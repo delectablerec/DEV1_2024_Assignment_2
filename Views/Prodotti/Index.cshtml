@@ -1,0 +1,125 @@
+@model ProdottiViewModel
+@{
+    ViewData["Title"] = "Prodotti";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="container">
+    <!-- Mobile View: Filter Dropdown (Above Products) -->
+    <div class="d-lg-none mb-4">
+        <!-- Large grey dropdown button for filter -->
+        <button class="btn btn-outline-secondary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#filterMobile" aria-expanded="false" aria-controls="filterMobile">
+            Filtra
+        </button>
+
+        <!-- Collapsible filter form (on top of the products in mobile view) -->
+        <div class="collapse mt-2" id="filterMobile">
+            <form method="get">
+                <!-- Price Filter -->
+                <div class="form-group">
+                    <input type="number" class="form-control form-control-sm mb-2" maxlength="10" name="minPrezzo" value="@Model.MinPrezzo" placeholder="Min Prezzo"/>
+                    <input type="number" class="form-control form-control-sm mb-2" maxlength="10" name="maxPrezzo" value="@Model.MaxPrezzo" placeholder="Max Prezzo"/>
+                </div>
+
+                <!-- Categoria Filter as a dropdown on small screen -->
+                <div class="dropdown mb-2">
+                    <button class="btn btn-outline-secondary btn-sm w-100 dropdown-toggle" type="button" id="categoriaDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false">
+                        Seleziona Categoria
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="categoriaDropdownMobile">
+                    
+                    </ul>
+                </div>
+
+                <button type="submit" class="btn btn-outline-secondary btn-sm w-100">Filtra</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Filter Form (Sidebar for large screens) -->
+    <div class="row">
+        <!-- Sidebar Filter (Visible on Large Screens) -->
+        <div class="col-lg-3 d-none d-lg-block">
+            <form method="get">
+                <!-- Price Filter -->
+                <div class="form-group m-1">
+                    <label for="minPrezzo">
+                        <input type="number" class="form-control form-control-sm" maxlength="10" name="minPrezzo" value="@Model.MinPrezzo" placeholder="Min Prezzo"/>
+                    </label>
+                </div>
+                <div class="form-group m-1">
+                    <label for="maxPrezzo">
+                        <input type="number" class="form-control form-control-sm" maxlength="10" name="maxPrezzo" value="@Model.MaxPrezzo" placeholder="Max Prezzo"/>
+                    </label>
+                </div>
+
+                <!-- Categoria Filter as a dropdown on large screen -->
+                <div class="form-group m-1">
+                    <label>Categoria</label>
+                    <select class="form-control form-control-sm" name="categoria">
+                        <option value="">Tutte le categorie</option>
+                        
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-outline-secondary btn-sm w-100">Filtra</button>
+            </form>
+        </div>
+
+        <!-- Products Section -->
+        <div class="col-lg-9">
+            <div class="row">
+                @foreach (var orologio in Model.Orologi)
+                {
+                    <div class="col-md-6 col-lg-4 d-flex justify-content-center">
+                        <div class="card mb-3 mb-md-4 mb-lg-5 @className" style="width: 18rem;">
+                            <img src="@orologio.Immagine" class="card-img-top" alt="@orologio.Nome">
+                            <div class="card-body">
+                                <h5 class="card-title">@orologio.Modello</h5>
+                                <p class="card-text text-dark">@orologio.Marca</p>
+                                <p class="card-text text-dark">@orologio.Categoria</p>
+                                <p class="card-text">@orologio.Prezzo</p>
+                                <p class="card-text">@orologio.Quantita</p>
+                                <p class="card-text">@orologio.Tipologia</p>
+                                <p class="card-text">@orologio.Materiale</p>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <!-- Dettagli Button (Left side, grey) -->
+                                    <a asp-controller="Prodotti" asp-action="DettaglioProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm flex-grow-1">Dettagli</a>
+
+                                    <!-- Cart Button (Right side, black with white cart icon) -->
+                                    <button type="button" class="btn btn-dark btn-sm ms-2" style="width: 36px; height: 36px; display: flex; justify-content: center; align-items: center;">
+                                        <i class="bi-cart text-white"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="Prodotti" asp-action="ModificaProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm">Modifica</a>
+                            }
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="Prodotti" asp-action="CancellaProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm">Elimina</a>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination Form -->
+    <form method="get" class="d-flex justify-content-end">
+        <input type="hidden" name="minPrezzo" value="@Model.MinPrezzo" /> 
+        <input type="hidden" name="maxPrezzo" value="@Model.MaxPrezzo" /> 
+        @for (int i = 1; i <= Model.NumeroPagine; i++)
+        {
+            <button type="submit" class="btn btn-dark m-1 opacity-50" name="paginaCorrente" value="@i">@i</button>
+        }
+    </form>
+
+    <br>
+    <a class="link-body-emphasis link-underline-opacity-10" asp-controller="Home" asp-action="Index">Torna a home</a>
+</div>
