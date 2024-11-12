@@ -285,7 +285,6 @@ C:\Users\dev1\Documents\DEV1_2024_Assignment_2\obj\Debug\net8.0\refint\WatchStor
 C:\Users\dev1\Documents\DEV1_2024_Assignment_2\obj\Debug\net8.0\WatchStoreApp.pdb
 C:\Users\dev1\Documents\DEV1_2024_Assignment_2\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\dev1\Documents\DEV1_2024_Assignment_2\bin\Debug\net8.0\appsettings.json
-C:\Users\dev1\Documents\DEV1_2024_Assignment_2\bin\Debug\net8.0\app.db
 C:\Users\dev1\Documents\DEV1_2024_Assignment_2\bin\Debug\net8.0\WatchStoreApp.staticwebassets.runtime.json
 C:\Users\dev1\Documents\DEV1_2024_Assignment_2\bin\Debug\net8.0\WatchStoreApp.exe
 C:\Users\dev1\Documents\DEV1_2024_Assignment_2\bin\Debug\net8.0\WatchStoreApp.deps.json
@@ -541,3 +540,4 @@ C:\Users\dev1\Documents\DEV1_2024_Assignment_2\obj\Debug\net8.0\scopedcss\projec
 C:\Users\dev1\Documents\DEV1_2024_Assignment_2\obj\Debug\net8.0\WatchSto.73850193.Up2Date
 C:\Users\dev1\Documents\DEV1_2024_Assignment_2\obj\Debug\net8.0\WatchStoreApp.genruntimeconfig.cache
 C:\Users\dev1\Documents\DEV1_2024_Assignment_2\obj\Debug\net8.0\ref\WatchStoreApp.dll
+C:\Users\dev1\Documents\DEV1_2024_Assignment_2\bin\Debug\net8.0\app.db
