@@ -1,8 +1,5 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using WatchStoreApp.Models;
-
-namespace WatchStoreApp.Controllers;
 
 public class HomeController : Controller
 {
