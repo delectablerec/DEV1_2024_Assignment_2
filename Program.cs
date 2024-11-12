@@ -12,9 +12,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Cliente invece di IdentityUser perchè è stata creata una classe personalizzata
 builder.Services.AddDefaultIdentity<Cliente>(options => options.SignIn.RequireConfirmedAccount = true)
-    //.AddRoles<IdentityRole>() !!! PER I RUOLI
+    .AddRoles<IdentityRole>()// !!! PER I RUOLI
     .AddEntityFrameworkStores<ApplicationDbContext>();
-    // .AddDefaultTokenProviders(); !!! PER RESETS E CONFIRMATIONS
+    // .AddDefaultTokenProviders(); //!!! PER RESETS E CONFIRMATIONS
 
 /*  !!! PER DIVERSI CHECK
 builder.Services.Configure<IdentityOptions>(options =>
@@ -166,14 +166,38 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// app.UseAuthentication(); !!! PER ACCESSO A DETERMINATE PAGINE
+app.UseAuthentication(); //!!! PER ACCESSO A DETERMINATE PAGINE
 app.UseAuthorization();
 
-// app.UseStatusCodePagesWithReExecute("/Home/Error"); !!! 
+// app.UseStatusCodePagesWithReExecute("/Home/Error"); //!!! 
+// app.UseEndpoints(endpoints =>
+// {
+// 	endpoints.MapControllerRoute(
+// 		name: "user",
+// 		pattern: "User/{email}",
+// 		defaults: new { controller = "Users", action = "Index" });
+// });
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+// Seeding del database
+using (var scope = app.Services.CreateScope())
+{
+	var serviceProvider = scope.ServiceProvider;
+	try
+	{
+		var userManager = serviceProvider.GetRequiredService<UserManager<Cliente>>();
+		var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+		await SeedData.InitializeAsync(userManager, roleManager);
+	}
+	catch (Exception ex)
+	{
+		var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+		logger.LogError(ex, "Un errore è avvenuto durante il seeding del database.");
+	}
+}
 
 app.Run();

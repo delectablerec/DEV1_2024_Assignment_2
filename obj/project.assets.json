@@ -6968,19 +6968,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Ginevra\\.nuget\\packages\\": {}
+    "C:\\Users\\Pozzame\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Ginevra\\Documents\\WorkingArea\\WatchStoreApp\\WatchStoreApp.csproj",
+      "projectUniqueName": "C:\\Users\\Pozzame\\Documents\\Corso\\DEV1_2024_Assignment_2\\WatchStoreApp.csproj",
       "projectName": "WatchStoreApp",
-      "projectPath": "C:\\Users\\Ginevra\\Documents\\WorkingArea\\WatchStoreApp\\WatchStoreApp.csproj",
-      "packagesPath": "C:\\Users\\Ginevra\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Ginevra\\Documents\\WorkingArea\\WatchStoreApp\\obj\\",
+      "projectPath": "C:\\Users\\Pozzame\\Documents\\Corso\\DEV1_2024_Assignment_2\\WatchStoreApp.csproj",
+      "packagesPath": "C:\\Users\\Pozzame\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Pozzame\\Documents\\Corso\\DEV1_2024_Assignment_2\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Ginevra\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Pozzame\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -7053,7 +7053,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
