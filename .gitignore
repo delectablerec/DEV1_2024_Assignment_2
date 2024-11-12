@@ -5,6 +5,7 @@ obj
 build
 /build
 Migrations
+/Data/Migrations
 .env.local
 .env.development.local
 .env.test.local
