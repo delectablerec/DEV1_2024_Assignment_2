@@ -1,6 +1,9 @@
 bin
+/bin
 obj
+/obj
 build
+/build
 Migrations
 .env.local
 .env.development.local
