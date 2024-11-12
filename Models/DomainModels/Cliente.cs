@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-public class Cliente : IdentityUser
+public class Cliente : General
 {
-    public string Nome { get; set; }
+  //  public string Nome { get; set; }
 }
