@@ -1,6 +1,6 @@
 public class Prodotto : General
 {
-    public decimal Prezzo { get; set; } // Prezzo del prodotto
+    public  decimal Prezzo { get; set; } // Prezzo del prodotto
     public int Giacenza { get; set; }   // Quantità disponibile in magazzino
     public string? Colore { get; set; }
     public string UrlImmagine { get; set; }
