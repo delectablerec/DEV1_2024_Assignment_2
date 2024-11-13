@@ -235,6 +235,7 @@ namespace WatchStoreApp.Migrations
                     UrlImmagine = table.Column<string>(type: "TEXT", nullable: false),
                     CategoriaId = table.Column<int>(type: "INTEGER", nullable: false),
                     MarcaId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Descrizione = table.Column<string>(type: "TEXT", nullable: true),
                     Discriminator = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
                     Modello = table.Column<string>(type: "TEXT", nullable: true),
                     Referenza = table.Column<string>(type: "TEXT", nullable: true),

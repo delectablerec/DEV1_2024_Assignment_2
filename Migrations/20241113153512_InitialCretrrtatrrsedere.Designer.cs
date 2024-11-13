@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace WatchStoreApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241113145902_InitialCretrrtatrrsedere")]
+    [Migration("20241113153512_InitialCretrrtatrrsedere")]
     partial class InitialCretrrtatrrsedere
     {
         /// <inheritdoc />
@@ -326,6 +326,9 @@ namespace WatchStoreApp.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Colore")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Descrizione")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Discriminator")
