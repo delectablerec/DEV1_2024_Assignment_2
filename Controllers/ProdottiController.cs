@@ -10,10 +10,16 @@ public class ProdottiController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Index(int? minPrezzo, int? maxPrezzo, int paginaCorrente = 1)
+    public async Task<IActionResult> Index(int? minPrezzo, int? maxPrezzo, int? categoriaId, int? marcaId, int? materialeId, int? tipologiaId, int paginaCorrente = 1)
     {
         // Numero di default dei prodotti per pagina
         int prodottiPerPagina = 6;
+
+        // Recupera tutte le categorie per il dropdown
+        var categorie = await _context.Categorie.ToListAsync();
+        var marche = await _context.Marche.ToListAsync();
+        var materiali = await _context.Materiali.ToListAsync();
+        var tipologie = await _context.Tipologie.ToListAsync();
 
         // Inizia a costruire la query
         var query = from o in _context.Orologi
@@ -32,6 +38,35 @@ public class ProdottiController : Controller
         {
             query = from o in query
                     where o.Prezzo <= maxPrezzo.Value
+                    select o;
+        }
+
+        // Filtra per categoria se selezionata
+        if (categoriaId.HasValue)
+        {
+            query = from o in query
+                    where o.Categoria.Id == categoriaId.Value // !!! CONTROLLARE MODELLO PRODOTTO E VIEWMODEL PRODOTTI (CategoriaId da aggiungere sopra Categoria Categoria)
+                    select o;
+        }
+
+        if (marcaId.HasValue)
+        {
+            query = from o in query
+                    where o.Marca.Id == marcaId.Value // !!! CONTROLLARE MODELLO PRODOTTO E VIEWMODEL PRODOTTI (MarcaId da aggiungere sopra Marca Marca)
+                    select o;
+        }
+
+        if (materialeId.HasValue)
+        {
+            query = from o in query
+                    where o.Materiale.Id == materialeId.Value // !!! CONTROLLARE MODELLO OROLOGIO E VIEWMODEL PRODOTTI (MaterialeId da aggiungere sopra Materiale Materiale)
+                    select o;
+        }
+
+        if (tipologiaId.HasValue)
+        {
+            query = from o in query
+                    where o.Tipologia.Id == tipologiaId.Value  // !!! CONTROLLARE MODELLO OROLOGIO E VIEWMODEL PRODOTTI (TipologiaId da aggiungere sopra Tipologia Tipologia)
                     select o;
         }
 
@@ -57,7 +92,15 @@ public class ProdottiController : Controller
             MaxPrezzo = (from o in _context.Orologi
                         select o.Prezzo).Max(),
             NumeroPagine = numeroPagine,
-            PaginaCorrente = paginaCorrente
+            PaginaCorrente = paginaCorrente,
+            Categorie = categorie,  // Passa le categorie per il dropdown
+            CategoriaSelezionata = categoriaId, // Passa la categoria selezionata, se presente   !!! DA AGGIUNGERE A VIEWMODEL
+            Marche = marche,    // Passa le marche per il dropdown
+            MarcaSelezionata = marcaId,  // Passa la marca selezionata, se presente  !!! DA AGGIUNGERE A VIEWMODEL
+            Materiali = materiali,
+            MaterialeSelezionato = materialeId, // DA AGGIUNGERE A VIEWMODEL
+            Tipologie = tipologie,
+            TipologiaSelezionata = tipologiaId // DA AGGIUNGERE A VIEWMODEL
         };
 
         return View(viewModel);

@@ -6,43 +6,109 @@
 <h1>@ViewData["Title"]</h1>
 
 <div class="container">
-    <!-- Mobile View: Filter Dropdown (Above Products) -->
+    <!-- Mobile View: Filtro Dropdown (Sopra ai prodotti) -->
     <div class="d-lg-none mb-4">
-        <!-- Large grey dropdown button for filter -->
+        <!-- Bottone grigio per i filtri -->
         <button class="btn btn-outline-secondary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#filterMobile" aria-expanded="false" aria-controls="filterMobile">
             Filtra
         </button>
 
-        <!-- Collapsible filter form (on top of the products in mobile view) -->
+        <!-- Form filtro collassabile (sopra i prodotti) -->
         <div class="collapse mt-2" id="filterMobile">
             <form method="get">
-                <!-- Price Filter -->
+                <!-- Filtro prezzo -->
                 <div class="form-group">
                     <input type="number" class="form-control form-control-sm mb-2" maxlength="10" name="minPrezzo" value="@Model.MinPrezzo" placeholder="Min Prezzo"/>
                     <input type="number" class="form-control form-control-sm mb-2" maxlength="10" name="maxPrezzo" value="@Model.MaxPrezzo" placeholder="Max Prezzo"/>
                 </div>
 
-                <!-- Categoria Filter as a dropdown on small screen -->
+                <!-- Dropdown filtro categoria -->
                 <div class="dropdown mb-2">
                     <button class="btn btn-outline-secondary btn-sm w-100 dropdown-toggle" type="button" id="categoriaDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false">
                         Seleziona Categoria
                     </button>
                     <ul class="dropdown-menu w-100" aria-labelledby="categoriaDropdownMobile">
-                    
+                        <!-- Loop delle categorie e dropdown con tutte le opzioni -->
+                        @foreach (var categoria in Model.Categorie)
+                        {
+                            <li>
+                                <a class="dropdown-item @(Model.CategoriaSelezionata == categoria.Id ? "active" : "")" href="?categoriaSelezionata=@categoria.Id&marcaSelezionata=@Model.MarcaSelezionata&materialeSelezionato=@Model.MaterialeSelezionato&tipologiaSelezionata=@Model.TipologiaSelezionata&minPrezzo=@Model.MinPrezzo&maxPrezzo=@Model.MaxPrezzo">
+                                    @categoria.Nome
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
+
+                <!-- Dropdown filtro marca -->
+                <div class="dropdown mb-2">
+                    <button class="btn btn-outline-secondary btn-sm w-100 dropdown-toggle" type="button" id="marcaDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false">
+                        Seleziona Marca
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="marcaDropdownMobile">
+                        <!-- Loop delle marche e dropdown con tutte le opzioni -->
+                        @foreach (var marca in Model.Marche)
+                        {
+                            <li>
+                                <a class="dropdown-item @(Model.MarcaSelezionata == marca.Id ? "active" : "")" href="?marcaSelezionata=@marca.Id&categoriaSelezionata=@Model.CategoriaSelezionata&materialeSelezionato=@Model.MaterialeSelezionato&tipologiaSelezionata=@Model.TipologiaSelezionata&minPrezzo=@Model.MinPrezzo&maxPrezzo=@Model.MaxPrezzo">
+                                    @marca.Nome
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <!-- Dropdown filtro materiale -->
+                <div class="dropdown mb-2">
+                    <button class="btn btn-outline-secondary btn-sm w-100 dropdown-toggle" type="button" id="materialeDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false">
+                        Seleziona Materiale
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="materialeDropdownMobile">
+                        <!-- Loop dei materiali e dropdown con tutte le opzioni -->
+                        @foreach (var materiale in Model.Materiali)
+                        {
+                            <li>
+                                <a class="dropdown-item @(Model.MaterialeSelezionato == marca.Id ? "active" : "")" href="?materialeSelezionato=@materiale.Id&categoriaSelezionata=@Model.CategoriaSelezionata&marcaSelezionata=@Model.MarcaSelezionata&tipologiaSelezionata=@Model.TipologiaSelezionat&minPrezzo=@Model.MinPrezzo&maxPrezzo=@Model.MaxPrezzo">
+                                    @materiale.Nome
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <!-- Dropdown filtro tipologia -->
+                <div class="dropdown mb-2">
+                    <button class="btn btn-outline-secondary btn-sm w-100 dropdown-toggle" type="button" id="tipologiaDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false">
+                        Seleziona Tipologia
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="tipologiaDropdownMobile">
+                        <!-- Loop delle tipologie  e dropdown con tutte le opzioni -->
+                        @foreach (var tipologia in Model.Tipologie)
+                        {
+                            <li>
+                                <a class="dropdown-item @(Model.TipologieSelezionate == tipologia.Id ? "active" : "")" href="?tipologiaSelezionata=@tipologia.Id&categoriaSelezionata=@Model.CategoriaSelezionata&marcaSelezionata=@Model.MarcaSelezionata&materialeSelezionato=@Model.MaterialeSelezionato&minPrezzo=@Model.MinPrezzo&maxPrezzo=@Model.MaxPrezzo">
+                                    @tipologia.Nome
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <!-- Inputs nascosti per mantenere lo stato dei filtri -->
+                <input type="hidden" name="minPrezzo" value="@Model.MinPrezzo" />
+                <input type="hidden" name="maxPrezzo" value="@Model.MaxPrezzo" />
 
                 <button type="submit" class="btn btn-outline-secondary btn-sm w-100">Filtra</button>
             </form>
         </div>
     </div>
 
-    <!-- Filter Form (Sidebar for large screens) -->
+    <!-- Form filtro (Sidebar su schermo grande) -->
     <div class="row">
-        <!-- Sidebar Filter (Visible on Large Screens) -->
+        <!-- Filtro sidebar -->
         <div class="col-lg-3 d-none d-lg-block">
             <form method="get">
-                <!-- Price Filter -->
+                <!-- Filtro prezzo -->
                 <div class="form-group m-1">
                     <label for="minPrezzo">
                         <input type="number" class="form-control form-control-sm" maxlength="10" name="minPrezzo" value="@Model.MinPrezzo" placeholder="Min Prezzo"/>
@@ -54,27 +120,78 @@
                     </label>
                 </div>
 
-                <!-- Categoria Filter as a dropdown on large screen -->
+                <!-- Filtro categoria -->
                 <div class="form-group m-1">
-                    <label>Categoria</label>
-                    <select class="form-control form-control-sm" name="categoria">
+                    <select class="form-control form-control-sm" name="categoriaSelezionata">
                         <option value="">Tutte le categorie</option>
-                        
+                        @foreach (var categoria in Model.Categorie)
+                        {
+                            <option value="@categoria.Id" @(Model.CategoriaSelezionata == categoria.Id ? "selected" : "")>
+                                @categoria.Nome
+                            </option>
+                        }
                     </select>
                 </div>
+
+                <!-- Filtro marca -->
+                <div class="form-group m-1">
+                    <select class="form-control form-control-sm" name="marcaSelezionata">
+                        <option value="">Tutte le marche</option>
+                        @foreach (var marca in Model.Marche)
+                        {
+                            <option value="@marca.Id" @(Model.MarcaSelezionata == marca.Id ? "selected" : "")>
+                                @marca.Nome
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Filtro materiale -->
+                <div class="form-group m-1">
+                    <select class="form-control form-control-sm" name="materialeSelezionato">
+                        <option value="">Tutti i materiali</option>
+                        @foreach (var materiale in Model.Materiali)
+                        {
+                            <option value="@materiale.Id" @(Model.MaterialeSelezionato == materiale.Id ? "selected" : "")>
+                                @materiale.Nome
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Filtro tipologia -->
+                <div class="form-group m-1">
+                    <select class="form-control form-control-sm" name="tipologiaSelezionata">
+                        <option value="">Tutte le tipologie</option>
+                        @foreach (var tipologia in Model.Tipologie)
+                        {
+                            <option value="@tipologia.Id" @(Model.TipologiaSelezionata == tipologia.Id ? "selected" : "")>
+                                @tipologia.Nome
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Inputs nascosti per mantenere i parametri (se presenti) -->
+                <input type="hidden" name="minPrezzo" value="@Model.MinPrezzo" />
+                <input type="hidden" name="maxPrezzo" value="@Model.MaxPrezzo" />
+                <input type="hidden" name="categoriaSelezionata" value="@Model.CategoriaSelezionata" />
+                <input type="hidden" name="marcaSelezionata" value="@Model.MarcaSelezionata" />
+                <input type="hidden" name="materialeSelezionato" value="@Model.MaterialeSelezionato" />
+                <input type="hidden" name="tipologiaSelezionata" value="@Model.TipologiaSelezionata" />
 
                 <button type="submit" class="btn btn-outline-secondary btn-sm w-100">Filtra</button>
             </form>
         </div>
 
-        <!-- Products Section -->
+        <!-- Sezione prodotti -->
         <div class="col-lg-9">
             <div class="row">
                 @foreach (var orologio in Model.Orologi)
                 {
                     <div class="col-md-6 col-lg-4 d-flex justify-content-center">
                         <div class="card mb-3 mb-md-4 mb-lg-5 @className" style="width: 18rem;">
-                            <img src="@orologio.Immagine" class="card-img-top" alt="@orologio.Nome">
+                            <img src="@orologio.Immagine" class="card-img-top" alt="@orologio.Marca @orologio.Modello">
                             <div class="card-body">
                                 <h5 class="card-title">@orologio.Modello</h5>
                                 <p class="card-text text-dark">@orologio.Marca</p>
@@ -85,10 +202,10 @@
                                 <p class="card-text">@orologio.Materiale</p>
 
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <!-- Dettagli Button (Left side, grey) -->
+                                    <!-- Bottone dettagli -->
                                     <a asp-controller="Prodotti" asp-action="DettaglioProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm flex-grow-1">Dettagli</a>
 
-                                    <!-- Cart Button (Right side, black with white cart icon) -->
+                                    <!-- Bottone icona carrello -->
                                     <button type="button" class="btn btn-dark btn-sm ms-2" style="width: 36px; height: 36px; display: flex; justify-content: center; align-items: center;">
                                         <i class="bi-cart text-white"></i>
                                     </button>
@@ -110,10 +227,14 @@
         </div>
     </div>
 
-    <!-- Pagination Form -->
+    <!-- Form paginazione -->
     <form method="get" class="d-flex justify-content-end">
         <input type="hidden" name="minPrezzo" value="@Model.MinPrezzo" /> 
         <input type="hidden" name="maxPrezzo" value="@Model.MaxPrezzo" /> 
+        <input type="hidden" name="categoriaSelezionata" value="@Model.CategoriaSelezionata" />
+        <input type="hidden" name="marcaSelezionata" value="@Model.MarcaSelezionata" />
+        <input type="hidden" name="materialeSelezionato" value="@Model.MaterialeSelezionato" />
+        <input type="hidden" name="tipologiaSelezionata" value="@Model.TipologiaSelezionata" />
         @for (int i = 1; i <= Model.NumeroPagine; i++)
         {
             <button type="submit" class="btn btn-dark m-1 opacity-50" name="paginaCorrente" value="@i">@i</button>
