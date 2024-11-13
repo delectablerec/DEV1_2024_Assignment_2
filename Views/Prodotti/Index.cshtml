@@ -68,7 +68,7 @@
                         @foreach (var materiale in Model.Materiali)
                         {
                             <li>
-                                <a class="dropdown-item @(Model.MaterialeSelezionato == marca.Id ? "active" : "")" href="?materialeSelezionato=@materiale.Id&categoriaSelezionata=@Model.CategoriaSelezionata&marcaSelezionata=@Model.MarcaSelezionata&tipologiaSelezionata=@Model.TipologiaSelezionat&minPrezzo=@Model.MinPrezzo&maxPrezzo=@Model.MaxPrezzo">
+                                <a class="dropdown-item @(Model.MaterialeSelezionato == materiale.Id ? "active" : "")" href="?materialeSelezionato=@materiale.Id&categoriaSelezionata=@Model.CategoriaSelezionata&marcaSelezionata=@Model.MarcaSelezionata&tipologiaSelezionata=@Model.TipologiaSelezionata&minPrezzo=@Model.MinPrezzo&maxPrezzo=@Model.MaxPrezzo">
                                     @materiale.Nome
                                 </a>
                             </li>
@@ -86,7 +86,7 @@
                         @foreach (var tipologia in Model.Tipologie)
                         {
                             <li>
-                                <a class="dropdown-item @(Model.TipologieSelezionate == tipologia.Id ? "active" : "")" href="?tipologiaSelezionata=@tipologia.Id&categoriaSelezionata=@Model.CategoriaSelezionata&marcaSelezionata=@Model.MarcaSelezionata&materialeSelezionato=@Model.MaterialeSelezionato&minPrezzo=@Model.MinPrezzo&maxPrezzo=@Model.MaxPrezzo">
+                                <a class="dropdown-item @(Model.TipologiaSelezionata == tipologia.Id ? "active" : "")" href="?tipologiaSelezionata=@tipologia.Id&categoriaSelezionata=@Model.CategoriaSelezionata&marcaSelezionata=@Model.MarcaSelezionata&materialeSelezionato=@Model.MaterialeSelezionato&minPrezzo=@Model.MinPrezzo&maxPrezzo=@Model.MaxPrezzo">
                                     @tipologia.Nome
                                 </a>
                             </li>
@@ -126,7 +126,7 @@
                         <option value="">Tutte le categorie</option>
                         @foreach (var categoria in Model.Categorie)
                         {
-                            <option value="@categoria.Id" @(Model.CategoriaSelezionata == categoria.Id ? "selected" : "")>
+                            <option value="@categoria.Id">
                                 @categoria.Nome
                             </option>
                         }
@@ -139,7 +139,7 @@
                         <option value="">Tutte le marche</option>
                         @foreach (var marca in Model.Marche)
                         {
-                            <option value="@marca.Id" @(Model.MarcaSelezionata == marca.Id ? "selected" : "")>
+                            <option value="@marca.Id">
                                 @marca.Nome
                             </option>
                         }
@@ -152,7 +152,7 @@
                         <option value="">Tutti i materiali</option>
                         @foreach (var materiale in Model.Materiali)
                         {
-                            <option value="@materiale.Id" @(Model.MaterialeSelezionato == materiale.Id ? "selected" : "")>
+                            <option value="@materiale.Id">
                                 @materiale.Nome
                             </option>
                         }
@@ -165,7 +165,7 @@
                         <option value="">Tutte le tipologie</option>
                         @foreach (var tipologia in Model.Tipologie)
                         {
-                            <option value="@tipologia.Id" @(Model.TipologiaSelezionata == tipologia.Id ? "selected" : "")>
+                            <option value="@tipologia.Id">
                                 @tipologia.Nome
                             </option>
                         }
@@ -190,14 +190,14 @@
                 @foreach (var orologio in Model.Orologi)
                 {
                     <div class="col-md-6 col-lg-4 d-flex justify-content-center">
-                        <div class="card mb-3 mb-md-4 mb-lg-5 @className" style="width: 18rem;">
-                            <img src="@orologio.Immagine" class="card-img-top" alt="@orologio.Marca @orologio.Modello">
+                        <div class="card mb-3 mb-md-4 mb-lg-5" style="width: 18rem;">
+                            <img src="@orologio.UrlImmagine" class="card-img-top" alt="@orologio.Marca @orologio.Modello">
                             <div class="card-body">
                                 <h5 class="card-title">@orologio.Modello</h5>
                                 <p class="card-text text-dark">@orologio.Marca</p>
                                 <p class="card-text text-dark">@orologio.Categoria</p>
                                 <p class="card-text">@orologio.Prezzo</p>
-                                <p class="card-text">@orologio.Quantita</p>
+                                <p class="card-text">@orologio.Giacenza</p>
                                 <p class="card-text">@orologio.Tipologia</p>
                                 <p class="card-text">@orologio.Materiale</p>
 

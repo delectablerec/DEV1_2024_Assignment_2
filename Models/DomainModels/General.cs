@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Identity;
-
-public abstract class General : IdentityUser
+public abstract class General
 {
     public virtual int Id { get; set; }
     public virtual string Nome { get; set; }

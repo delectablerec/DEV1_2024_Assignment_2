@@ -10,8 +10,10 @@ public class Ordine : General
     public int Quantita { get; set; }
 
     // Cliente associato all'ordine
+    public int ClienteId { get; set; }
     public Cliente Cliente { get; set; }
 
     // Orologio associato all'ordine (formerly Prodotto)
+    public int OrologioId { get; set; }
     public Orologio? Orologio { get; set; }  // Change this to Orologio
 }
