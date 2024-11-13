@@ -28,6 +28,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Prodotti" asp-action="Index">Prodotti</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated){
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Ordini" asp-action="Index">Ordini</a>
+                        </li>
+                        }
                     </ul>
                     <!-- Bottone Carrello -->
                     <button
