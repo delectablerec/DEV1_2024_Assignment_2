@@ -2,82 +2,99 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="container-lg">
-  <h2>Ultimi arrivi</h2>  
-  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+<!-- Ultimi Arrivi -->
+<div class="container-lg py-5">
+  <h2 class="text-center mb-4">Ultimi Arrivi</h2>  
+  <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
     <!-- Indicators -->
     <ol class="carousel-indicators">
-      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-      <li data-target="#myCarousel" data-slide-to="1"></li>
-      <li data-target="#myCarousel" data-slide-to="2"></li>
+      <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"></li>
+      <li data-bs-target="#myCarousel" data-bs-slide-to="1"></li>
+      <li data-bs-target="#myCarousel" data-bs-slide-to="2"></li>
     </ol>
 
     <!-- Wrapper for slides -->
-    <div class="carousel-inner" align="center">
-      <div class="item active">
-        <img src="./images/1.jpg" alt="1.jpg" style="width:40%;">
+    <div class="carousel-inner">
+      <div class="carousel-item active text-center">
+        <img src="./images/1.jpg" alt="1.jpg" class="d-block mx-auto carousel-image" style="max-width: 100%; height: 400px; object-fit: cover;">
       </div>
 
-      <div class="item">
-        <img src="./images/2.jpg" alt="2.jpg" style="width:40%;">
+      <div class="carousel-item text-center">
+        <img src="./images/2.jpg" alt="2.jpg" class="d-block mx-auto carousel-image" style="max-width: 100%; height: 400px; object-fit: cover;">
       </div>
     
-      <div class="item">
-        <img src="./images/3.jpg" alt="3.jpg" style="width:40%;">
+      <div class="carousel-item text-center">
+        <img src="./images/3.jpg" alt="3.jpg" class="d-block mx-auto carousel-image" style="max-width: 100%; height: 400px; object-fit: cover;">
       </div>
     </div>
 
     <!-- Left and right controls -->
-    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-      <span class="glyphicon glyphicon-chevron-left"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <a class="right carousel-control" href="#myCarousel" data-slide="next">
-      <span class="glyphicon glyphicon-chevron-right"></span>
-      <span class="sr-only">Next</span>
-    </a>
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
   </div>
 </div>
 
-
+<!-- Sezioni più visitate -->
 <div class="container-lg py-5">
-    <h2>Sezioni più visitate</h2> 
-    <div class="row text-center">
-      <div class="col-6 col-md-2 mb-4">
-        <a href="#" class="text-decoration-none">
-          <img src="./images/1.jpg" class="img-fluid mb-2" style="width:80%;" alt="New In">
-          <h6 class="text-dark">NEW IN</h6>
-        </a>
-      </div>
-      <div class="col-6 col-md-2 mb-4">
-        <a href="#" class="text-decoration-none">
-          <img src="./images/2.jpg" class="img-fluid mb-2" style="width:80%;" alt="Charms">
-          <h6 class="text-dark">CHARMS</h6>
-        </a>
-      </div>
-      <div class="col-6 col-md-2 mb-4">
-        <a href="#" class="text-decoration-none">
-          <img src="./images/3.jpg" class="img-fluid mb-2" style="width:80%;" alt="Bracelets">
-          <h6 class="text-dark">BRACELETS</h6>
-        </a>
-      </div>
-      <div class="col-6 col-md-2 mb-4">
-        <a href="#" class="text-decoration-none">
-          <img src="./images/1.jpg" class="img-fluid mb-2" style="width:80%;" alt="Rings">
-          <h6 class="text-dark">RINGS</h6>
-        </a>
-      </div>
-      <div class="col-6 col-md-2 mb-4">
-        <a href="#" class="text-decoration-none">
-          <img src="./images/2.jpg" class="img-fluid mb-2" style="width:80%;" alt="Earrings">
-          <h6 class="text-dark">EARRINGS</h6>
-        </a>
-      </div>
-      <div class="col-6 col-md-2 mb-4">
-        <a href="#" class="text-decoration-none">
-          <img src="./images/3.jpg" class="img-fluid mb-2" style="width:80%;" alt="Necklaces">
-          <h6 class="text-dark">NECKLACES</h6>
-        </a>
-      </div>
+  <h2 class="text-center mb-4">Sezioni Più Visitate</h2> 
+  <div class="row text-center">
+    <div class="col-6 col-md-2 mb-4">
+      <a href="#" class="text-decoration-none">
+        <img src="./images/1.jpg" class="img-fluid mb-2" alt="New In" style="width:100%;">
+        <h6 class="text-dark">NEW IN</h6>
+      </a>
+    </div>
+    <div class="col-6 col-md-2 mb-4">
+      <a href="#" class="text-decoration-none">
+        <img src="./images/2.jpg" class="img-fluid mb-2" alt="Charms" style="width:100%;">
+        <h6 class="text-dark">CHARMS</h6>
+      </a>
+    </div>
+    <div class="col-6 col-md-2 mb-4">
+      <a href="#" class="text-decoration-none">
+        <img src="./images/3.jpg" class="img-fluid mb-2" alt="Bracelets" style="width:100%;">
+        <h6 class="text-dark">BRACELETS</h6>
+      </a>
+    </div>
+    <div class="col-6 col-md-2 mb-4">
+      <a href="#" class="text-decoration-none">
+        <img src="./images/1.jpg" class="img-fluid mb-2" alt="Rings" style="width:100%;">
+        <h6 class="text-dark">RINGS</h6>
+      </a>
+    </div>
+    <div class="col-6 col-md-2 mb-4">
+      <a href="#" class="text-decoration-none">
+        <img src="./images/2.jpg" class="img-fluid mb-2" alt="Earrings" style="width:100%;">
+        <h6 class="text-dark">EARRINGS</h6>
+      </a>
+    </div>
+    <div class="col-6 col-md-2 mb-4">
+      <a href="#" class="text-decoration-none">
+        <img src="./images/3.jpg" class="img-fluid mb-2" alt="Necklaces" style="width:100%;">
+        <h6 class="text-dark">NECKLACES</h6>
+      </a>
     </div>
   </div>
+</div>
+
+<!-- Aggiungi questo stile CSS per personalizzare le frecce -->
+<style>
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-color: black; /* Cambia il colore delle frecce a nero */
+    border-radius: 50%; /* Aggiunge un bordo arrotondato alle frecce */
+  }
+
+  /* Aggiungi una larghezza e altezza fisse per le immagini del carosello */
+  .carousel-image {
+    max-width: 100%;
+    height: 400px; /* Imposta una altezza fissa per evitare spostamenti */
+    object-fit: cover; /* Garantisce che l'immagine si adatti senza deformarsi */
+  }
+</style>
