@@ -19,6 +19,8 @@ public class ApplicationDbContext : IdentityDbContext<Cliente>
 
     public DbSet<Ordine> Ordini { get; set; }
 
+    public DbSet<Cliente> Clienti { get; set; }
+
 /*  !!! PER CREARE PRODOTTI E OROLOGI SEPARATI
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
