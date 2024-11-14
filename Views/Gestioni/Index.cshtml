@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "Gestionale";
+}
+
+<!-- Page Container -->
+<div class="container my-4 py-4 bg-dark text-light rounded shadow-sm">
+    <h2 class="text-center">@ViewData["Title"]</h2>
+    
+    <p class="text-center">Scegli un'opzione</p>
+    
+    <!-- Button Grid -->
+    <div class="row text-center">
+        <div class="col-12 col-md-6 mb-3">
+            <a class="btn btn-custom btn-lg w-100 rounded-pill" 
+                asp-controller="Gestioni" asp-action="AggiungiCategoria">
+                Aggiungi una categoria
+            </a>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <a class="btn btn-custom btn-lg w-100 rounded-pill" 
+                asp-controller="Gestioni" asp-action="AggiungiMarca">
+                Aggiungi una marca
+            </a>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <a class="btn btn-custom btn-lg w-100 rounded-pill" 
+                asp-controller="Gestioni" asp-action="AggiungiMateriale">
+                Aggiungi un materiale
+            </a>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <a class="btn btn-custom btn-lg w-100 rounded-pill" 
+                asp-controller="Gestioni" asp-action="AggiungiTipologia">
+                Aggiungi una tipologia
+            </a>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <a class="btn btn-custom btn-lg w-100 rounded-pill" 
+                asp-controller="Gestioni" asp-action="AggiungiGenere">
+                Aggiungi un genere
+            </a>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <a class="btn btn-custom btn-lg w-100 rounded-pill" 
+                asp-controller="Prodotti" asp-action="AggiungiProdotto">
+                Aggiungi un prodotto
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    /* Dark Theme Background */
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+    /* Styling for the Container */
+    .container.bg-dark {
+        background-color: #1e1e1e;
+    }
+    /* Button Custom Style with Pale Cream Color */
+    .btn-custom {
+        background-color: #f5f5dc;
+        color: #333;
+        border: none;
+        transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+    }
+    /* Hover Effect */
+    .btn-custom:hover {
+        background-color: transparent;
+        color: #ffffff;
+        border: 2px solid #b0b0b0; /* Grey border */
+    }
+</style>

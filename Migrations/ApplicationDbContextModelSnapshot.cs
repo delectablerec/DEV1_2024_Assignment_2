@@ -323,6 +323,7 @@ namespace WatchStoreApp.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Colore")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Discriminator")
