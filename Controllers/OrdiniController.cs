@@ -12,25 +12,7 @@ public class OrdiniController : Controller
         _context = context;
     }
 
-/*
-     // Visualizza l'elenco di ordini
-    public IActionResult Index()
-    {
-        // Recupera tutti gli ordini e i relativi prodotti associati
-        List<Ordine> ordiniConProdotti = new List<Ordine>();
 
-        foreach (var ordine in _context.Ordini.Include(o => o.Orologi).Include(o => o.Cliente))
-        {
-            ordiniConProdotti.Add(ordine);
-        }
-
-        var viewModel = new OrdiniViewModel
-        {
-            Ordini = ordiniConProdotti
-        };
-
-        return View(viewModel);
-    } */
 
 // Visualizza l'elenco di ordini
 public IActionResult Index()
@@ -50,6 +32,7 @@ public IActionResult Index()
     return View(viewModel);
 }
 
+/*
 
     // Azione GET per visualizzare il form di aggiunta di un nuovo ordine
     [HttpGet]
@@ -69,7 +52,7 @@ public IActionResult Index()
             return RedirectToAction("Index");
         }
         return View(ordine); // Ritorna alla vista di aggiunta ordine in caso di errore di validazione
-    }
+    }*/
 
     // Azione per eliminare ordine
 
