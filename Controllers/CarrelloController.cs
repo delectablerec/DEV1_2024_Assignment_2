@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 public class CarrelloController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<ProdottiController> _logger;
     private CarrelloViewModel Carrello;
 
-    public CarrelloController(ApplicationDbContext context)
+    public CarrelloController(ApplicationDbContext context, ILogger<ProdottiController> logger)
     {
         _context = context;
+        _logger = logger;
     }
     public IActionResult Index()
     {
@@ -29,9 +31,17 @@ public class CarrelloController : Controller
         return View(Carrello);
     }
 
-        public IActionResult AggiungiACarrello(Orologio Orologio)
+        public IActionResult AggiungiACarrello(int id)
     {
-        Carrello.Carrello.Add(Orologio);
+        try
+        {
+            Carrello.Carrello.Add(_context.Orologi.ToList().Find(p => p.Id == id));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nella ricerca : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
+            return null;
+        }
         return View();
     }
 }
