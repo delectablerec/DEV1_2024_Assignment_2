@@ -10,15 +10,15 @@ public class Ordine : General
     public int Quantita { get; set; }
 
     // Cliente associato all'ordine
-    public int ClienteId { get; set; }
+    public string ClienteId { get; set; }
     public Cliente Cliente { get; set; }
 
-    // Orologio associato all'ordine (formerly Prodotto)
+    
  //   public int OrologioId { get; set; }
-  //  public Orologio? Orologio { get; set; }  // Change this to Orologio
+  //  public Orologio? Orologio { get; set; }  
 
        // Stato dell'ordine
-      public StatoOrdine Stato { get; set; } = StatoOrdine.InLavorazione;
+      public StatoOrdine StatoOrdine { get; set; } = StatoOrdine.InLavorazione;
 
       // Lista di orologi associati all'ordine
     public List<Orologio> Orologi { get; set; } = new List<Orologio>();

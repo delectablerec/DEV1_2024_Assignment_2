@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WatchStoreApp.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateAccountRegister2 : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,8 @@ namespace WatchStoreApp.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Nome = table.Column<string>(type: "TEXT", nullable: true),
+                    UrlImmagine = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -43,8 +45,7 @@ namespace WatchStoreApp.Migrations
                     TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    Nome = table.Column<string>(type: "TEXT", nullable: false)
+                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,20 +58,6 @@ namespace WatchStoreApp.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserName = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false),
                     Nome = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -84,20 +71,6 @@ namespace WatchStoreApp.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserName = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false),
                     Nome = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -111,20 +84,6 @@ namespace WatchStoreApp.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserName = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false),
                     Nome = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -138,20 +97,6 @@ namespace WatchStoreApp.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserName = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false),
                     Nome = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -165,20 +110,6 @@ namespace WatchStoreApp.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserName = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false),
                     Nome = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -293,73 +224,6 @@ namespace WatchStoreApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Prodotti",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Prezzo = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Giacenza = table.Column<int>(type: "INTEGER", nullable: false),
-                    Colore = table.Column<string>(type: "TEXT", nullable: true),
-                    CategoriaId = table.Column<int>(type: "INTEGER", nullable: true),
-                    MarcaId = table.Column<int>(type: "INTEGER", nullable: true),
-                    Discriminator = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
-                    Modello = table.Column<string>(type: "TEXT", nullable: true),
-                    Referenza = table.Column<string>(type: "TEXT", nullable: true),
-                    MaterialeId = table.Column<int>(type: "INTEGER", nullable: true),
-                    TipologiaId = table.Column<int>(type: "INTEGER", nullable: true),
-                    Diametro = table.Column<int>(type: "INTEGER", nullable: true),
-                    GenereId = table.Column<int>(type: "INTEGER", nullable: true),
-                    UserName = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    Nome = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Prodotti", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Prodotti_Categorie_CategoriaId",
-                        column: x => x.CategoriaId,
-                        principalTable: "Categorie",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Prodotti_Generi_GenereId",
-                        column: x => x.GenereId,
-                        principalTable: "Generi",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Prodotti_Marche_MarcaId",
-                        column: x => x.MarcaId,
-                        principalTable: "Marche",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Prodotti_Materiali_MaterialeId",
-                        column: x => x.MaterialeId,
-                        principalTable: "Materiali",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Prodotti_Tipologie_TipologiaId",
-                        column: x => x.TipologiaId,
-                        principalTable: "Tipologie",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Ordini",
                 columns: table => new
                 {
@@ -369,21 +233,7 @@ namespace WatchStoreApp.Migrations
                     DataAcquisto = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Quantita = table.Column<int>(type: "INTEGER", nullable: false),
                     ClienteId = table.Column<string>(type: "TEXT", nullable: false),
-                    OrologioId = table.Column<int>(type: "INTEGER", nullable: true),
-                    UserName = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
+                    StatoOrdine = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -394,11 +244,69 @@ namespace WatchStoreApp.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Prodotti",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Prezzo = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Giacenza = table.Column<int>(type: "INTEGER", nullable: false),
+                    Colore = table.Column<string>(type: "TEXT", nullable: true),
+                    UrlImmagine = table.Column<string>(type: "TEXT", nullable: false),
+                    CategoriaId = table.Column<int>(type: "INTEGER", nullable: false),
+                    MarcaId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Discriminator = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
+                    Modello = table.Column<string>(type: "TEXT", nullable: true),
+                    Referenza = table.Column<string>(type: "TEXT", nullable: true),
+                    MaterialeId = table.Column<int>(type: "INTEGER", nullable: true),
+                    TipologiaId = table.Column<int>(type: "INTEGER", nullable: true),
+                    DiametroId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Diametro = table.Column<int>(type: "INTEGER", nullable: true),
+                    GenereId = table.Column<int>(type: "INTEGER", nullable: true),
+                    OrdineId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Nome = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Prodotti", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ordini_Prodotti_OrologioId",
-                        column: x => x.OrologioId,
-                        principalTable: "Prodotti",
+                        name: "FK_Prodotti_Categorie_CategoriaId",
+                        column: x => x.CategoriaId,
+                        principalTable: "Categorie",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Prodotti_Generi_GenereId",
+                        column: x => x.GenereId,
+                        principalTable: "Generi",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Prodotti_Marche_MarcaId",
+                        column: x => x.MarcaId,
+                        principalTable: "Marche",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Prodotti_Materiali_MaterialeId",
+                        column: x => x.MaterialeId,
+                        principalTable: "Materiali",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Prodotti_Ordini_OrdineId",
+                        column: x => x.OrdineId,
+                        principalTable: "Ordini",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Prodotti_Tipologie_TipologiaId",
+                        column: x => x.TipologiaId,
+                        principalTable: "Tipologie",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -444,11 +352,6 @@ namespace WatchStoreApp.Migrations
                 column: "ClienteId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ordini_OrologioId",
-                table: "Ordini",
-                column: "OrologioId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Prodotti_CategoriaId",
                 table: "Prodotti",
                 column: "CategoriaId");
@@ -467,6 +370,11 @@ namespace WatchStoreApp.Migrations
                 name: "IX_Prodotti_MaterialeId",
                 table: "Prodotti",
                 column: "MaterialeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Prodotti_OrdineId",
+                table: "Prodotti",
+                column: "OrdineId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Prodotti_TipologiaId",
@@ -493,16 +401,10 @@ namespace WatchStoreApp.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Ordini");
+                name: "Prodotti");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Prodotti");
 
             migrationBuilder.DropTable(
                 name: "Categorie");
@@ -517,7 +419,13 @@ namespace WatchStoreApp.Migrations
                 name: "Materiali");
 
             migrationBuilder.DropTable(
+                name: "Ordini");
+
+            migrationBuilder.DropTable(
                 name: "Tipologie");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

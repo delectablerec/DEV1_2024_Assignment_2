@@ -2,6 +2,52 @@
 @{
     ViewData["Title"] = "Ordini";
 }
+<text>
+ <style>
+    
+    .order-card {
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .order-photo {
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .order-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .btn-detail, .btn-delete {
+      width: 100%;
+      margin-top: 5px;
+    }
+    .order-date {
+      font-weight: bold;
+    }
+@*    @media screen and (max-width: 576px) {
+      .order-card {
+        text-align: center;
+      }
+      .order-photo {
+        margin: 0 auto 10px;
+      }
+      .btn-detail, .btn-delete {
+        display: inline-block;
+        width: auto;
+        margin: 5px 10px;
+      }
+    }
+  integrare in site.css media query *@  
+  </style>
+   </text>
 
 <div class="container mt-4">
     <div class="d-flex justify-content-start mb-3">
@@ -15,13 +61,13 @@
             <div class="row align-items-center">
                 <div class="col-12 col-sm-2 text-center">
                     <div class="order-photo">
-                        <img src="~/img/@ordine.Orologio.UrlImmagine" alt="Product Image">
+                        <img src="~/img/@ordine.Orologi.FirstOrDefault()?.UrlImmagine" alt="Product Image">
                     </div>
                 </div>
                 <div class="col-12 col-sm-8">
-                    <h6>Numero d'ordine: @ordine.Id</h6>
-                    <h4>@ordine.Orologio.Nome</h4>
-                    <p>Prezzo: €@ordine.Orologio.Prezzo<br>Stato ordine: @ordine.Stato<br>Data ordine: @ordine.DataAcquisto.ToString("dd/MM/yyyy")</p>
+                    <h6>Numero d'ordine: @ordine.Nome</h6>
+                    <h4>@ordine.Orologi.FirstOrDefault()?.Nome</h4>
+                    <p>Prezzo: €@Model.Carrello.Totale + @Model.SpedizioneCosto<br>Stato ordine: @ordine.StatoOrdine<br>Data ordine: @ordine.DataAcquisto.ToString("dd/MM/yyyy")</p>
                 </div>
                 <div class="col-12 col-sm-2 d-flex flex-sm-column justify-content-center">
                     <button class="btn btn-dark btn-detail">Dettaglio</button>

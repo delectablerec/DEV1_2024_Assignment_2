@@ -284,10 +284,7 @@ namespace WatchStoreApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ClienteId1")
+                    b.Property<string>("ClienteId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -298,20 +295,15 @@ namespace WatchStoreApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("OrologioId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Quantita")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Stato")
+                    b.Property<int>("StatoOrdine")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId1");
-
-                    b.HasIndex("OrologioId");
+                    b.HasIndex("ClienteId");
 
                     b.ToTable("Ordini");
                 });
@@ -398,6 +390,9 @@ namespace WatchStoreApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("OrdineId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Referenza")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -408,6 +403,8 @@ namespace WatchStoreApp.Migrations
                     b.HasIndex("GenereId");
 
                     b.HasIndex("MaterialeId");
+
+                    b.HasIndex("OrdineId");
 
                     b.HasIndex("TipologiaId");
 
@@ -469,19 +466,11 @@ namespace WatchStoreApp.Migrations
                 {
                     b.HasOne("Cliente", "Cliente")
                         .WithMany()
-                        .HasForeignKey("ClienteId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Orologio", "Orologio")
-                        .WithMany()
-                        .HasForeignKey("OrologioId")
+                        .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Cliente");
-
-                    b.Navigation("Orologio");
                 });
 
             modelBuilder.Entity("Prodotto", b =>
@@ -517,6 +506,10 @@ namespace WatchStoreApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Ordine", null)
+                        .WithMany("Orologi")
+                        .HasForeignKey("OrdineId");
+
                     b.HasOne("Tipologia", "Tipologia")
                         .WithMany()
                         .HasForeignKey("TipologiaId")
@@ -528,6 +521,11 @@ namespace WatchStoreApp.Migrations
                     b.Navigation("Materiale");
 
                     b.Navigation("Tipologia");
+                });
+
+            modelBuilder.Entity("Ordine", b =>
+                {
+                    b.Navigation("Orologi");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,70 +12,43 @@ public class OrdiniController : Controller
         _context = context;
     }
 
- /*
+/*
+     // Visualizza l'elenco di ordini
     public IActionResult Index()
-{
-    var ordini = _context.Ordini.ToList();
+    {
+        // Recupera tutti gli ordini e i relativi prodotti associati
+        List<Ordine> ordiniConProdotti = new List<Ordine>();
 
-    // Crea il ViewModel e assegna la lista di ordini
+        foreach (var ordine in _context.Ordini.Include(o => o.Orologi).Include(o => o.Cliente))
+        {
+            ordiniConProdotti.Add(ordine);
+        }
+
+        var viewModel = new OrdiniViewModel
+        {
+            Ordini = ordiniConProdotti
+        };
+
+        return View(viewModel);
+    } */
+
+// Visualizza l'elenco di ordini
+public IActionResult Index()
+{
+    // Recupera tutti gli ordini e i relativi prodotti
+    //Include("Orologi") Include gli orologi associati
+    // Include il cliente associato
+    var ordini = _context.Ordini.Include("Orologi").Include("Cliente").ToList();
+
+    // Crea il ViewModel e assegna direttamente la lista di ordini Ordini
     var viewModel = new OrdiniViewModel
     {
         Ordini = ordini
     };
 
-    return View(viewModel); // Passa il ViewModel alla vista
-}*/
-
-public IActionResult Index()
-{
-    // Crea una lista vuota per contenere gli ordini con i prodotti associati
-    List<Ordine> ordiniConProdotti = new List<Ordine>();
-
-    // Itera su tutti gli ordini nel contesto (database)
-    foreach (var ordine in _context.Ordini)
-    {
-        // Crea una lista per gli orologi associati all'ordine corrente
-        List<Orologio> prodottiAssociati = new List<Orologio>();
-
-        // Trova gli orologi associati all'ordine corrente
-        foreach (var orologio in _context.Orologi)
-        {
-            // Controlla se l'orologio è incluso nell'ordine
-            bool orologioAssociato = false;
-
-            foreach (var ordineAssociato in orologio.Ordini)
-            {
-                if (ordineAssociato.Id == ordine.Id)
-                {
-                    orologioAssociato = true;
-                    break;
-                }
-            }
-
-            // Se l'orologio è associato all'ordine, aggiungilo alla lista dei prodotti associati
-            if (orologioAssociato)
-            {
-                prodottiAssociati.Add(orologio);
-            }
-        }
-
-        // Assegna la lista di prodotti associati all'ordine
-        ordine.Orologi = prodottiAssociati;
-
-        // Aggiungi l'ordine con i prodotti associati alla lista
-        ordiniConProdotti.Add(ordine);
-    }
-
-    // Crea il ViewModel e assegna la lista di ordini
-    var viewModel = new OrdiniViewModel
-    {
-        Ordini = ordiniConProdotti
-    };
-
-    // Passa il ViewModel alla vista "Index"
+    // Passa il ViewModel alla vista
     return View(viewModel);
 }
-
 
 
     // Azione GET per visualizzare il form di aggiunta di un nuovo ordine
