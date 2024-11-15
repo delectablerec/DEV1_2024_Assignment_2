@@ -326,6 +326,9 @@ namespace WatchStoreApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Descrizione")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasMaxLength(8)

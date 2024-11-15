@@ -30,90 +30,22 @@
                         </li>
                     </ul>
                     <!-- Bottone Carrello -->
-                    <button
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                      <button
                         type="button"
                         class="btn btn-cart"
                         data-bs-toggle="modal"
                         data-bs-target="#cartModal"
-                        style="background: none; border: none; padding: 0"
-                    >
-                        <i class="bi bi-bag" style="font-size: 2rem"></i>
-                    </button>
+                        style="background: none; border: none; padding: 0">
+                        <a class="bi bi-bag" style="font-size: 2rem" asp-area="" asp-controller="Carrello" asp-action="Index"></a>
+                      </button>
+                    }
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
-
-    <!-- Carrello Modale -->
-    <div
-      class="modal fade"
-      id="cartModal"
-      tabindex="-1"
-      aria-labelledby="cartModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="cartModalLabel">Il tuo Carrello</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Chiudi"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <!-- Elementi del Carrello -->
-            <div class="cart-items">
-              <!-- Prodotto Singolo -->
-              <div class="cart-item row">
-                <div class="col-12 col-sm-3">
-                  <img
-                    src="https://placehold.co/600x400"
-                    alt="Immagine Prodotto"
-                    class="img-fluid rounded"
-                  />
-                </div>
-                <div class="col-12 col-sm-7 cart-item-details">
-                  <h6 class="mb-1">Nome Prodotto</h6>
-                  <small class="text-muted">Descrizione breve del prodotto</small>
-                  <div class="d-flex align-items-center mt-2 cart-item-actions">
-                    <button class="btn btn-sm btn-outline-secondary me-2">-</button>
-                    <span>1</span>
-                    <button class="btn btn-sm btn-outline-secondary ms-2">+</button>
-                  </div>
-                </div>
-                <div class="col-12 col-sm-2 text-end">
-                  <span class="fw-bold">€100</span>
-                </div>
-              </div>
-              <!-- Aggiungi altri prodotti qui -->
-            </div>
-          </div>
-
-          <div class="modal-footer d-flex justify-content-between w-100">
-            <!-- Totale e Prezzo -->
-            <div class="d-flex justify-content-between w-100">
-              <h6 class="mb-0">Totale</h6>
-              <span class="fw-bold total-price">€200</span>
-            </div>
-            <!-- Bottoni a destra -->
-            <div class="ms-auto">
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                data-bs-dismiss="modal"
-              >
-                Continua a Comprare
-              </button>
-              <button type="button" class="btn btn-dark">Vai alla Cassa</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="container">
         <main role="main" class="pb-3">
