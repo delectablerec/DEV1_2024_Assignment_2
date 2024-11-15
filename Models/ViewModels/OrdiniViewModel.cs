@@ -15,7 +15,5 @@ public class OrdiniViewModel
 
     public DateTime DataAcquisto{get;set;}
 
-    public Carrello Carrello{get;set;}
-
    // public decimal PrezzoFinale{get;set;}
 }

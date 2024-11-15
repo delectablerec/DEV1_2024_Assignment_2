@@ -103,11 +103,11 @@
       <p><strong>Metodo pagamento:</strong> @Model.MetodoPagamento</p>
     </div>
     
-    <!-- Recap ordine -->
+    @* <!-- Recap ordine -->
     <div class="summary-box">
       <div class="d-flex justify-content-between">
         <p>Subtotale:</p>
-        <p>€@Model.Carrello.Totale</p>
+        <p>€@Model.Ordine..Totale</p>
       </div>
       <div class="d-flex justify-content-between">
         <p>Spedizione:</p>
@@ -116,7 +116,7 @@
       <hr>
       <div class="d-flex justify-content-between total-box">
         <p>Totale:</p>
-        <p>€@Model.Carrello.Totale + @Model.CostoSpedizione</p>
+        <p>€@Model.Ordini.Orol.Totale + @Model.CostoSpedizione</p>
       </div>
     </div>
     
@@ -124,7 +124,7 @@
     <div class="return-button">
       <a asp-action="Index" class="btn btn-dark">Return</a>
     </div>
-    
+     *@
   </div>
 </div>
 
