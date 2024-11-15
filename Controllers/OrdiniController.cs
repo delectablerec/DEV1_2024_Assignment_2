@@ -12,7 +12,7 @@ public class OrdiniController : Controller
         _context = context;
     }
 
-
+/*
 
 // Visualizza l'elenco di ordini
 public IActionResult Index()
@@ -23,16 +23,38 @@ public IActionResult Index()
     var ordini = _context.Ordini.Include("Orologi").Include("Cliente").ToList();
 
     // Crea il ViewModel e assegna direttamente la lista di ordini Ordini
-    var viewModel = new OrdiniViewModel
+    var viewModel = new ListaOrdiniViewModel
     {
-        Ordini = ordini
+        ListaOrdiniViewModel = ordini
     };
 
     // Passa il ViewModel alla vista
     return View(viewModel);
 }
 
-/*
+public IActionResult ElencoOrdini()
+{
+    // Recupera tutti gli ordini dal database
+    var ordini = _context.Ordini.Include(o => o.Orologi).ToList();
+
+    // Popola il ViewModel
+    var viewModel = ordini.Select(ordine => new ListaOrdiniViewModel
+    {
+        Id = ordine.Id,
+        NomeOrdine = ordine.Nome,
+        DataAcquisto = ordine.DataAcquisto,
+        StatoOrdine = ordine.StatoOrdine,
+        TotaleOrdine = ordine.Orologi.Sum(o => o.Prezzo), // Calcolo del totale dei prodotti
+        UrlImmagineProdotto = ordine.Orologi.FirstOrDefault()?.UrlImmagine,
+        NomeProdotto = ordine.Orologi.FirstOrDefault()?.Nome,
+        CostoSpedizione = 10.00m // Sostituisci con il valore reale
+    }).ToList();
+
+    return View(viewModel);
+}
+
+
+
 
     // Azione GET per visualizzare il form di aggiunta di un nuovo ordine
     [HttpGet]

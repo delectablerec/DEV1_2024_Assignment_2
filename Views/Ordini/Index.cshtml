@@ -1,4 +1,4 @@
-@model OrdiniViewModel
+@model ListaOrdiniViewModel
 @{
     ViewData["Title"] = "Ordini";
 }
@@ -53,8 +53,8 @@
     <div class="d-flex justify-content-start mb-3">
         <button class="btn btn-dark">Ordina per data</button>
     </div>
-
-    @* @foreach (var ordine in Model.Ordini)
+@*
+     @foreach (var ordine in Model)
     {
         <h5 class="order-date">Ordine effettuato il @ordine.DataAcquisto.ToString("dd/MM/yyyy")</h5>
         <div class="card order-card">
@@ -67,15 +67,15 @@
                 <div class="col-12 col-sm-8">
                     <h6>Numero d'ordine: @ordine.Nome</h6>
                     <h4>@ordine.Orologi.FirstOrDefault()?.Nome</h4>
-                    <p>Prezzo: €@Model.Carrello.Totale + @Model.CostoSpedizione<br>Stato ordine: @ordine.StatoOrdine<br>Data ordine: @ordine.DataAcquisto.ToString("dd/MM/yyyy")</p>
+                    <p>Prezzo: €@Model.TotaleOrdine + @Model.CostoSpedizione<br>Stato ordine: @ordine.StatoOrdine<br>Data ordine: @ordine.DataAcquisto.ToString("dd/MM/yyyy")</p>
                 </div>
                 <div class="col-12 col-sm-2 d-flex flex-sm-column justify-content-center">
                     <button class="btn btn-dark btn-detail">Dettaglio</button>
                     <button class="btn btn-danger btn-delete">Elimina</button>
                 </div>
-            </div>
+            </div>*@
         </div>
-    } *@
+    } 
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
