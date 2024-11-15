@@ -47,75 +47,87 @@
         </nav>
     </header>
 
-    <!-- Carrello Modale -->
-    <div
-      class="modal fade"
-      id="cartModal"
-      tabindex="-1"
-      aria-labelledby="cartModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="cartModalLabel">Il tuo Carrello</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Chiudi"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <!-- Elementi del Carrello -->
-            <div class="cart-items">
+    @model CarrelloViewModel
+
+<!-- Carrello Modale -->
+<div
+  class="modal fade"
+  id="cartModal"
+  tabindex="-1"
+  aria-labelledby="cartModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cartModalLabel">Il tuo Carrello</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Chiudi"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- Elementi del Carrello -->
+        <div class="cart-items">
+          @if (Model.Carrello != null)
+          {
+            @foreach (var orologio in Model.Carrello)
+            {
               <!-- Prodotto Singolo -->
-              <div class="cart-item row">
+              <div class="cart-item row mb-3">
                 <div class="col-12 col-sm-3">
                   <img
-                    src="https://placehold.co/600x400"
+                    src="@orologio.UrlImmagine" 
                     alt="Immagine Prodotto"
                     class="img-fluid rounded"
                   />
                 </div>
                 <div class="col-12 col-sm-7 cart-item-details">
-                  <h6 class="mb-1">Nome Prodotto</h6>
-                  <small class="text-muted">Descrizione breve del prodotto</small>
+                  <h6 class="mb-1">@orologio.Nome</h6>
+                  <small class="text-muted">@orologio.Descrizione</small>
                   <div class="d-flex align-items-center mt-2 cart-item-actions">
+                    <!-- Pulsanti per modificare la quantità -->
                     <button class="btn btn-sm btn-outline-secondary me-2">-</button>
-                    <span>1</span>
+                    <span>@Model.Quantita</span>
                     <button class="btn btn-sm btn-outline-secondary ms-2">+</button>
                   </div>
                 </div>
                 <div class="col-12 col-sm-2 text-end">
-                  <span class="fw-bold">€100</span>
+                  <span class="fw-bold">€@orologio.Prezzo</span>
                 </div>
               </div>
-              <!-- Aggiungi altri prodotti qui -->
-            </div>
-          </div>
+            }
+          }
+          else {
+            <p>Carrello is null.</p>
+          }
+        </div>
+      </div>
 
-          <div class="modal-footer d-flex justify-content-between w-100">
-            <!-- Totale e Prezzo -->
-            <div class="d-flex justify-content-between w-100">
-              <h6 class="mb-0">Totale</h6>
-              <span class="fw-bold total-price">€200</span>
-            </div>
-            <!-- Bottoni a destra -->
-            <div class="ms-auto">
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                data-bs-dismiss="modal"
-              >
-                Continua a Comprare
-              </button>
-              <button type="button" class="btn btn-dark">Vai alla Cassa</button>
-            </div>
-          </div>
+      <div class="modal-footer d-flex justify-content-between w-100">
+        <!-- Totale e Prezzo -->
+        <div class="d-flex justify-content-between w-100">
+          <h6 class="mb-0">Totale</h6>
+          <span class="fw-bold total-price">€@Model.Totale</span>
+        </div>
+        <!-- Bottoni a destra -->
+        <div class="ms-auto">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-bs-dismiss="modal"
+          >
+            Continua a Comprare
+          </button>
+          <button type="button" class="btn btn-dark">Vai alla Cassa</button>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
 
     <div class="container">
         <main role="main" class="pb-3">
