@@ -1,0 +1,83 @@
+@model EliminaProdottoViewModel
+@{
+    ViewData["Title"] = "Cancella Prodotto";
+}
+
+<div class="container my-4 py-4 bg-dark text-light rounded shadow-sm">
+    <h2 class="text-center">@ViewData["Title"]</h2>
+
+    <form method="post" class="mt-4">
+        <div class="row align-items-center">
+            <!-- Image on the left -->
+            <div class="col-sm-4">
+                <img src="@Model.Orologio.UrlImmagine" alt="@Model.Orologio.Modello" class="img-fluid rounded">
+            </div>
+
+            <!-- Product Details on the right -->
+            <div class="col-sm-8">
+                <div class="form-group mb-3">
+                    <p><strong>Marca:</strong> @Model.Orologio.Marca</p>
+                    <p><strong>Modello:</strong> @Model.Orologio.Modello</p>
+                    <p><strong>Prezzo:</strong> @Model.Orologio.Prezzo €</p>
+                    <p><strong>Giacenza:</strong> @Model.Orologio.Giacenza</p>
+                </div>
+
+                <!-- Delete Button -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-danger w-auto rounded-pill">Cancella</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    /* Dark Theme Background */
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+    .container.bg-dark {
+        background-color: #1e1e1e;
+    }
+
+    /* Product Card Styling */
+    .row.align-items-center {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Image Styling */
+    .img-fluid {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    /* Product Details Styling */
+    .form-group p {
+        margin: 10px 0;
+        color: #f5f5dc;
+    }
+
+    /* Button Styling */
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        color: #ffffff;
+    }
+
+    /* Additional Styling for the Button and Card */
+    .rounded-pill {
+        border-radius: 50px;
+    }
+</style>

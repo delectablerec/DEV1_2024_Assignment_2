@@ -97,6 +97,10 @@
                 <!-- Inputs nascosti per mantenere lo stato dei filtri -->
                 <input type="hidden" name="minPrezzo" value="@Model.MinPrezzo" />
                 <input type="hidden" name="maxPrezzo" value="@Model.MaxPrezzo" />
+                <input type="hidden" name="categoriaSelezionata" value="@Model.CategoriaSelezionata" />
+            <input type="hidden" name="marcaSelezionata" value="@Model.MarcaSelezionata" />
+            <input type="hidden" name="materialeSelezionato" value="@Model.MaterialeSelezionato" />
+            <input type="hidden" name="tipologiaSelezionata" value="@Model.TipologiaSelezionata" />
 
                 <button type="submit" class="btn btn-outline-secondary btn-sm w-100">Filtra</button>
             </form>
@@ -185,46 +189,60 @@
         </div>
 
         <!-- Sezione prodotti -->
-        <div class="col-lg-9">
-            <div class="row">
-                @foreach (var orologio in Model.Orologi)
-                {
-                    <div class="col-md-6 col-lg-4 d-flex justify-content-center">
-                        <div class="card mb-3 mb-md-4 mb-lg-5" style="width: 18rem;">
-                            <img src="@orologio.UrlImmagine" class="card-img-top" alt="@orologio.Marca @orologio.Modello">
-                            <div class="card-body">
-                                <h5 class="card-title">@orologio.Modello</h5>
-                                <p class="card-text text-dark">@orologio.Marca</p>
-                                <p class="card-text text-dark">@orologio.Categoria</p>
-                                <p class="card-text">@orologio.Prezzo</p>
-                                <p class="card-text">@orologio.Giacenza</p>
-                                <p class="card-text">@orologio.Tipologia</p>
-                                <p class="card-text">@orologio.Materiale</p>
+        @if(Model.Orologi != null)
+        {
+            <div class="col-lg-9">
+                <div class="row">
+                    @foreach (var orologio in Model.Orologi)
+                    {
+                        <div class="col-md-6 col-lg-4 d-flex justify-content-center">
+                            <div class="card mb-3 mb-md-4 mb-lg-5" style="width: 18rem;">
+                                <img src="@orologio.UrlImmagine" class="card-img-top" alt="@orologio.Marca.Nome @orologio.Modello">
+                                <div class="card-body">
+                                    <h5 class="card-title">@orologio.Modello</h5>
+                                    <p class="card-text text-dark">@orologio.Marca.Nome</p>
+                                    <p class="card-text text-dark">@orologio.Categoria.Nome</p>
+                                    <p class="card-text">@orologio.Prezzo</p>
+                                    <p class="card-text">@orologio.Giacenza</p>
+                                    <p class="card-text">@orologio.Tipologia.Nome</p>
+                                    <p class="card-text">@orologio.Materiale.Nome</p>
 
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <!-- Bottone dettagli -->
-                                    <a asp-controller="Prodotti" asp-action="DettaglioProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm flex-grow-1">Dettagli</a>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <!-- Bottone dettagli -->
+                                        <a asp-controller="Prodotti" asp-action="DettaglioProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm flex-grow-1">Dettagli</a>
 
-                                    <!-- Bottone icona carrello -->
-                                    <button type="button" class="btn btn-dark btn-sm ms-2" style="width: 36px; height: 36px; display: flex; justify-content: center; align-items: center;">
-                                        <i class="bi-cart text-white"></i>
-                                    </button>
+                                        <!-- Bottone icona carrello -->
+                                        <button type="button" class="btn btn-dark btn-sm ms-2" style="width: 36px; height: 36px; display: flex; justify-content: center; align-items: center;">
+                                            <i class="bi-cart text-white"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
 
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a asp-controller="Prodotti" asp-action="ModificaProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm">Modifica</a>
-                            }
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a asp-controller="Prodotti" asp-action="CancellaProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm">Elimina</a>
-                            }
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-controller="Prodotti" asp-action="ModificaProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm">Modifica</a>
+                                }
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-controller="Prodotti" asp-action="EliminaProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm">Elimina</a>
+                                }
+                            </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="col-lg-9 d-flex justify-content-center align-items-center" style="height: 50vh;">
+                <div class="text-center">
+                    <i class="bi bi-search" style="font-size: 4rem; color: #ccc;"></i>
+                    <h3 class="mt-3">Nessuna corrispondenza trovata</h3>
+                    <p class="text-muted">Prova a modificare i tuoi filtri o esplora altre categorie di orologi.</p>
+                    <a href="/Prodotti" class="btn btn-primary mt-3">Torna alla Lista Prodotti</a>
+                </div>
+            </div>
+        }
     </div>
 
     <!-- Form paginazione -->
@@ -242,5 +260,11 @@
     </form>
 
     <br>
-    <a class="link-body-emphasis link-underline-opacity-10" asp-controller="Home" asp-action="Index">Torna a home</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="d-flex justify-content-center mb-3">
+            <!-- Gestionale Button -->
+            <a asp-controller="Gestioni" asp-action="Index" class="btn custom-btn mx-2">Gestionale</a>
+        </div>
+    }
 </div>

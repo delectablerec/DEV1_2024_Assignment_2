@@ -1,108 +1,398 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+
 public class ProdottiController : Controller
 {
+    private readonly ILogger<ProdottiController> _logger;
     private readonly ApplicationDbContext _context;
 
-    public ProdottiController(ApplicationDbContext context)
+    public ProdottiController(ApplicationDbContext context, ILogger<ProdottiController> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
-    public async Task<IActionResult> Index(int? minPrezzo, int? maxPrezzo, int? categoriaId, int? marcaId, int? materialeId, int? tipologiaId, int paginaCorrente = 1)
+    public IActionResult Index(int? minPrezzo, int? maxPrezzo, int? categoriaId, int? marcaId, int? materialeId, int? tipologiaId, int paginaCorrente = 1)
     {
         // Numero di default dei prodotti per pagina
         int prodottiPerPagina = 6;
 
         // Recupera tutte le categorie per il dropdown
-        var categorie = await _context.Categorie.ToListAsync();
-        var marche = await _context.Marche.ToListAsync();
-        var materiali = await _context.Materiali.ToListAsync();
-        var tipologie = await _context.Tipologie.ToListAsync();
+        var categorie = _context.Categorie.ToList();
+        var marche = _context.Marche.ToList();
+        var materiali = _context.Materiali.ToList();
+        var tipologie = _context.Tipologie.ToList();
 
-        // Inizia a costruire la query
-        var query = from o in _context.Orologi
-                    select o;
+        var prodottiTotali = CaricaProdotti();
 
-        // Applica il prezzo minimo se fornito
-        if (minPrezzo.HasValue)
+        var prodottiFiltrati = FiltraProdotti(prodottiTotali.ToList(), minPrezzo, maxPrezzo, categoriaId, marcaId, materialeId, tipologiaId);
+
+        if (!prodottiTotali.Any())
         {
-            query = from o in query
-                    where o.Prezzo >= minPrezzo.Value
-                    select o;
+            // Se non ci sono prodotti, passiamo un ViewModel vuoto
+            var viewModelNoProducts = new ProdottiViewModel
+            {
+                Orologi = new List<Orologio>(), // Lista vuota
+                MinPrezzo = 0,
+                MaxPrezzo = 0,
+                NumeroPagine = 1,
+                PaginaCorrente = 1,
+                Categorie = categorie,
+                Marche = marche,
+                Materiali = materiali,
+                Tipologie = tipologie
+            };
+            return View(viewModelNoProducts); // Mostra la vista con la lista vuota e il messaggio
         }
-
-        // Applica il prezzo massimo se fornito
-        if (maxPrezzo.HasValue)
-        {
-            query = from o in query
-                    where o.Prezzo <= maxPrezzo.Value
-                    select o;
-        }
-
-        // Filtra per categoria se selezionata
-        if (categoriaId.HasValue)
-        {
-            query = from o in query
-                    where o.Categoria.Id == categoriaId.Value // !!! CONTROLLARE MODELLO PRODOTTO E VIEWMODEL PRODOTTI (CategoriaId da aggiungere sopra Categoria Categoria)
-                    select o;
-        }
-
-        if (marcaId.HasValue)
-        {
-            query = from o in query
-                    where o.Marca.Id == marcaId.Value // !!! CONTROLLARE MODELLO PRODOTTO E VIEWMODEL PRODOTTI (MarcaId da aggiungere sopra Marca Marca)
-                    select o;
-        }
-
-        if (materialeId.HasValue)
-        {
-            query = from o in query
-                    where o.Materiale.Id == materialeId.Value // !!! CONTROLLARE MODELLO OROLOGIO E VIEWMODEL PRODOTTI (MaterialeId da aggiungere sopra Materiale Materiale)
-                    select o;
-        }
-
-        if (tipologiaId.HasValue)
-        {
-            query = from o in query
-                    where o.Tipologia.Id == tipologiaId.Value  // !!! CONTROLLARE MODELLO OROLOGIO E VIEWMODEL PRODOTTI (TipologiaId da aggiungere sopra Tipologia Tipologia)
-                    select o;
-        }
-
         // Prende il conteggio totale per la paginazione
-        int totalProdotti = await query.CountAsync();
+        int quantitaProdotti = prodottiFiltrati.Count();
 
         // Applica la paginazione (Skip and Take)
-        var prodottiPaginati = await (from o in query
-                                    orderby o.Prezzo // !! Qua si può opzionalmente aggiungere l'ordine
-                                    select o)
-                                    .Skip((paginaCorrente - 1) * prodottiPerPagina) // Salta gli oggetti della pagina corrente
-                                    .Take(prodottiPerPagina) // Prende gli oggetti della pagina corrente
-                                    .ToListAsync(); // Esegue la query in modo asincrono
+        var prodotti = prodottiFiltrati
+                            .Skip((paginaCorrente - 1) * prodottiPerPagina) // Salta gli oggetti della pagina corrente
+                            .Take(prodottiPerPagina) // Prende gli oggetti della pagina corrente
+                            .ToList(); // Esegue la query in modo asincrono
+        
+        var prodottiPaginati = prodotti.OrderBy(o => o.Prezzo).ToList();
 
         // Calcola il numero totale di pagine
-        int numeroPagine = (int)Math.Ceiling((double)totalProdotti / prodottiPerPagina);
+        int numeroPagine = (int)Math.Ceiling((double)quantitaProdotti / prodottiPerPagina);
 
         // Prepara il viewmodel
         var viewModel = new ProdottiViewModel
         {
             Orologi = prodottiPaginati,
             MinPrezzo = minPrezzo ?? 0,
-            MaxPrezzo = (from o in _context.Orologi
-                        select o.Prezzo).Max(),
+            MaxPrezzo = maxPrezzo ?? prodottiPaginati.Max(p => p.Prezzo),
             NumeroPagine = numeroPagine,
             PaginaCorrente = paginaCorrente,
-            Categorie = categorie,  // Passa le categorie per il dropdown
-            CategoriaSelezionata = categoriaId, // Passa la categoria selezionata, se presente   !!! DA AGGIUNGERE A VIEWMODEL
-            Marche = marche,    // Passa le marche per il dropdown
-            MarcaSelezionata = marcaId,  // Passa la marca selezionata, se presente  !!! DA AGGIUNGERE A VIEWMODEL
+            Categorie = categorie, 
+            Marche = marche,  
             Materiali = materiali,
-            MaterialeSelezionato = materialeId, // DA AGGIUNGERE A VIEWMODEL
-            Tipologie = tipologie,
-            TipologiaSelezionata = tipologiaId // DA AGGIUNGERE A VIEWMODEL
+            Tipologie = tipologie
         };
-
         return View(viewModel);
+    }
+
+    public List<Orologio> FiltraProdotti(List<Orologio> prodottiTotali, int? minPrezzo, int? maxPrezzo, int? categoriaId, int? marcaId, int? materialeId, int? tipologiaId)
+    {
+        List<Orologio> prodottiFiltrati = new List<Orologio>(); 
+        bool scartato;
+
+        foreach (var prodotto in prodottiTotali)
+        {
+            scartato = false;
+            if(minPrezzo.HasValue && prodotto.Prezzo <= minPrezzo.Value)
+            {
+                scartato = true;
+            }
+            if(maxPrezzo.HasValue && prodotto.Prezzo >= maxPrezzo.Value)
+            {
+                scartato = true;
+            }
+            if(categoriaId.HasValue && prodotto.CategoriaId != categoriaId)
+            {
+                scartato = true;
+            }
+            if(marcaId.HasValue && prodotto.MarcaId != marcaId)
+            {
+                scartato = true;
+            }
+            if(materialeId.HasValue && prodotto.MaterialeId != materialeId)
+            {
+                scartato = true;
+            }
+            if(tipologiaId.HasValue && prodotto.TipologiaId != tipologiaId)
+            {
+                scartato = true;
+            }
+            if(scartato == false)
+            {
+                prodottiFiltrati.Add(prodotto);
+            }
+        }
+        return prodottiFiltrati;
+    }
+
+    public IActionResult AggiungiProdotto()
+    {
+        var viewModel = new AggiungiProdottoViewModel
+        {
+            Orologio = new Orologio(),
+            Categorie = CaricaCategorie(),
+            Marche = CaricaMarche(),
+            Materiali = CaricaMateriali(),
+            Tipologie = CaricaTipologie(),
+            Generi = CaricaGeneri()
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    public IActionResult AggiungiProdotto(AggiungiProdottoViewModel viewModel)
+    {
+        // Log for debugging purposes
+        _logger.LogInformation("Valore della categoria: " + viewModel.Orologio.Categoria);
+        _logger.LogInformation("Valore del materiale: " + viewModel.Orologio.Materiale);
+        _logger.LogInformation("Valore della marca: " + viewModel.Orologio.Marca);
+        _logger.LogInformation("Valore della tipologia: " + viewModel.Orologio.Tipologia);
+        _logger.LogInformation("Valore del genere: " + viewModel.Orologio.Genere);
+/*
+        // Check if the model is valid, including custom validation for password
+        if (!ModelState.IsValid)
+        {
+            // Log validation errors for debugging purposes
+            foreach (var modelState in ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _logger.LogError(error.ErrorMessage);  // Log each error
+                }
+
+                // Return the view with validation errors
+                viewModel.Categorie = CaricaCategorie();
+                viewModel.Marche = CaricaMarche();
+                viewModel.Materiali = CaricaMateriali();
+                viewModel.Tipologie = CaricaTipologie();
+                viewModel.Generi = CaricaGeneri();
+                return View(viewModel);
+            }
+        }
+
+        // Log information about the current product
+        _logger.LogInformation("Product is valid, saving to database");
+*/
+        try
+        {
+            _context.Orologi.Add(viewModel.Orologio);  // Entity Framework will handle the ID assignment
+            _context.SaveChanges();  // Save changes asynchronously
+            _logger.LogInformation("Product successfully saved.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error while saving the product: {ex.Message}", ex);
+            // Optionally, you can return an error page or display an error message
+            return View("Error");
+        }
+
+        // Redirect to Index page after success
+        _logger.LogInformation("Product successfully saved. Redirecting to Index.");
+        return RedirectToAction("Index", "Home");
+    }
+
+    private List<Orologio> CaricaProdotti()
+    {
+        try
+        {
+            return _context.Orologi.ToList();  // Return all products as a List
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nella lettura : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
+            return new List<Orologio>(); // Return an empty list in case of error
+        }
+    }
+
+    private List<Categoria> CaricaCategorie()
+    {
+        List<Categoria> categorieTotali = new List<Categoria>();
+        try
+        {
+            foreach (Categoria categoria in _context.Categorie)
+            {
+                categorieTotali.Add(categoria); 
+            }
+            return categorieTotali;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nella lettura : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
+            return new List<Categoria>(); // Ritorna una lista vuota se c'è un errore
+        }
+    } 
+
+    private List<Marca> CaricaMarche()
+    {
+        List<Marca> marcheTotali = new List<Marca>();
+        try
+        {
+            foreach (Marca marca in _context.Marche)
+            {
+                marcheTotali.Add(marca); 
+            }
+            return marcheTotali;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nella lettura : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
+            return new List<Marca>();
+        }
+    } 
+
+    private List<Materiale> CaricaMateriali()
+    {
+        List<Materiale> materialiTotali = new List<Materiale>();
+        try
+        {
+            foreach (Materiale materiale in _context.Materiali)
+            {
+                materialiTotali.Add(materiale); 
+            }
+            return materialiTotali;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nella lettura : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
+            return new List<Materiale>();
+        }
+    } 
+
+    private List<Tipologia> CaricaTipologie()
+    {
+        List<Tipologia> tipologieTotali = new List<Tipologia>();
+        try
+        {
+            foreach (Tipologia tipologia in _context.Tipologie)
+            {
+                tipologieTotali.Add(tipologia); 
+            }
+            return tipologieTotali;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nella lettura : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
+            return new List<Tipologia>();
+        }
+    }
+
+    private List<Genere> CaricaGeneri()
+    {
+        List<Genere> generiTotali = new List<Genere>();
+        try
+        {
+            foreach (Genere genere in _context.Generi)
+            {
+                generiTotali.Add(genere); 
+            }
+            return generiTotali;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nella lettura : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
+            return new List<Genere>();
+        }
+    }
+    public IActionResult ModificaProdotto(int id)
+    {
+        var prodotti = CaricaProdotti();
+        var prodotto = CercaProdottoPerId(prodotti, id);
+        if (prodotto == null) return NotFound();
+        var viewModel = new ModificaProdottoViewModel
+        {
+            Orologio = prodotto,
+            Categorie = CaricaCategorie(),
+            Marche = CaricaMarche(),
+            Materiali = CaricaMateriali(),
+            Tipologie = CaricaTipologie(),
+            Generi = CaricaGeneri()
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    public IActionResult ModificaProdotto(ModificaProdottoViewModel viewModel)
+    {
+        _logger.LogInformation("Categoria selezionata: " + viewModel.Orologio.Categoria);
+        var prodotti = _context.Orologi.ToList();
+        var prodottoDaModificare = CercaProdottoPerId(prodotti, viewModel.Orologio.Id);
+        if (prodottoDaModificare == null)
+        {
+            _logger.LogWarning("Prodotto con ID: {Id} non trovato.", viewModel.Orologio.Id);
+            return NotFound();
+        }
+        
+        _logger.LogInformation("Modifica del prodotto con ID: {Id}", viewModel.Orologio.Id);
+        prodottoDaModificare.Nome = viewModel.Orologio.Nome;
+        prodottoDaModificare.Prezzo = viewModel.Orologio.Prezzo;
+        prodottoDaModificare.Giacenza = viewModel.Orologio.Giacenza;
+        prodottoDaModificare.Colore = viewModel.Orologio.Colore;
+        prodottoDaModificare.UrlImmagine = viewModel.Orologio.UrlImmagine;
+        prodottoDaModificare.CategoriaId = viewModel.Orologio.CategoriaId;
+        prodottoDaModificare.MarcaId = viewModel.Orologio.MarcaId;
+        prodottoDaModificare.Modello = viewModel.Orologio.Modello;
+        prodottoDaModificare.Referenza = viewModel.Orologio.Referenza;
+        prodottoDaModificare.MaterialeId = viewModel.Orologio.MaterialeId;
+        prodottoDaModificare.TipologiaId = viewModel.Orologio.TipologiaId;
+        prodottoDaModificare.Diametro = viewModel.Orologio.Diametro;
+        prodottoDaModificare.GenereId = viewModel.Orologio.GenereId;
+        _logger.LogInformation("Prodotto con ID: {Id} modificato con successo.", viewModel.Orologio.Id);        
+        try
+        {
+            _context.SaveChanges();
+            _logger.LogInformation("Prodotto con ID: {Id} modificato con successo.", viewModel.Orologio.Id);
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nel salvataggio: {Message} \n Exception Type: {ExceptionType} \n Stack Trace: {StackTrace}", ex.Message, ex.GetType().Name, ex.StackTrace);
+            return StatusCode(500, "Errore durante il salvataggio del prodotto.");
+        }
+    }
+
+    private Orologio CercaProdottoPerId(List<Orologio> orologi, int id)
+    {
+        try
+        {
+            return orologi.Find(p => p.Id == id);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nella ricerca : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
+            return null;
+        }
+    }
+
+    public IActionResult EliminaProdotto(int id)
+    {
+        var prodotti = CaricaProdotti();
+        var prodotto = CercaProdottoPerId(prodotti, id);
+        if (prodotto == null)
+        {
+            // Se il prodotto non viene trovato
+            return NotFound();
+        }
+
+        // Prepara il viewnodel con il prodotto da cancellare
+        var viewModel = new EliminaProdottoViewModel
+        {
+            Orologio = prodotto
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost, ActionName("EliminaProdotto")]
+    public IActionResult EliminaProdottoEseguito(int id)
+    {
+        try
+        {
+            var prodotti = CaricaProdotti();
+            var prodotto = CercaProdottoPerId(prodotti, id);
+            if (prodotto == null)
+            {
+                return NotFound();
+            }
+
+            // Rimuove il prodotto da DbContext
+            _context.Orologi.Remove(prodotto);
+            
+            // Salva le modifiche nel database
+            _context.SaveChanges();
+            _logger.LogInformation("Prodotto con ID: {Id} eliminato con successo.", id);
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nel salvataggio: {Message} \n Exception Type: {ExceptionType} \n Stack Trace: {StackTrace}", ex.Message, ex.GetType().Name, ex.StackTrace);
+            return StatusCode(500, "Errore durante l'eliminazione del prodotto.");
+        }
     }
 }

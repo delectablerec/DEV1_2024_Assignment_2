@@ -1,0 +1,55 @@
+@{
+    ViewData["Title"] = "Aggiungi nuova marca";
+}
+
+<!-- Page Container -->
+<div class="container my-4 py-4 bg-dark text-light rounded shadow-sm">
+    <h2 class="text-center">@ViewData["Title"]</h2>
+
+    <!-- Form -->
+    <form method="post" class="mt-4">
+        <div class="form-group mb-3">
+            <label for="Nome" class="form-label">Nome Marca</label>
+            <input type="text" id="Nome" name="nome" class="form-control bg-dark text-light border-secondary" required />
+        </div>
+
+        <button type="submit" class="btn btn-custom w-100 rounded-pill">Aggiungi</button>
+    </form>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    /* Dark Theme Background */
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+    /* Styling for the Container */
+    .container.bg-dark {
+        background-color: #1e1e1e;
+    }
+    /* Input Field Styles */
+    .form-control {
+        background-color: #333;
+        color: #f5f5dc;
+        border: 1px solid #555;
+    }
+    .form-control:focus {
+        background-color: #444;
+        color: #f5f5dc;
+        border-color: #888;
+    }
+    /* Custom Button Style with Pale Cream Color */
+    .btn-custom {
+        background-color: #f5f5dc;
+        color: #333;
+        border: none;
+        transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+    }
+    /* Hover Effect */
+    .btn-custom:hover {
+        background-color: transparent;
+        color: #ffffff;
+        border: 2px solid #b0b0b0; /* Grey border */
+    }
+</style>
