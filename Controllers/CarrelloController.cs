@@ -13,11 +13,11 @@ public class CarrelloController : Controller
     {
         _context = context;
     }
-    public IActionResult VisualizzaCarrello()
+    public IActionResult Index()
     {
-        var viewModel = new Carrello
+        var viewModel = new CarrelloViewModel
         {
-            Prodotti = new List<Orologio>(),  // Se necessario, inizializza qui
+            Carrello = new List<Orologio>(),  // Se necessario, inizializza qui
             Totale = 0,
             Quantita = 0
         };
