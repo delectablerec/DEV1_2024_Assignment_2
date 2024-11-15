@@ -8,5 +8,5 @@ public class Prodotto : General
     public Categoria Categoria { get; set; }  // Relazione con la categoria
     public int MarcaId { get; set; }
     public Marca Marca {get; set;}
-    public string? Descrizione { get; set; } 
+    // public string? Descrizione { get; set; } 
 }
