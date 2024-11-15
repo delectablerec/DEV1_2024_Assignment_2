@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Ordini";
 }
-<text>
+
  <style>
     
     .order-card {
@@ -47,7 +47,7 @@
     }
   integrare in site.css media query *@  
   </style>
-   </text>
+   
 
 <div class="container mt-4">
     <div class="d-flex justify-content-start mb-3">
@@ -67,7 +67,7 @@
                 <div class="col-12 col-sm-8">
                     <h6>Numero d'ordine: @ordine.Nome</h6>
                     <h4>@ordine.Orologi.FirstOrDefault()?.Nome</h4>
-                    <p>Prezzo: €@Model.Carrello.Totale + @Model.SpedizioneCosto<br>Stato ordine: @ordine.StatoOrdine<br>Data ordine: @ordine.DataAcquisto.ToString("dd/MM/yyyy")</p>
+                    <p>Prezzo: €@Model.Carrello.Totale + @Model.CostoSpedizione<br>Stato ordine: @ordine.StatoOrdine<br>Data ordine: @ordine.DataAcquisto.ToString("dd/MM/yyyy")</p>
                 </div>
                 <div class="col-12 col-sm-2 d-flex flex-sm-column justify-content-center">
                     <button class="btn btn-dark btn-detail">Dettaglio</button>
