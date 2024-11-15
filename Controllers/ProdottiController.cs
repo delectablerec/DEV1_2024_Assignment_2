@@ -281,4 +281,118 @@ public class ProdottiController : Controller
             return new List<Genere>();
         }
     }
+    public IActionResult ModificaProdotto(int id)
+    {
+        var prodotti = CaricaProdotti();
+        var prodotto = CercaProdottoPerId(prodotti, id);
+        if (prodotto == null) return NotFound();
+        var viewModel = new ModificaProdottoViewModel
+        {
+            Orologio = prodotto,
+            Categorie = CaricaCategorie(),
+            Marche = CaricaMarche(),
+            Materiali = CaricaMateriali(),
+            Tipologie = CaricaTipologie(),
+            Generi = CaricaGeneri()
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    public IActionResult ModificaProdotto(ModificaProdottoViewModel viewModel)
+    {
+        _logger.LogInformation("Categoria selezionata: " + viewModel.Orologio.Categoria);
+        var prodotti = _context.Orologi.ToList();
+        var prodottoDaModificare = CercaProdottoPerId(prodotti, viewModel.Orologio.Id);
+        if (prodottoDaModificare == null)
+        {
+            _logger.LogWarning("Prodotto con ID: {Id} non trovato.", viewModel.Orologio.Id);
+            return NotFound();
+        }
+        
+        _logger.LogInformation("Modifica del prodotto con ID: {Id}", viewModel.Orologio.Id);
+        prodottoDaModificare.Nome = viewModel.Orologio.Nome;
+        prodottoDaModificare.Prezzo = viewModel.Orologio.Prezzo;
+        prodottoDaModificare.Giacenza = viewModel.Orologio.Giacenza;
+        prodottoDaModificare.Colore = viewModel.Orologio.Colore;
+        prodottoDaModificare.UrlImmagine = viewModel.Orologio.UrlImmagine;
+        prodottoDaModificare.CategoriaId = viewModel.Orologio.CategoriaId;
+        prodottoDaModificare.MarcaId = viewModel.Orologio.MarcaId;
+        prodottoDaModificare.Modello = viewModel.Orologio.Modello;
+        prodottoDaModificare.Referenza = viewModel.Orologio.Referenza;
+        prodottoDaModificare.MaterialeId = viewModel.Orologio.MaterialeId;
+        prodottoDaModificare.TipologiaId = viewModel.Orologio.TipologiaId;
+        prodottoDaModificare.Diametro = viewModel.Orologio.Diametro;
+        prodottoDaModificare.GenereId = viewModel.Orologio.GenereId;
+        _logger.LogInformation("Prodotto con ID: {Id} modificato con successo.", viewModel.Orologio.Id);        
+        try
+        {
+            _context.SaveChanges();
+            _logger.LogInformation("Prodotto con ID: {Id} modificato con successo.", viewModel.Orologio.Id);
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nel salvataggio: {Message} \n Exception Type: {ExceptionType} \n Stack Trace: {StackTrace}", ex.Message, ex.GetType().Name, ex.StackTrace);
+            return StatusCode(500, "Errore durante il salvataggio del prodotto.");
+        }
+    }
+
+    private Orologio CercaProdottoPerId(List<Orologio> orologi, int id)
+    {
+        try
+        {
+            return orologi.Find(p => p.Id == id);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nella ricerca : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
+            return null;
+        }
+    }
+
+    public IActionResult EliminaProdotto(int id)
+    {
+        var prodotti = CaricaProdotti();
+        var prodotto = CercaProdottoPerId(prodotti, id);
+        if (prodotto == null)
+        {
+            // Se il prodotto non viene trovato
+            return NotFound();
+        }
+
+        // Prepara il viewnodel con il prodotto da cancellare
+        var viewModel = new EliminaProdottoViewModel
+        {
+            Orologio = prodotto
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost, ActionName("EliminaProdotto")]
+    public IActionResult EliminaProdottoEseguito(int id)
+    {
+        try
+        {
+            var prodotti = CaricaProdotti();
+            var prodotto = CercaProdottoPerId(prodotti, id);
+            if (prodotto == null)
+            {
+                return NotFound();
+            }
+
+            // Rimuove il prodotto da DbContext
+            _context.Orologi.Remove(prodotto);
+            
+            // Salva le modifiche nel database
+            _context.SaveChanges();
+            _logger.LogInformation("Prodotto con ID: {Id} eliminato con successo.", id);
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore nel salvataggio: {Message} \n Exception Type: {ExceptionType} \n Stack Trace: {StackTrace}", ex.Message, ex.GetType().Name, ex.StackTrace);
+            return StatusCode(500, "Errore durante l'eliminazione del prodotto.");
+        }
+    }
 }
