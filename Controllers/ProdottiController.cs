@@ -68,7 +68,8 @@ public class ProdottiController : Controller
             Categorie = categorie, 
             Marche = marche,  
             Materiali = materiali,
-            Tipologie = tipologie
+            Tipologie = tipologie,
+            ConteggioProdotti = quantitaProdotti
         };
         return View(viewModel);
     }
