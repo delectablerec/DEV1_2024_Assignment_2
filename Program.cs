@@ -14,7 +14,29 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<Cliente>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Register your CartService here
+builder.Services.AddScoped<CarrelloService>();  // Adding CartService as Scoped service
+
 builder.Services.AddControllersWithViews();
+
+// Configure the authentication cookie to initialize the cart on sign-in
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Events.OnSignedIn = async context =>
+    {
+        var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<Cliente>>();
+        var carrelloService = context.HttpContext.RequestServices.GetRequiredService<CarrelloService>();
+
+        var user = await userManager.GetUserAsync(context.Principal);
+        if (user != null)
+        {
+            // Initialize the user's cart upon login if it's not already initialized
+            carrelloService.InizializzaCarrello(user.Id);
+            Console.WriteLine("Inizializzato Carrello da program");
+        }
+    };
+});
 
 var app = builder.Build();
 

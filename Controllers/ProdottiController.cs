@@ -343,7 +343,18 @@ public class ProdottiController : Controller
     {
         try
         {
-            return orologi.Find(p => p.Id == id);
+            Orologio orologio = null;
+    
+            // Loop through the Orologi collection to find the product
+            foreach (var item in orologi)
+            {
+                if (item.Id == id)
+                {
+                    orologio = item;
+                    break; // Exit the loop once the product is found
+                }
+            }
+            return orologio;
         }
         catch (Exception ex)
         {

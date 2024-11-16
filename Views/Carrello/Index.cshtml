@@ -5,37 +5,35 @@
 
 <h1>@ViewData["Title"]</h1>
 
-
 <!-- Elementi del Carrello -->
 <div class="cart-items">
-    @if (Model.Carrello != null)
+    @if (Model.Carrello != null && Model.Carrello.Count > 0)
     {
         @foreach (var orologio in Model.Carrello)
         {
             <!-- Prodotto Singolo -->
             <div class="cart-item row mb-3">
                 <div class="col-12 col-sm-3">
-                    <img src="@orologio.UrlImmagine" alt="Immagine Prodotto" class="img-fluid rounded" />
+                    <img src="@orologio.Orologio.UrlImmagine" alt="Immagine Prodotto" class="img-fluid rounded" />
                 </div>
                 <div class="col-12 col-sm-7 cart-item-details">
-                    <h6 class="mb-1">@orologio.Modello</h6>
-                    @* <small class="text-muted">@orologio.Descrizione</small> *@
+                    <h6 class="mb-1">@orologio.Orologio.Modello</h6>
                     <div class="d-flex align-items-center mt-2 cart-item-actions">
                         <!-- Pulsanti per modificare la quantità -->
-                        <button class="btn btn-sm btn-outline-secondary me-2">-</button>
-                        <span>@Model.Quantita</span>
-                        <button class="btn btn-sm btn-outline-secondary ms-2">+</button>
+                        <button class="btn btn-sm btn-outline-secondary me-2 btn-decrease" data-id="@orologio.OrologioId">-</button>
+                        <span class="cart-item-quantity">@orologio.QuantitaInCarrello</span>
+                        <button class="btn btn-sm btn-outline-secondary ms-2 btn-increase" data-id="@orologio.OrologioId">+</button>
                     </div>
                 </div>
                 <div class="col-12 col-sm-2 text-end">
-                    <span class="fw-bold">€@orologio.Prezzo</span>
+                    <span class="fw-bold">€@orologio.Orologio.Prezzo</span>
                 </div>
             </div>
         }
     }
     else
     {
-        <p>Carrello vuoto.</p>
+        <p>Carrello vuoto. <a href="@Url.Action("Index", "Home")">Continua a fare acquisti</a></p>
     }
 </div>
 
