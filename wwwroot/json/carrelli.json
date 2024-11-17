@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "28b18064-78ab-466e-a733-8487450ddd2a": {
+=======
+  "7e03b07e-05f1-4955-867e-a38ee4bec4e7": {
+>>>>>>> origin/OrdiniControllerMod
     "Carrello": [
       {
         "OrologioId": 1,
@@ -14,7 +18,11 @@
           "GenereId": 1,
           "Genere": null,
           "Prezzo": 456.23,
+<<<<<<< HEAD
           "Giacenza": 34,
+=======
+          "Giacenza": 37,
+>>>>>>> origin/OrdiniControllerMod
           "Colore": "blu",
           "UrlImmagine": "/immaginiProdotti/Omega1.jpg",
           "CategoriaId": 3,
@@ -24,10 +32,23 @@
           "Id": 1,
           "Nome": "orologio"
         },
+<<<<<<< HEAD
         "QuantitaInCarrello": 2
       }
     ],
     "Totale": 912.46,
     "Quantita": 2
+=======
+        "QuantitaInCarrello": 1
+      }
+    ],
+    "Totale": 456.23,
+    "Quantita": 1
+  },
+  "21b9ece8-35c4-4d28-971b-0607a54412d5": {
+    "Carrello": [],
+    "Totale": 0.0,
+    "Quantita": 0
+>>>>>>> origin/OrdiniControllerMod
   }
 }

@@ -13,6 +13,11 @@ public class Ordine : General
     public string ClienteId { get; set; }
     public Cliente Cliente { get; set; }
 
+    // Metodo di pagamento
+    public string MetodoPagamento { get; set; }
+
+      public decimal CostoSpedizione { get; set; }
+
     
  //   public int OrologioId { get; set; }
   //  public Orologio? Orologio { get; set; }  
@@ -22,6 +27,7 @@ public class Ordine : General
 
       // Lista di orologi associati all'ordine
     public List<Orologio> Orologi { get; set; } = new List<Orologio>();
+    public string IndirizzoSpedizione { get; set; }
 }
 
 // Definizione dell'enum StatoOrdine
