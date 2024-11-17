@@ -84,11 +84,11 @@
     <!-- Dettagli prodotto -->
     <div class="product-detail-box">
       <div class="product-photo">
-        <img src="~/images/@prodotto.UrlImmagine" alt="Product Image"> <!-- Adjust image path -->
+        <img src="@prodotto.UrlImmagine" alt="Product Image"> <!-- Adjust image path -->
       </div>
       <div>
-        <p class="product-name">@prodotto.Modello ?? "Dati non disponibili"</p>
-        <p><strong>Descrizione:</strong>@* @Model.Orologio.Descrizione*@</p> @*verrà integrato in prodotto*@
+        <p class="product-name">@prodotto.Modello</p>
+        <p><strong>Descrizione:</strong> Lorem ipsum dolor sit amet consectetur, adipisicing elit.</p>
         <p><strong>Giacenza:</strong> @prodotto.Giacenza</p>
       </div>
     </div>

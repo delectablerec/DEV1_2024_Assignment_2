@@ -14,7 +14,7 @@ public class CarrelloController : Controller
         _userManager = userManager;
         _carrelloService = carrelloService;
     }
-
+/*
     public IActionResult Index()
     {
         var userId = _userManager.GetUserId(User); 
@@ -29,7 +29,31 @@ public class CarrelloController : Controller
 
         // Passa il carrello alla view
         return View(carrello);
+    }*/
+
+    public IActionResult Index()
+{
+    var userId = _userManager.GetUserId(User); 
+    if (string.IsNullOrEmpty(userId))
+    {
+        _logger.LogError("User ID is null or empty.");
+        return RedirectToAction("Index", "Home"); 
     }
+
+    var carrello = _carrelloService.CaricaCarrello(userId);
+    
+    if (carrello == null || carrello.Carrello.Count == 0)
+    {
+        _logger.LogWarning("Carrello vuoto per UserId: {UserId}", userId);
+    }
+    else
+    {
+        _logger.LogInformation("Carrello caricato per UserId: {UserId}. Prodotti nel carrello: {Count}", userId, carrello.Carrello.Count);
+    }
+
+    return View(carrello);
+}
+
 
     public IActionResult AggiungiACarrello (int id)
     {
@@ -82,4 +106,6 @@ public class CarrelloController : Controller
 
         return RedirectToAction("Index"); // Redirect al carrello dopo la rimozione
     }
+
+    
 }

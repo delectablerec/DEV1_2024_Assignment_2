@@ -61,20 +61,27 @@
             <div class="row align-items-center">
                 <div class="col-12 col-sm-2 text-center">
                     <div class="order-photo">
-                        <img src="~/img/@ordine.UrlImmagineProdotto" alt="Product Image">
+                      @*  <img src="~/img/@ordine.UrlImmagineProdotto" alt="Product Image">*@
+                      <img src="@ordine.UrlImmagineProdotto" alt="Product Image">
                     </div>
                 </div>
                 <div class="col-12 col-sm-8">
                     <h6>Numero d'ordine: @ordine.NomeOrdine</h6>
                     <h4>@ordine.NomeProdotto</h4>
-                    <p>Prezzo: €@ordine.TotaleOrdine + @ordine.CostoSpedizione<br>Stato ordine: @ordine.StatoOrdine<br>Data ordine: @ordine.DataAcquisto.ToString("dd/MM/yyyy")</p>
+                    <p>Prezzo: €@ordine.TotaleOrdine<br>Stato ordine: @ordine.StatoOrdine<br>Data ordine: @ordine.DataAcquisto.ToString("dd/MM/yyyy")</p>
                 </div>
 
                 <div class="col-12 col-sm-2 d-flex flex-sm-column justify-content-center">
                   
                     <a asp-action="DettaglioOrdine" asp-route-id="@ordine.Id" class="btn btn-dark btn-detail">Dettaglio</a>
+                   
 
-                    <button class="btn btn-danger btn-delete">Elimina</button>
+
+                        <!-- Form per eliminare l'ordine -->
+    <form asp-action="EliminaOrdine" method="post" style="display:inline;">
+        <input type="hidden" name="id" value="@ordine.Id" />
+        <button type="submit" class="btn btn-danger btn-delete">Elimina</button>
+    </form>
                 </div>
             </div>
         </div>
