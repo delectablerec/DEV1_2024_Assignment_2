@@ -15,7 +15,6 @@ public class CarrelloController : Controller
         _carrelloService = carrelloService;
     }
 
-/*
     public IActionResult Index()
     {
         var userId = _userManager.GetUserId(User); 
@@ -25,25 +24,10 @@ public class CarrelloController : Controller
             return RedirectToAction("Index", "Home"); 
         }
 
-        var carrello = _carrelloService.CaricaCarrello(userId); // Carica il carrello
-
-        return View(carrello);
-    }
-*/
-
-    public IActionResult Index()
-    {
-        var userId = _userManager.GetUserId(User); 
-        if (string.IsNullOrEmpty(userId))
-        {
-            _logger.LogError("User ID is null or empty.");
-            return RedirectToAction("Index", "Home"); 
-        }
-
-        // Fetch or initialize the cart for the user
+        // Recupera o inizializza il carrello per l'utente tramite il servizio
         var carrello = _carrelloService.CaricaCarrello(userId);
 
-        // Pass the cart to the view
+        // Passa il carrello alla view
         return View(carrello);
     }
 
@@ -59,7 +43,7 @@ public class CarrelloController : Controller
             return NotFound();
         }
 
-        var orologio = CercaProdottoPerId(listaOrologi, id);
+        var orologio = _carrelloService.CercaProdottoPerId(listaOrologi, id);
         if (orologio == null)
         {
             _logger.LogWarning("Prodotto con ID: {IdProdotto} non trovato", id);
@@ -77,57 +61,25 @@ public class CarrelloController : Controller
         }
 
         return RedirectToAction("Index");
-
     }
-/*
-    public IActionResult AggiungiACarrello(int id)
+
+    public IActionResult RimuoviDalCarrello(int id)
     {
         var userId = _userManager.GetUserId(User);
-        _logger.LogInformation("UserId: {UserId} is adding a product to the cart.", userId);
-        
-        var listaOrologi = _context.Orologi.ToList();
-        if (listaOrologi == null || listaOrologi.Count == 0)
+        if (string.IsNullOrEmpty(userId))
         {
-            _logger.LogError("Lista vuota o nulla.");
-            return NotFound();
-        }
-        // Passa i prodotti estrapolati dal database
-        var orologio = CercaProdottoPerId(listaOrologi, id);
-
-        if (orologio == null)
-        {
-            _logger.LogWarning("Product with ID: {ProductId} not found.", id);
-            return NotFound(); 
+            _logger.LogError("User ID è nullo o vuoto.");
+            return RedirectToAction("Index", "Home");
         }
 
-        _logger.LogInformation("Product found: {ProductName}, Price: {ProductPrice}", orologio.Modello, orologio.Prezzo);
-
-        // Use the service to update the cart
-        _carrelloService.AggiungiACarrello(userId, orologio);
-
-        // Redirect to the cart view
-        return RedirectToAction("Index");
-    }
-*/
-    private Orologio CercaProdottoPerId(List<Orologio> orologi, int id)
-    {
-        try
+        // Chiama il metodo del servizio per rimuovere dal carrello
+        var success = _carrelloService.RimuoviDalCarrello(userId, id);
+        if (!success)
         {
-            Orologio orologio = null;
-            foreach (var item in orologi)
-            {
-                if (item.Id == id)
-                {
-                    orologio = item;
-                    break;
-                }
-            }
-            return orologio;
+            _logger.LogWarning("Errore nella rimozione del prodotto con ID: {IdProdotto} dal carrello", id);
+            return RedirectToAction("Index"); 
         }
-        catch (Exception ex)
-        {
-            _logger.LogError("Errore nella ricerca : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
-            return null;
-        }
+
+        return RedirectToAction("Index"); // Redirect al carrello dopo la rimozione
     }
 }

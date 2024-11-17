@@ -12,55 +12,13 @@ public class CarrelloService
         _context = context;
         _logger = logger;
     }
-
-/*  NON PIU NECESSARIO
-    public void InizializzaCarrello(string userId)
-    {
-        if (!_userCart.ContainsKey(userId))
-        {
-            _userCart[userId] = new CarrelloViewModel
-            {
-                Carrello = new List<OrologioInCarrello>(),
-                Totale = 0,
-                Quantita = 0
-            };
-            Console.WriteLine($"Initialized cart for UserId: {userId}");
-        }
-        else
-        {
-            Console.WriteLine($"Cart already initialized for UserId: {userId}");
-        }
-        SalvaCarrelloSuJson();
-    }
-*/
-
-/*
-    public CarrelloViewModel CaricaCarrello(string userId)
-    {
-        _logger.LogInformation("Loading cart for UserId: {UserId}", userId);
-        if (_userCart.TryGetValue(userId, out var cart))
-        {
-            return cart;
-        }
-
-        _logger.LogWarning("Cart not found for UserId: {UserId}. Returning an empty cart.", userId);
-
-        // Return a new empty cart if it does not exist
-        return new CarrelloViewModel
-        {
-            Carrello = new List<OrologioInCarrello>(),
-            Totale = 0,
-            Quantita = 0
-        };
-    }
-*/
     public CarrelloViewModel CaricaCarrello(string userId)
     {
         try
         {
             Dictionary<string, CarrelloViewModel> carrelliUtenti = new();
 
-            // Check if the JSON file exists and load it
+            // Controlla se il file json esiste e lo popola
             if (File.Exists(CartFilePath))
             {
                 var json = File.ReadAllText(CartFilePath);
@@ -68,14 +26,14 @@ public class CarrelloService
                         ?? new Dictionary<string, CarrelloViewModel>();
             }
 
-            // Check if the user's cart exists
+            // Controlla se il carrello utente esiste
             if (carrelliUtenti.TryGetValue(userId, out var existingCart))
             {
                 _logger.LogInformation("Cart loaded for UserId: {UserId}", userId);
-                return existingCart; // Return the user's cart
+                return existingCart; // Ritorna il carrello dell'utente
             }
 
-            // Initialize a new cart if the user does not have one
+            // Inizializza un nuovo carrello se l'utente non ne ha già uno
             _logger.LogInformation("No cart found for UserId: {UserId}. Initializing a new one.", userId);
             var newCart = new CarrelloViewModel
             {
@@ -84,7 +42,7 @@ public class CarrelloService
                 Quantita = 0
             };
 
-            // Add the new cart to the collection and save it
+            // Aggiunge il carrello alla collezione
             carrelliUtenti[userId] = newCart;
             SalvaTuttiICarrelli(carrelliUtenti);
 
@@ -179,6 +137,69 @@ public class CarrelloService
         }
     }
 
+    public bool RimuoviDalCarrello(string userId, int orologioId)
+    {
+        try
+        {
+            // Carica o inizializza il carrello per l'utente
+            var carrello = CaricaCarrello(userId);
+
+            // Trova il prodotto nel carrello
+            OrologioInCarrello prodottoInCarrello = null;
+            foreach(var item in carrello.Carrello)
+            {
+                if(item.OrologioId == orologioId)
+                {
+                    prodottoInCarrello = item;
+                    break;
+                }
+            }
+            
+            if (prodottoInCarrello == null)
+            {
+                _logger.LogWarning("Prodotto con ID: {IdProdotto} non trovato nel carrello per l'utente: {UserId}", orologioId, userId);
+                return false; // Se il prodotto non è nel carrello, ritorna falso
+            }
+
+            // Aggiusta lo stock nel database per il prodotto rimosso
+            var orologio = CercaProdottoPerId(_context.Orologi.ToList(), orologioId);
+            if (orologio != null)
+            {
+                orologio.Giacenza += prodottoInCarrello.QuantitaInCarrello; // Ripristina lo stock
+                _context.SaveChanges(); // Salva i cambiamenti nel database
+                _logger.LogInformation("Stock aggiornato per il prodotto ID: {IdProdotto}, Nuovo stock: {Stock}", orologioId, orologio.Giacenza);
+            }
+
+            // Rimuovi il prodotto dal carrello
+            carrello.Carrello.Remove(prodottoInCarrello);
+
+            // Ricalcola il totale e la quantità del carrello
+            decimal totale = 0;
+            int quantita = 0;
+            foreach (var item in carrello.Carrello)
+            {
+                totale += item.Orologio.Prezzo * item.QuantitaInCarrello; // Calcola il totale considerando la quantità
+                quantita += item.QuantitaInCarrello; // Calcola la quantità totale
+            }
+            carrello.Totale = totale;
+            carrello.Quantita = quantita;
+
+            _logger.LogInformation("Carrello aggiornato per l'utente {UserId}, Nuovo totale: {Totale}, Nuova quantità: {Quantita}", userId, totale, quantita);
+
+            // Salva i carrelli aggiornati nel file JSON
+            Dictionary<string, CarrelloViewModel> carrelliUtenti = new();
+            carrelliUtenti[userId] = carrello;
+            SalvaTuttiICarrelli(carrelliUtenti);
+
+            return true; // Success
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore durante la rimozione dal carrello per l'utente {UserId}, Id Prodotto: {IdProdotto}, Exception: {Message}", userId, orologioId, ex.Message);
+            return false; // Failure in case of error
+        }
+    }
+
     private void SalvaTuttiICarrelli(Dictionary<string, CarrelloViewModel> carrelliUtenti)
     {
         try
@@ -193,62 +214,25 @@ public class CarrelloService
         }
     }
 
-
-/*    public void AggiungiACarrello(string userId, Orologio orologio)
-    {
-        if (!_userCart.ContainsKey(userId))
-        {
-            InizializzaCarrello(userId);
-        }
-
-        var carrello = _userCart[userId];
-
-        // Check if the product is already in the cart
-        var prodottoInCarrello = carrello.Carrello.FirstOrDefault(item => item.OrologioId == orologio.Id);
-        if (prodottoInCarrello != null)
-        {
-            prodottoInCarrello.QuantitaInCarrello++;
-            _logger.LogInformation("Product added to cart. ProductId: {ProductId}, Quantity: {Quantity}", orologio.Id, prodottoInCarrello.QuantitaInCarrello);
-        }
-        else
-        {
-            carrello.Carrello.Add(new OrologioInCarrello
-            {
-                OrologioId = orologio.Id,
-                Orologio = orologio,
-                QuantitaInCarrello = 1
-            });
-            _logger.LogInformation("Product added to cart for the first time. ProductId: {ProductId}", orologio.Id);
-        }
-
-        // Update the total and quantity
-        decimal totale = 0;
-        int quantita = 0;
-        foreach (var item in carrello.Carrello)
-        {
-            totale += item.Orologio.Prezzo * item.QuantitaInCarrello;
-            quantita += item.QuantitaInCarrello;
-        }
-
-        carrello.Totale = totale;
-        carrello.Quantita = quantita;
-        _logger.LogInformation("Cart updated for UserId: {UserId}, Total: {Total}, Quantity: {Quantity}", userId, totale, quantita);
-        SalvaCarrelloSuJson();
-    }
-
-    // Salva il carrello su un file json
-    private void SalvaCarrelloSuJson()
+    public Orologio CercaProdottoPerId(List<Orologio> orologi, int id)
     {
         try
         {
-            var json = JsonConvert.SerializeObject(_userCart);
-            File.WriteAllText(CartFilePath, json); // Save all carts to the JSON file
-            _logger.LogInformation("Carts saved to {FilePath}", CartFilePath);
+            Orologio orologio = null;
+            foreach (var item in orologi)
+            {
+                if (item.Id == id)
+                {
+                    orologio = item;
+                    break;
+                }
+            }
+            return orologio;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error saving carts to file: {Message}", ex.Message);
+            _logger.LogError("Errore nella ricerca : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
+            return null;
         }
     }
-*/
 }

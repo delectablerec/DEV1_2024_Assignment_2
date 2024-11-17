@@ -27,13 +27,18 @@
                 </div>
                 <div class="col-12 col-sm-2 text-end">
                     <span class="fw-bold">€@orologio.Orologio.Prezzo</span>
+                    <!-- Remove Button (Wrapped in Form) -->
+                    <form method="post" action="@Url.Action("RimuoviDalCarrello", "Carrello")" style="display:inline;">
+                        <input type="hidden" name="id" value="@orologio.OrologioId" />
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Rimuovi</button>
+                    </form>
                 </div>
             </div>
         }
     }
     else
     {
-        <p>Carrello vuoto. <a href="@Url.Action("Index", "Home")">Continua a fare acquisti</a></p>
+        <p>Carrello vuoto. <a asp-controller="Home" asp-action="Index">Continua a fare acquisti</a></p>
     }
 </div>
 
@@ -45,9 +50,13 @@
     </div>
     <!-- Bottoni a destra -->
     <div class="ms-auto">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-            Continua a Comprare
-        </button>
-        <button type="button" class="btn btn-dark">Vai alla Cassa</button>
+        <form method="get" asp-controller="Prodotti" asp-action="Index">
+            <button type="submit" class="btn btn-outline-secondary">
+                Continua a Comprare
+            </button>
+        </form>
+        <form method="post" asp-controller="Ordini" asp-action="CreaOrdineDaCarrello">
+            <button type="submit" class="btn btn-dark">Vai alla Cassa</button>
+        </form>
     </div>
 </div>
