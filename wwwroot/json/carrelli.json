@@ -1,8 +1,34 @@
 {
   "7e03b07e-05f1-4955-867e-a38ee4bec4e7": {
-    "Carrello": [],
-    "Totale": 0.0,
-    "Quantita": 0
+    "Carrello": [
+      {
+        "OrologioId": 1,
+        "Orologio": {
+          "Modello": "virtual",
+          "Referenza": "yu56Df3",
+          "MaterialeId": 4,
+          "Materiale": null,
+          "TipologiaId": 1,
+          "Tipologia": null,
+          "Diametro": 0,
+          "GenereId": 1,
+          "Genere": null,
+          "Prezzo": 456.23,
+          "Giacenza": 37,
+          "Colore": "blu",
+          "UrlImmagine": "/immaginiProdotti/Omega1.jpg",
+          "CategoriaId": 3,
+          "Categoria": null,
+          "MarcaId": 4,
+          "Marca": null,
+          "Id": 1,
+          "Nome": "orologio"
+        },
+        "QuantitaInCarrello": 1
+      }
+    ],
+    "Totale": 456.23,
+    "Quantita": 1
   },
   "21b9ece8-35c4-4d28-971b-0607a54412d5": {
     "Carrello": [],

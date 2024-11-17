@@ -11,15 +11,14 @@ public class OrdiniController : Controller
     private readonly ApplicationDbContext _context;
     private readonly ILogger<OrdiniController> _logger;
     private const string FilePath = "wwwroot/json/carrelli.json";
-private readonly UserManager<Cliente> _userManager;
+    private readonly UserManager<Cliente> _userManager;
 
-public OrdiniController(ApplicationDbContext context, ILogger<OrdiniController> logger, UserManager<Cliente> userManager)
-{
-    _context = context;
-    _logger = logger;
-    _userManager = userManager;
-}
-
+    public OrdiniController(ApplicationDbContext context, ILogger<OrdiniController> logger, UserManager<Cliente> userManager)
+    {
+        _context = context;
+        _logger = logger;
+        _userManager = userManager;
+    }
 
     // Visualizza l'elenco degli ordini
     public IActionResult Index()
@@ -27,11 +26,24 @@ public OrdiniController(ApplicationDbContext context, ILogger<OrdiniController> 
         try
         {
             _logger.LogInformation("Caricamento della lista degli ordini.");
-            var ordini = CaricaOrdini();
-            var viewModel = new OrdiniViewModel
+
+            var ordini = _context.Ordini
+                .Include(o => o.Orologi)
+                .Include(o => o.Cliente)
+                .ToList();
+
+            var viewModel = ordini.Select(ordine => new ListaOrdiniViewModel
             {
-                Ordini = ordini
-            };
+                Id = ordine.Id,
+                NomeOrdine = ordine.Nome,
+                DataAcquisto = ordine.DataAcquisto,
+                StatoOrdine = ordine.StatoOrdine.ToString(),
+                TotaleOrdine = ordine.Orologi.Sum(o => o.Prezzo),
+                UrlImmagineProdotto = ordine.Orologi.FirstOrDefault()?.UrlImmagine,
+                NomeProdotto = ordine.Orologi.FirstOrDefault()?.Modello,
+                CostoSpedizione = ordine.CostoSpedizione
+            }).ToList();
+
             return View(viewModel);
         }
         catch (Exception ex)
@@ -41,140 +53,92 @@ public OrdiniController(ApplicationDbContext context, ILogger<OrdiniController> 
         }
     }
 
-    // Carica gli ordini dal database
-    private List<Ordine> CaricaOrdini()
+    [HttpPost]
+    public IActionResult CreaOrdineDaCarrello(CarrelloViewModel carrello, string indirizzo, string metodoPagamento)
     {
-        return _context.Ordini
-            .Include(o => o.Orologi)
-            .Include(o => o.Cliente)
-            .ToList();
-    }
-
-  [HttpPost]
-public IActionResult CreaOrdineDaCarrello(CarrelloViewModel carrello, string indirizzo, string metodoPagamento)
-{
-    if (carrello == null || carrello.Carrello == null || !carrello.Carrello.Any())
-    {
-        _logger.LogWarning("Tentativo di creare un ordine con un carrello vuoto.");
-        return BadRequest("Il carrello è vuoto.");
-    }
-
-    try
-    {
-        // Recupera l'ID dell'utente autenticato
-        var clienteId = _userManager.GetUserId(User);
-        if (string.IsNullOrEmpty(clienteId))
+        if (carrello == null || carrello.Carrello == null || !carrello.Carrello.Any())
         {
-            _logger.LogWarning("Utente non autenticato. Impossibile creare un ordine.");
-            return Unauthorized("Devi essere autenticato per effettuare un ordine.");
+            _logger.LogWarning("Tentativo di creare un ordine con un carrello vuoto.");
+            return BadRequest("Il carrello è vuoto.");
         }
 
-        // Recupera il cliente dal database
-        var cliente = _context.Clienti.FirstOrDefault(c => c.Id == clienteId);
-        if (cliente == null)
-        {
-            _logger.LogWarning("Cliente non trovato per ID: {ClienteId}.", clienteId);
-            return NotFound("Cliente non trovato.");
-        }
-
-        _logger.LogInformation("Creazione ordine in corso per il cliente con ID: {ClienteId}.", clienteId);
-
-        // Calcola il totale dell'ordine
-        var totaleOrdine = carrello.Carrello.Sum(p => p.Orologio.Prezzo * p.QuantitaInCarrello);
-
-        // Crea un nuovo ordine
-        var nuovoOrdine = new Ordine
-        {
-            ClienteId = clienteId,
-            Cliente = cliente,
-            DataAcquisto = DateTime.Now,
-            Quantita = carrello.Carrello.Sum(p => p.QuantitaInCarrello),
-            MetodoPagamento = metodoPagamento,
-            IndirizzoSpedizione = indirizzo,
-            Orologi = carrello.Carrello.Select(ci => ci.Orologio).ToList(),
-            CostoSpedizione = 10.00m, // Spedizione fissa come esempio
-            StatoOrdine = StatoOrdine.InLavorazione // Stato iniziale
-        };
-
-        // Salva l'ordine nel database
-        _context.Ordini.Add(nuovoOrdine);
-        _context.SaveChanges();
-
-        _logger.LogInformation("Ordine creato con successo, ID: {OrdineId}.", nuovoOrdine.Id);
-
-        // Reindirizza alla pagina degli ordini
-        return RedirectToAction("Index");
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError("Errore durante la creazione dell'ordine: {Message}", ex.Message);
-        return StatusCode(500, "Errore interno al server.");
-    }
-}
-
-    // Salva un ordine nel database
-    private void SalvaOrdine(Ordine ordine)
-    {
-        _context.Ordini.Add(ordine);
-        _context.SaveChanges();
-        _logger.LogInformation("Ordine salvato con successo. ID Ordine: {OrdineId}", ordine.Id);
-    }
-
-    // Svuota il carrello
-    private void SvuotaCarrello(string userId)
-    {
-        var carrello = new CarrelloViewModel
-        {
-            Carrello = new List<OrologioInCarrello>(),
-            Totale = 0,
-            Quantita = 0
-        };
-        SalvaCarrello(userId, carrello);
-        _logger.LogInformation("Carrello svuotato per UserId: {UserId}", userId);
-    }
-
-   
-    // Carica il carrello JSON
-    private CarrelloViewModel CaricaCarrello(string userId)
-    {
-        if (System.IO.File.Exists(FilePath))
-        {
-            var json = System.IO.File.ReadAllText(FilePath);
-            var carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) 
-                                 ?? new Dictionary<string, CarrelloViewModel>();
-
-            if (carrelliUtenti.TryGetValue(userId, out var carrello))
-            {
-                return carrello;
-            }
-        }
-
-        return new CarrelloViewModel { Carrello = new List<OrologioInCarrello>(), Totale = 0, Quantita = 0 };
-    }
-
-    // Salva il carrello nel JSON
-    private void SalvaCarrello(string userId, CarrelloViewModel carrello)
-    {
         try
         {
-            Dictionary<string, CarrelloViewModel> carrelliUtenti = new();
-
-            if (System.IO.File.Exists(FilePath))
+            var clienteId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(clienteId))
             {
-                var json = System.IO.File.ReadAllText(FilePath);
-                carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) 
-                                 ?? new Dictionary<string, CarrelloViewModel>();
+                _logger.LogWarning("Utente non autenticato. Impossibile creare un ordine.");
+                return Unauthorized("Devi essere autenticato per effettuare un ordine.");
             }
 
-            carrelliUtenti[userId] = carrello;
-            var updatedJson = JsonConvert.SerializeObject(carrelliUtenti, Formatting.Indented);
-            System.IO.File.WriteAllText(FilePath, updatedJson);
+            var cliente = _context.Clienti.FirstOrDefault(c => c.Id == clienteId);
+            if (cliente == null)
+            {
+                _logger.LogWarning("Cliente non trovato per ID: {ClienteId}.", clienteId);
+                return NotFound("Cliente non trovato.");
+            }
 
-            _logger.LogInformation("Carrello salvato per UserId: {UserId}", userId);
+            _logger.LogInformation("Creazione ordine in corso per il cliente con ID: {ClienteId}.", clienteId);
+
+            var nuovoOrdine = new Ordine
+            {
+                ClienteId = clienteId,
+                Cliente = cliente,
+                DataAcquisto = DateTime.Now,
+                Quantita = carrello.Carrello.Sum(p => p.QuantitaInCarrello),
+                MetodoPagamento = metodoPagamento,
+                IndirizzoSpedizione = indirizzo,
+                Orologi = carrello.Carrello.Select(ci => ci.Orologio).ToList(),
+                CostoSpedizione = 10.00m,
+                StatoOrdine = StatoOrdine.InLavorazione
+            };
+
+            _context.Ordini.Add(nuovoOrdine);
+            _context.SaveChanges();
+
+            _logger.LogInformation("Ordine creato con successo, ID: {OrdineId}.", nuovoOrdine.Id);
+
+            SvuotaCarrello(clienteId);
+
+            return RedirectToAction("Index");
         }
         catch (Exception ex)
         {
-            _logger.LogError("Errore durante il salvataggio del carrello per UserId: {UserId}. Exception: {Message}", userId, ex.Message);
+            _logger.LogError("Errore durante la creazione dell'ordine: {Message}", ex.Message);
+            return StatusCode(500, "Errore interno al server.");
+        }
+    }
+
+    private void SvuotaCarrello(string userId)
+    {
+        try
+        {
+            if (System.IO.File.Exists(FilePath))
+            {
+                var json = System.IO.File.ReadAllText(FilePath);
+                var carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) 
+                                     ?? new Dictionary<string, CarrelloViewModel>();
+
+                if (carrelliUtenti.ContainsKey(userId))
+                {
+                    carrelliUtenti[userId] = new CarrelloViewModel
+                    {
+                        Carrello = new List<OrologioInCarrello>(),
+                        Totale = 0,
+                        Quantita = 0
+                    };
+
+                    var updatedJson = JsonConvert.SerializeObject(carrelliUtenti, Formatting.Indented);
+                    System.IO.File.WriteAllText(FilePath, updatedJson);
+
+                    _logger.LogInformation("Carrello svuotato per UserId: {UserId}", userId);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore durante lo svuotamento del carrello per UserId: {UserId}. Exception: {Message}", userId, ex.Message);
         }
     }
 }
+
