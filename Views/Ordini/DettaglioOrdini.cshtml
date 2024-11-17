@@ -1,4 +1,4 @@
-@model OrdiniViewModel
+@model DettaglioOrdineViewModel
 @{
     ViewData["Title"] = "DettaglioOrdine";
 }
@@ -77,37 +77,38 @@
     
     <!-- Barra stato ordine -->
     <div class="status-bar bg-dark text-white">
-      Stato ordine: @Model.Ordine.StatoOrdine
+      Stato ordine: @Model.StatoOrdine
     </div>
-    
+    @foreach (var prodotto in Model.Prodotti)
+{
     <!-- Dettagli prodotto -->
     <div class="product-detail-box">
       <div class="product-photo">
-        <img src="~/images/@Model.Orologio.UrlImmagine" alt="Product Image"> <!-- Adjust image path -->
+        <img src="~/images/@prodotto.UrlImmagine" alt="Product Image"> <!-- Adjust image path -->
       </div>
       <div>
-        <p class="product-name">@Model.Orologio.Modello</p>
+        <p class="product-name">@prodotto.Modello ?? "Dati non disponibili"</p>
         <p><strong>Descrizione:</strong>@* @Model.Orologio.Descrizione*@</p> @*verrà integrato in prodotto*@
-        <p><strong>Giacenza:</strong> @Model.Orologio?.Giacenza</p>
+        <p><strong>Giacenza:</strong> @prodotto.Giacenza</p>
       </div>
     </div>
-    
+    }
     <!-- Dettagli ordine -->
     <div class="mb-4 mt-4">
-      <p><strong>Numero ordine:</strong> @Model.Ordine.Nome</p>
+      <p><strong>Numero ordine:</strong> @Model.NomeOrdine</p>
       <p><strong>Ordinato il:</strong> @Model.DataAcquisto.ToString("dd/MM/yyyy")</p>
-      <p><strong>Nome cliente:</strong> @Model.Cliente?.Nome</p>
-      <p><strong>Indirizzo:</strong> @Model.Indirizzo</p>
-      <p><strong>Telefono:</strong> @Model.Cliente?.PhoneNumber</p>
+      <p><strong>Nome cliente:</strong> @Model.ClienteNome</p>
+      <p><strong>Indirizzo:</strong> @Model.IndirizzoSpedizione</p>
+      <p><strong>Telefono:</strong> @Model.ClienteTelefono</p>
       <p><strong>Spedizione:</strong> @Model.TipoSpedizione</p>
       <p><strong>Metodo pagamento:</strong> @Model.MetodoPagamento</p>
     </div>
-    
-    @* <!-- Recap ordine -->
+  @* 
+     <!-- Recap ordine -->
     <div class="summary-box">
       <div class="d-flex justify-content-between">
         <p>Subtotale:</p>
-        <p>€@Model.Ordine..Totale</p>
+       <p>€@Model.Totale</p>
       </div>
       <div class="d-flex justify-content-between">
         <p>Spedizione:</p>
@@ -116,15 +117,15 @@
       <hr>
       <div class="d-flex justify-content-between total-box">
         <p>Totale:</p>
-        <p>€@Model.Ordini.Orol.Totale + @Model.CostoSpedizione</p>
+       <p>€@Model.Ordini.Orol.Totale + @Model.CostoSpedizione</p>
       </div>
-    </div>
+    </div>   *@ 
     
     <!-- Bottone per tornare alla sezione precedente -->
     <div class="return-button">
       <a asp-action="Index" class="btn btn-dark">Return</a>
     </div>
-     *@
+     
   </div>
 </div>
 

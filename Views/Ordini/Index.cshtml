@@ -1,4 +1,4 @@
-@model OrdiniViewModel
+@model IEnumerable<ListaOrdiniViewModel>
 @{
     ViewData["Title"] = "Ordini";
 }
@@ -54,28 +54,31 @@
         <button class="btn btn-dark">Ordina per data</button>
     </div>
 
-    @* @foreach (var ordine in Model.Ordini)
+     @foreach (var ordine in Model)
     {
         <h5 class="order-date">Ordine effettuato il @ordine.DataAcquisto.ToString("dd/MM/yyyy")</h5>
         <div class="card order-card">
             <div class="row align-items-center">
                 <div class="col-12 col-sm-2 text-center">
                     <div class="order-photo">
-                        <img src="~/img/@ordine.Orologi.FirstOrDefault()?.UrlImmagine" alt="Product Image">
+                        <img src="~/img/@ordine.UrlImmagineProdotto" alt="Product Image">
                     </div>
                 </div>
                 <div class="col-12 col-sm-8">
-                    <h6>Numero d'ordine: @ordine.Nome</h6>
-                    <h4>@ordine.Orologi.FirstOrDefault()?.Nome</h4>
-                    <p>Prezzo: €@Model.Carrello.Totale + @Model.CostoSpedizione<br>Stato ordine: @ordine.StatoOrdine<br>Data ordine: @ordine.DataAcquisto.ToString("dd/MM/yyyy")</p>
+                    <h6>Numero d'ordine: @ordine.NomeOrdine</h6>
+                    <h4>@ordine.NomeProdotto</h4>
+                    <p>Prezzo: €@ordine.TotaleOrdine + @ordine.CostoSpedizione<br>Stato ordine: @ordine.StatoOrdine<br>Data ordine: @ordine.DataAcquisto.ToString("dd/MM/yyyy")</p>
                 </div>
+
                 <div class="col-12 col-sm-2 d-flex flex-sm-column justify-content-center">
-                    <button class="btn btn-dark btn-detail">Dettaglio</button>
+                  
+                    <a asp-action="DettaglioOrdine" asp-route-id="@ordine.Id" class="btn btn-dark btn-detail">Dettaglio</a>
+
                     <button class="btn btn-danger btn-delete">Elimina</button>
                 </div>
             </div>
         </div>
-    } *@
+    } 
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

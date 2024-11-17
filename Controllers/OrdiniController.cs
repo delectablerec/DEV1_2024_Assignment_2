@@ -1,86 +1,180 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.IO;
 
 public class OrdiniController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<OrdiniController> _logger;
+    private const string FilePath = "wwwroot/json/carrelli.json";
+private readonly UserManager<Cliente> _userManager;
 
-    public OrdiniController(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
-
-
-// Visualizza l'elenco di ordini
-public IActionResult Index()
+public OrdiniController(ApplicationDbContext context, ILogger<OrdiniController> logger, UserManager<Cliente> userManager)
 {
-    // Recupera tutti gli ordini e i relativi prodotti
-    //Include("Orologi") Include gli orologi associati
-    // Include il cliente associato
-    var ordini = _context.Ordini.Include("Orologi").Include("Cliente").ToList();
-
-    // Crea il ViewModel e assegna direttamente la lista di ordini Ordini
-    var viewModel = new OrdiniViewModel
-    {
-        Ordini = ordini
-    };
-
-    // Passa il ViewModel alla vista
-    return View(viewModel);
+    _context = context;
+    _logger = logger;
+    _userManager = userManager;
 }
 
-/*
 
-    // Azione GET per visualizzare il form di aggiunta di un nuovo ordine
-    [HttpGet]
-    public IActionResult AddOrder()
+    // Visualizza l'elenco degli ordini
+    public IActionResult Index()
     {
-        return View();
+        try
+        {
+            _logger.LogInformation("Caricamento della lista degli ordini.");
+            var ordini = CaricaOrdini();
+            var viewModel = new OrdiniViewModel
+            {
+                Ordini = ordini
+            };
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore durante il caricamento della lista degli ordini: {Message}", ex.Message);
+            return StatusCode(500, "Errore interno al server.");
+        }
     }
 
-    // Azione POST per aggiungere un nuovo ordine
-    [HttpPost]
-    public async Task<IActionResult> AddOrder(Ordine ordine)
+    // Carica gli ordini dal database
+    private List<Ordine> CaricaOrdini()
     {
-        if (ModelState.IsValid)
-        {
-            _context.Ordini.Add(ordine);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
-        return View(ordine); // Ritorna alla vista di aggiunta ordine in caso di errore di validazione
-    }*/
+        return _context.Ordini
+            .Include(o => o.Orologi)
+            .Include(o => o.Cliente)
+            .ToList();
+    }
 
-    // Azione per eliminare ordine
-
-[HttpPost]
-[Authorize(Roles = "Admin")]
-public IActionResult DeleteOrder(int id)
+  [HttpPost]
+public IActionResult CreaOrdineDaCarrello(CarrelloViewModel carrello, string indirizzo, string metodoPagamento)
 {
-    Ordine ordine = null;
-
-    foreach (var ord in _context.Ordini)
+    if (carrello == null || carrello.Carrello == null || !carrello.Carrello.Any())
     {
-        if (ord.Id == id)
-        {
-            ordine = ord;
-            break;
-        }
+        _logger.LogWarning("Tentativo di creare un ordine con un carrello vuoto.");
+        return BadRequest("Il carrello è vuoto.");
     }
 
-    if (ordine != null)
+    try
     {
-        _context.Ordini.Remove(ordine);
-        _context.SaveChanges(); // Chiamata sincrona a SaveChanges()
+        // Recupera l'ID dell'utente autenticato
+        var clienteId = _userManager.GetUserId(User);
+        if (string.IsNullOrEmpty(clienteId))
+        {
+            _logger.LogWarning("Utente non autenticato. Impossibile creare un ordine.");
+            return Unauthorized("Devi essere autenticato per effettuare un ordine.");
+        }
+
+        // Recupera il cliente dal database
+        var cliente = _context.Clienti.FirstOrDefault(c => c.Id == clienteId);
+        if (cliente == null)
+        {
+            _logger.LogWarning("Cliente non trovato per ID: {ClienteId}.", clienteId);
+            return NotFound("Cliente non trovato.");
+        }
+
+        _logger.LogInformation("Creazione ordine in corso per il cliente con ID: {ClienteId}.", clienteId);
+
+        // Calcola il totale dell'ordine
+        var totaleOrdine = carrello.Carrello.Sum(p => p.Orologio.Prezzo * p.QuantitaInCarrello);
+
+        // Crea un nuovo ordine
+        var nuovoOrdine = new Ordine
+        {
+            ClienteId = clienteId,
+            Cliente = cliente,
+            DataAcquisto = DateTime.Now,
+            Quantita = carrello.Carrello.Sum(p => p.QuantitaInCarrello),
+            MetodoPagamento = metodoPagamento,
+            IndirizzoSpedizione = indirizzo,
+            Orologi = carrello.Carrello.Select(ci => ci.Orologio).ToList(),
+            CostoSpedizione = 10.00m, // Spedizione fissa come esempio
+            StatoOrdine = StatoOrdine.InLavorazione // Stato iniziale
+        };
+
+        // Salva l'ordine nel database
+        _context.Ordini.Add(nuovoOrdine);
+        _context.SaveChanges();
+
+        _logger.LogInformation("Ordine creato con successo, ID: {OrdineId}.", nuovoOrdine.Id);
+
+        // Reindirizza alla pagina degli ordini
         return RedirectToAction("Index");
     }
-
-    return NotFound(); // Restituisce 404 se l'ordine non è trovato
+    catch (Exception ex)
+    {
+        _logger.LogError("Errore durante la creazione dell'ordine: {Message}", ex.Message);
+        return StatusCode(500, "Errore interno al server.");
+    }
 }
 
+    // Salva un ordine nel database
+    private void SalvaOrdine(Ordine ordine)
+    {
+        _context.Ordini.Add(ordine);
+        _context.SaveChanges();
+        _logger.LogInformation("Ordine salvato con successo. ID Ordine: {OrdineId}", ordine.Id);
+    }
 
+    // Svuota il carrello
+    private void SvuotaCarrello(string userId)
+    {
+        var carrello = new CarrelloViewModel
+        {
+            Carrello = new List<OrologioInCarrello>(),
+            Totale = 0,
+            Quantita = 0
+        };
+        SalvaCarrello(userId, carrello);
+        _logger.LogInformation("Carrello svuotato per UserId: {UserId}", userId);
+    }
 
+   
+    // Carica il carrello JSON
+    private CarrelloViewModel CaricaCarrello(string userId)
+    {
+        if (System.IO.File.Exists(FilePath))
+        {
+            var json = System.IO.File.ReadAllText(FilePath);
+            var carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) 
+                                 ?? new Dictionary<string, CarrelloViewModel>();
+
+            if (carrelliUtenti.TryGetValue(userId, out var carrello))
+            {
+                return carrello;
+            }
+        }
+
+        return new CarrelloViewModel { Carrello = new List<OrologioInCarrello>(), Totale = 0, Quantita = 0 };
+    }
+
+    // Salva il carrello nel JSON
+    private void SalvaCarrello(string userId, CarrelloViewModel carrello)
+    {
+        try
+        {
+            Dictionary<string, CarrelloViewModel> carrelliUtenti = new();
+
+            if (System.IO.File.Exists(FilePath))
+            {
+                var json = System.IO.File.ReadAllText(FilePath);
+                carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) 
+                                 ?? new Dictionary<string, CarrelloViewModel>();
+            }
+
+            carrelliUtenti[userId] = carrello;
+            var updatedJson = JsonConvert.SerializeObject(carrelliUtenti, Formatting.Indented);
+            System.IO.File.WriteAllText(FilePath, updatedJson);
+
+            _logger.LogInformation("Carrello salvato per UserId: {UserId}", userId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Errore durante il salvataggio del carrello per UserId: {UserId}. Exception: {Message}", userId, ex.Message);
+        }
+    }
 }
