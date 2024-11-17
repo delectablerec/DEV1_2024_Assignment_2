@@ -1,7 +1,58 @@
 {
-  "7e03b07e-05f1-4955-867e-a38ee4bec4e7": {
-    "Carrello": [],
-    "Totale": 0.0,
-    "Quantita": 0
+  "28b18064-78ab-466e-a733-8487450ddd2a": {
+    "Carrello": [
+      {
+        "OrologioId": 1,
+        "Orologio": {
+          "Modello": "virtual",
+          "Referenza": "yu56Df3",
+          "MaterialeId": 4,
+          "Materiale": null,
+          "TipologiaId": 1,
+          "Tipologia": null,
+          "Diametro": 0,
+          "GenereId": 1,
+          "Genere": null,
+          "Prezzo": 456.23,
+          "Giacenza": 34,
+          "Colore": "blu",
+          "UrlImmagine": "/immaginiProdotti/Omega1.jpg",
+          "CategoriaId": 3,
+          "Categoria": null,
+          "MarcaId": 4,
+          "Marca": null,
+          "Id": 1,
+          "Nome": "orologio"
+        },
+        "QuantitaInCarrello": 2
+      },
+      {
+        "OrologioId": 3,
+        "Orologio": {
+          "Modello": "fantasy65",
+          "Referenza": "edrfg456",
+          "MaterialeId": 4,
+          "Materiale": null,
+          "TipologiaId": 1,
+          "Tipologia": null,
+          "Diametro": 12,
+          "GenereId": 1,
+          "Genere": null,
+          "Prezzo": 497834.0,
+          "Giacenza": 11,
+          "Colore": "grigio",
+          "UrlImmagine": "/immaginiProdotti/Rolex1.jpg",
+          "CategoriaId": 2,
+          "Categoria": null,
+          "MarcaId": 1,
+          "Marca": null,
+          "Id": 3,
+          "Nome": "orologio"
+        },
+        "QuantitaInCarrello": 1
+      }
+    ],
+    "Totale": 498746.46,
+    "Quantita": 3
   }
 }

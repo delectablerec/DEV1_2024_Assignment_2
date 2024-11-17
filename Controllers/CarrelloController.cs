@@ -46,6 +46,39 @@ public class CarrelloController : Controller
         // Pass the cart to the view
         return View(carrello);
     }
+
+    public IActionResult AggiungiACarrello (int id)
+    {
+        var userId = _userManager.GetUserId(User);
+        _logger.LogInformation("UserId: {userId} sta aggiungendo un prodotto al carrello.", userId);
+
+        var listaOrologi = _context.Orologi.ToList();
+        if (listaOrologi == null || listaOrologi.Count == 0)
+        {
+            _logger.LogError("Lista vuota o nulla");
+            return NotFound();
+        }
+
+        var orologio = CercaProdottoPerId(listaOrologi, id);
+        if (orologio == null)
+        {
+            _logger.LogWarning("Prodotto con ID: {IdProdotto} non trovato", id);
+            return NotFound();
+        }
+
+        _logger.LogInformation("Prodotto trovato: {NomeProdotto}, Prezzo: {PrezzoProdotto}", orologio.Modello, orologio.Prezzo);
+
+        // Usa il servizio per aggiornare il carrello
+        var success = _carrelloService.AggiungiACarrello(userId, orologio);
+        if(!success)
+        {
+            _logger.LogWarning("Giacenza del prodotto insufficiente {IdProdotto}", id);
+            return RedirectToAction("Index", "Prodotti");
+        }
+
+        return RedirectToAction("Index");
+
+    }
 /*
     public IActionResult AggiungiACarrello(int id)
     {
@@ -75,7 +108,7 @@ public class CarrelloController : Controller
         // Redirect to the cart view
         return RedirectToAction("Index");
     }
-
+*/
     private Orologio CercaProdottoPerId(List<Orologio> orologi, int id)
     {
         try
@@ -97,5 +130,4 @@ public class CarrelloController : Controller
             return null;
         }
     }
-*/
 }
