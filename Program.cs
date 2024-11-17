@@ -20,6 +20,8 @@ builder.Services.AddScoped<CarrelloService>();  // Adding CartService as Scoped 
 
 builder.Services.AddControllersWithViews();
 
+
+/*  DA IMPLEMENTARE INSIEME ALLE SESSIONI 
 // Configure the authentication cookie to initialize the cart on sign-in
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -37,6 +39,8 @@ builder.Services.ConfigureApplicationCookie(options =>
         }
     };
 });
+*/
+
 
 var app = builder.Build();
 

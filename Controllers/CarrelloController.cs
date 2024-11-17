@@ -14,6 +14,8 @@ public class CarrelloController : Controller
         _userManager = userManager;
         _carrelloService = carrelloService;
     }
+
+/*
     public IActionResult Index()
     {
         var userId = _userManager.GetUserId(User); 
@@ -27,7 +29,24 @@ public class CarrelloController : Controller
 
         return View(carrello);
     }
+*/
 
+    public IActionResult Index()
+    {
+        var userId = _userManager.GetUserId(User); 
+        if (string.IsNullOrEmpty(userId))
+        {
+            _logger.LogError("User ID is null or empty.");
+            return RedirectToAction("Index", "Home"); 
+        }
+
+        // Fetch or initialize the cart for the user
+        var carrello = _carrelloService.CaricaCarrello(userId);
+
+        // Pass the cart to the view
+        return View(carrello);
+    }
+/*
     public IActionResult AggiungiACarrello(int id)
     {
         var userId = _userManager.GetUserId(User);
@@ -78,4 +97,5 @@ public class CarrelloController : Controller
             return null;
         }
     }
+*/
 }

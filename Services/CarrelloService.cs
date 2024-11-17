@@ -2,16 +2,16 @@ using Newtonsoft.Json;
 
 public class CarrelloService
 {
-    private Dictionary<string, CarrelloViewModel> _userCart = new();     // Carrello collegato al cliente
-    private const string CartFilePath = "wwwroot/json/carrello.json";
+    //private Dictionary<string, CarrelloViewModel> _userCart = new();     // Carrello collegato al cliente
+    private const string CartFilePath = "wwwroot/json/carrelli.json";
     private readonly ILogger<CarrelloService> _logger;
     
     public CarrelloService(ILogger<CarrelloService> logger)
     {
         _logger = logger;
-        ScaricaCarrelloDaJson();
     }
 
+/*  NON PIU NECESSARIO
     public void InizializzaCarrello(string userId)
     {
         if (!_userCart.ContainsKey(userId))
@@ -30,7 +30,9 @@ public class CarrelloService
         }
         SalvaCarrelloSuJson();
     }
+*/
 
+/*
     public CarrelloViewModel CaricaCarrello(string userId)
     {
         _logger.LogInformation("Loading cart for UserId: {UserId}", userId);
@@ -49,8 +51,66 @@ public class CarrelloService
             Quantita = 0
         };
     }
+*/
+    public CarrelloViewModel CaricaCarrello(string userId)
+    {
+        try
+        {
+            Dictionary<string, CarrelloViewModel> carrelliUtenti = new();
 
-    public void AggiungiACarrello(string userId, Orologio orologio)
+            // Check if the JSON file exists and load it
+            if (File.Exists(CartFilePath))
+            {
+                var json = File.ReadAllText(CartFilePath);
+                carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) 
+                        ?? new Dictionary<string, CarrelloViewModel>();
+            }
+
+            // Check if the user's cart exists
+            if (carrelliUtenti.TryGetValue(userId, out var existingCart))
+            {
+                _logger.LogInformation("Cart loaded for UserId: {UserId}", userId);
+                return existingCart; // Return the user's cart
+            }
+
+            // Initialize a new cart if the user does not have one
+            _logger.LogInformation("No cart found for UserId: {UserId}. Initializing a new one.", userId);
+            var newCart = new CarrelloViewModel
+            {
+                Carrello = new List<OrologioInCarrello>(),
+                Totale = 0,
+                Quantita = 0
+            };
+
+            // Add the new cart to the collection and save it
+            carrelliUtenti[userId] = newCart;
+            SalvaTuttiICarrelli(carrelliUtenti);
+
+            return newCart;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error loading cart for UserId: {UserId}. Exception: {Message}", userId, ex.Message);
+            throw;
+        }
+    }
+
+    private void SalvaTuttiICarrelli(Dictionary<string, CarrelloViewModel> carrelliUtenti)
+    {
+        try
+        {
+            var json = JsonConvert.SerializeObject(carrelliUtenti, Formatting.Indented);
+            File.WriteAllText(CartFilePath, json); // Save the updated carts to the JSON file
+            _logger.LogInformation("Carts saved to {FilePath}", CartFilePath);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error saving carts to file: {Message}", ex.Message);
+        }
+    }
+
+
+/*    public void AggiungiACarrello(string userId, Orologio orologio)
     {
         if (!_userCart.ContainsKey(userId))
         {
@@ -106,21 +166,5 @@ public class CarrelloService
             _logger.LogError("Error saving carts to file: {Message}", ex.Message);
         }
     }
-
-    private void ScaricaCarrelloDaJson()
-    {
-        try
-        {
-            if (File.Exists(CartFilePath))
-            {
-                var json = System.IO.File.ReadAllText(CartFilePath);
-                _userCart = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) ?? new Dictionary<string, CarrelloViewModel>();
-                _logger.LogInformation("Carts loaded from {FilePath}", CartFilePath);
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Error loading carts from file: {Message}", ex.Message);
-        }
-    }
+*/
 }
