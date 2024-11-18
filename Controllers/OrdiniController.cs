@@ -245,7 +245,7 @@ public IActionResult DettaglioOrdine(int id)
         return StatusCode(500, "Errore interno al server.");
     }
 }
-
+/*
 [HttpPost]
 public IActionResult CreaOrdineDaCarrello(string indirizzo, string metodoPagamento)
 {
@@ -312,7 +312,76 @@ public IActionResult CreaOrdineDaCarrello(string indirizzo, string metodoPagamen
         _logger.LogError("Errore durante la creazione dell'ordine: {Message}", ex.Message);
         return StatusCode(500, "Errore interno al server.");
     }
+}*/
+
+[HttpPost]
+public IActionResult CreaOrdineDaCarrello(AggiungiOrdineViewModel viewModel)
+{
+    try
+    {
+        // Verifica se il carrello è valido
+        if (viewModel.Carrello == null || !viewModel.Carrello.Any())
+        {
+            _logger.LogWarning("Tentativo di creare un ordine con un carrello vuoto.");
+            return BadRequest("Il carrello è vuoto.");
+        }
+
+        // Verifica se il cliente è valido
+        if (viewModel.Cliente == null)
+        {
+            _logger.LogWarning("Cliente non valido.");
+            return BadRequest("Cliente non trovato.");
+        }
+
+        // Crea un nuovo ordine
+        var nuovoOrdine = new Ordine
+        {
+            ClienteId = viewModel.Cliente.Id,
+            Cliente = viewModel.Cliente,
+            DataAcquisto = DateTime.Now,
+            Quantita = viewModel.Quantita,
+            Orologi = viewModel.Carrello.Select(ci =>
+            {
+                // Creazione di una copia del prodotto per evitare conflitti
+                var prodotto = new Orologio
+                {
+                    Modello = ci.Orologio.Modello,
+                    Prezzo = ci.Orologio.Prezzo,
+                    Colore = ci.Orologio.Colore,
+                    UrlImmagine = ci.Orologio.UrlImmagine,
+                    CategoriaId = ci.Orologio.CategoriaId,
+                    MarcaId = ci.Orologio.MarcaId,
+                    MaterialeId = ci.Orologio.MaterialeId,
+                    TipologiaId = ci.Orologio.TipologiaId,
+                    Diametro = ci.Orologio.Diametro,
+                    GenereId = ci.Orologio.GenereId,
+                    Giacenza = ci.QuantitaInCarrello // Associa la quantità corretta
+                };
+
+                return prodotto;
+            }).ToList()
+        };
+
+        // Imposta il valore del nome dell'ordine
+        nuovoOrdine.Nome = $"BRT-{nuovoOrdine.Id}_{nuovoOrdine.ClienteId}";
+
+        // Salva l'ordine nel database
+        _context.Ordini.Add(nuovoOrdine);
+        _context.SaveChanges();
+
+        _logger.LogInformation("Ordine creato con successo, ID: {OrdineId}.", nuovoOrdine.Id);
+
+        return RedirectToAction("Index", "Ordini");
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError("Errore durante la creazione dell'ordine: {Message}", ex.Message);
+        return StatusCode(500, "Errore interno del server.");
+    }
 }
+
+
+
 
 
 [HttpGet]

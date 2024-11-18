@@ -1,7 +1,33 @@
 {
-  "29fb7d2a-eac2-4647-b19f-e9c7d45b225a": {
-    "Carrello": [],
-    "Totale": 0.0,
-    "Quantita": 0
+  "0a06f3ab-ff21-4c6e-9afd-ce9af90cdd7f": {
+    "Carrello": [
+      {
+        "OrologioId": 2,
+        "Orologio": {
+          "Modello": "Daytona",
+          "Referenza": "20000",
+          "MaterialeId": 1,
+          "Materiale": null,
+          "TipologiaId": 1,
+          "Tipologia": null,
+          "Diametro": 42,
+          "GenereId": 1,
+          "Genere": null,
+          "Prezzo": 35000.0,
+          "Giacenza": 7,
+          "Colore": "oro",
+          "UrlImmagine": "https://www.bedetti.it/wp-content/uploads/2023/04/m126503-0003_modelpage_front_facing_landscape-7.webp",
+          "CategoriaId": 1,
+          "Categoria": null,
+          "MarcaId": 1,
+          "Marca": null,
+          "Id": 2,
+          "Nome": "Rolex"
+        },
+        "QuantitaInCarrello": 1
+      }
+    ],
+    "Totale": 35000.0,
+    "Quantita": 1
   }
 }
