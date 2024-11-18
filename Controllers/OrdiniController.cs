@@ -241,4 +241,170 @@ public IActionResult CreaOrdineDaCarrello()
             return StatusCode(500, "Errore interno del server.");
         }
     }
+
+    //nuovo metodo 
+
+/*
+public IActionResult DettaglioOrdine(int id)
+{
+    try
+    {
+        // Recupera l'ordine dal database includendo i dettagli dell'ordine e il cliente
+        var ordine = _context.Ordini
+            .Include(o => o.OrdineDettagli)
+                .ThenInclude(od => od.Orologio) // Include gli orologi associati ai dettagli
+            .Include(o => o.Cliente) // Include il cliente associato
+            .FirstOrDefault(o => o.Id == id);
+
+        if (ordine == null)
+        {
+            _logger.LogWarning("Ordine non trovato con ID: {Id}", id);
+            return NotFound("Ordine non trovato.");
+        }
+
+        // Crea il ViewModel del dettaglio ordine
+        var viewModel = new DettaglioOrdineViewModel
+        {
+            OrdineId = ordine.Id,
+            NomeOrdine = ordine.Nome,
+            ClienteNome = ordine.Cliente.Nome,
+            IndirizzoSpedizione = "Via Esempio, 123", // Può essere dinamico in base alla logica
+            MetodoPagamento = "Carta di credito", // Modifica in base alla logica
+            TipoSpedizione = "Standard", // Modifica in base alla logica
+            StatoOrdine = ordine.OrdineDettagli.Any() ? "Completato" : "In lavorazione",
+            DataAcquisto = ordine.DataAcquisto,
+            Subtotale = ordine.OrdineDettagli.Sum(od => od.PrezzoUnitario * od.Quantita),
+            CostoSpedizione = 10.00m, // Fisso per ora
+            Totale = ordine.OrdineDettagli.Sum(od => od.PrezzoUnitario * od.Quantita) + 10.00m,
+            Prodotti = ordine.OrdineDettagli.Select(od => new DettaglioOrdineProdottoViewModel
+            {
+                UrlImmagine = od.Orologio.UrlImmagine, // Immagine associata al prodotto
+                Modello = od.Orologio.Modello, // Modello dell'orologio
+                Quantita = od.Quantita, // Quantità ordinata
+                PrezzoUnitario = od.PrezzoUnitario, // Prezzo unitario del prodotto
+                Descrizione = $"Orologio {od.Orologio.Modello} di colore {od.Orologio.Colore}."
+            }).ToList()
+        };
+
+        return View("DettaglioOrdini", viewModel);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError("Errore durante il caricamento del dettaglio ordine: {Message}", ex.Message);
+        return StatusCode(500, "Errore interno del server.");
+    }
+}
+*/
+/*
+public IActionResult DettaglioOrdine(int id)
+{
+    try
+    {
+        var ordine = _context.Ordini
+            .Include(o => o.OrdineDettagli)
+                .ThenInclude(od => od.Orologio)
+            .Include(o => o.Cliente)
+            .FirstOrDefault(o => o.Id == id);
+
+        if (ordine == null)
+        {
+            _logger.LogWarning("Ordine non trovato con ID: {Id}", id);
+            return NotFound("Ordine non trovato.");
+        }
+
+        var ordineDettaglio = new DettaglioOrdineViewModel
+        {
+            OrdineId = ordine.Id,
+            NomeOrdine = ordine.Nome,
+            ClienteNome = ordine.Cliente.Nome,
+            IndirizzoSpedizione = "Via Esempio, 123",
+            MetodoPagamento = "Carta di credito",
+            TipoSpedizione = "Standard",
+            StatoOrdine = ordine.OrdineDettagli.Any() ? "Completato" : "In lavorazione",
+            DataAcquisto = ordine.DataAcquisto,
+            Subtotale = ordine.OrdineDettagli.Sum(od => od.PrezzoUnitario * od.Quantita),
+            CostoSpedizione = 10.00m,
+            Totale = ordine.OrdineDettagli.Sum(od => od.PrezzoUnitario * od.Quantita) + 10.00m,
+        };
+
+        var prodottiDettaglio = ordine.OrdineDettagli.Select(od => new DettaglioOrdineProdottoViewModel
+        {
+            UrlImmagine = od.Orologio.UrlImmagine,
+            Modello = od.Orologio.Modello,
+            Quantita = od.Quantita,
+            PrezzoUnitario = od.PrezzoUnitario,
+            Descrizione = $"Orologio {od.Orologio.Modello} di colore {od.Orologio.Colore}."
+        }).ToList();
+
+        var combinedViewModel = new OrdineDettaglioCombinedViewModel
+        {
+            OrdineDettaglio = ordineDettaglio,
+            ProdottiDettaglio = prodottiDettaglio
+        };
+
+        return View("DettaglioOrdini", combinedViewModel);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError("Errore durante il caricamento del dettaglio ordine: {Message}", ex.Message);
+        return StatusCode(500, "Errore interno del server.");
+    }
+}*/
+
+[HttpGet]
+public IActionResult DettaglioOrdine(int id)
+{
+    try
+    {
+        // Recupera l'ordine dal database includendo i dettagli dell'ordine e il cliente
+        var ordine = _context.Ordini
+            .Include(o => o.OrdineDettagli)
+                .ThenInclude(od => od.Orologio)
+            .Include(o => o.Cliente)
+            .FirstOrDefault(o => o.Id == id);
+
+        if (ordine == null)
+        {
+            _logger.LogWarning("Ordine non trovato con ID: {Id}", id);
+            return NotFound("Ordine non trovato.");
+        }
+
+        // Creazione del view model per il dettaglio ordine
+        var viewModel = new DettaglioOrdineViewModel
+        {
+            OrdineId = ordine.Id,
+            NomeOrdine = ordine.Nome,
+            ClienteNome = ordine.Cliente.Nome,
+            IndirizzoSpedizione = "Via Esempio, 123", // Puoi modificarlo in base alla tua logica
+            MetodoPagamento = "Carta di credito", // Puoi modificarlo in base alla tua logica
+            TipoSpedizione = "Standard",         // Puoi modificarlo in base alla tua logica
+            StatoOrdine = ordine.OrdineDettagli.Any() ? "Completato" : "In lavorazione",
+            DataAcquisto = ordine.DataAcquisto,
+            Subtotale = ordine.OrdineDettagli.Sum(od => od.PrezzoUnitario * od.Quantita),
+            CostoSpedizione = 10.00m, // Valore fisso, può essere calcolato dinamicamente
+            Totale = ordine.OrdineDettagli.Sum(od => od.PrezzoUnitario * od.Quantita) + 10.00m,
+            Prodotti = ordine.OrdineDettagli.Select(od => new DettaglioOrdineProdottoViewModel
+            {
+                UrlImmagine = od.Orologio.UrlImmagine,
+                Modello = od.Orologio.Modello,
+                Quantita = od.Quantita,
+                PrezzoUnitario = od.PrezzoUnitario,
+                Descrizione = $"Quantità: {od.Quantita} - Prezzo unitario: €{od.PrezzoUnitario}",
+                Giacenza = od.Orologio.Giacenza
+            }).ToList()
+        };
+
+        return View("DettaglioOrdini", viewModel);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError("Errore durante il caricamento del dettaglio ordine: {Message}", ex.Message);
+        return StatusCode(500, "Errore interno del server.");
+    }
+}
+
+
+
+
+
 }
