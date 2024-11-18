@@ -20,9 +20,9 @@
                     <h6 class="mb-1">@orologio.Orologio.Modello</h6>
                     <div class="d-flex align-items-center mt-2 cart-item-actions">
                         <!-- Pulsanti per modificare la quantità -->
-                        <button class="btn btn-sm btn-outline-secondary me-2 btn-decrease" data-id="@orologio.OrologioId">-</button>
+                        <a asp-controller="Carrello" asp-action="RimuoviUnoDalCarrello" asp-route-id="@orologio.Orologio.Id" class="btn btn-sm btn-outline-secondary me-2 btn-decrease" data-id="@orologio.OrologioId">-</a>
                         <span class="cart-item-quantity">@orologio.QuantitaInCarrello</span>
-                        <button class="btn btn-sm btn-outline-secondary ms-2 btn-increase" data-id="@orologio.OrologioId">+</button>
+                        <a asp-controller="Carrello" asp-action="AggiungiACarrello" asp-route-id="@orologio.Orologio.Id"class="btn btn-sm btn-outline-secondary ms-2 btn-increase" data-id="@orologio.OrologioId">+</a>
                     </div>
                 </div>
                 <div class="col-12 col-sm-2 text-end">

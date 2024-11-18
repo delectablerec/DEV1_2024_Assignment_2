@@ -1,7 +1,33 @@
 {
-  "29fb7d2a-eac2-4647-b19f-e9c7d45b225a": {
-    "Carrello": [],
-    "Totale": 0.0,
-    "Quantita": 0
+  "18383034-3dc5-45c0-bc4c-bc747970c5b2": {
+    "Carrello": [
+      {
+        "OrologioId": 2,
+        "Orologio": {
+          "Modello": "Ciruzzo",
+          "Referenza": "cidit1234",
+          "MaterialeId": 2,
+          "Materiale": null,
+          "TipologiaId": 1,
+          "Tipologia": null,
+          "Diametro": 125,
+          "GenereId": 1,
+          "Genere": null,
+          "Prezzo": 12.0,
+          "Giacenza": 108,
+          "Colore": "Rosa",
+          "UrlImmagine": "/immaginiProdotti/Rolex2.jpg",
+          "CategoriaId": 2,
+          "Categoria": null,
+          "MarcaId": 1,
+          "Marca": null,
+          "Id": 2,
+          "Nome": "Ciro"
+        },
+        "QuantitaInCarrello": 8
+      }
+    ],
+    "Totale": 96.0,
+    "Quantita": 8
   }
 }
