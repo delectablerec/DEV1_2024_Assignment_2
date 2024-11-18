@@ -43,7 +43,19 @@ public enum StatoOrdine
 public class Ordine : General
 {
     // Nome ordine with a default value
-    public override string Nome { get; set; } = "Default-Order-Name";
+    //public override string Nome { get; set; } = "Default-Order-Name";
+
+    public override string Nome
+    {
+        get
+        {
+            if (Id == 0 || Cliente == null)
+            {
+                return "Ordine-0000"; // Fallback in caso di dati incompleti
+            }
+            return $"BRT-{Id}_{Cliente.Id}";
+        }
+    }
 
     // Data in cui è stato effettuato l'acquisto
     public DateTime DataAcquisto { get; set; } = DateTime.Now;
