@@ -52,76 +52,6 @@ public IActionResult Index()
 }
 
 
-[HttpPost]
-public IActionResult CreaOrdineDaCarrello(string indirizzo, string metodoPagamento)
-{
-    var userId = _userManager.GetUserId(User); // Get the authenticated user's ID
-    if (string.IsNullOrEmpty(userId))
-    {
-        _logger.LogWarning("Utente non autenticato. Impossibile creare un ordine.");
-        return Unauthorized("Devi essere autenticato per effettuare un ordine.");
-    }
-
-    // Load the cart from the JSON file
-    var carrello = CaricaCarrello(userId);
-    if (carrello == null || carrello.Carrello == null || !carrello.Carrello.Any())
-    {
-        _logger.LogWarning("Tentativo di creare un ordine con un carrello vuoto.");
-        return BadRequest("Il carrello è vuoto.");
-    }
-
-    try
-    {
-        var cliente = _context.Clienti.FirstOrDefault(c => c.Id == userId);
-        if (cliente == null)
-        {
-            _logger.LogWarning("Cliente non trovato per ID: {ClienteId}.", userId);
-            return NotFound("Cliente non trovato.");
-        }
-
-        // Create a new order based on the cart
-        var nuovoOrdine = new Ordine
-        {
-            ClienteId = userId,
-            Cliente = cliente,
-            DataAcquisto = DateTime.Now,
-            Quantita = carrello.Carrello.Sum(p => p.QuantitaInCarrello),
-            Orologi = carrello.Carrello.Select(ci =>
-            {
-                var prodotto = ci.Orologio;
-
-                if (_context.Orologi.Any(o => o.Id == prodotto.Id))
-                {
-                    _context.Orologi.Attach(prodotto);
-                }
-                else
-                {
-                    prodotto.Id = 0; // Reset ID for new products
-                }
-
-                return prodotto;
-            }).ToList()
-        };
-
-        _context.Ordini.Add(nuovoOrdine);
-        _context.SaveChanges();
-
-        _logger.LogInformation("Ordine creato con successo, ID: {OrdineId}.", nuovoOrdine.Id);
-
-        SvuotaCarrello(userId);
-        
-        return RedirectToAction("Index", "Home");
-
-        return Ok($"Ordine creato con successo! ID Ordine: {nuovoOrdine.Id}");
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError("Errore durante la creazione dell'ordine: {Message}", ex.Message);
-        return StatusCode(500, "Errore interno al server.");
-    }
-}
-
-
     private CarrelloViewModel CaricaCarrello(string userId)
     {
         try
@@ -316,6 +246,109 @@ public IActionResult DettaglioOrdine(int id)
     }
 }
 
+[HttpPost]
+public IActionResult CreaOrdineDaCarrello(string indirizzo, string metodoPagamento)
+{
+    var userId = _userManager.GetUserId(User); // Ottieni l'ID utente autenticato
+    if (string.IsNullOrEmpty(userId))
+    {
+        _logger.LogWarning("Utente non autenticato. Impossibile creare un ordine.");
+        return Unauthorized("Devi essere autenticato per effettuare un ordine.");
+    }
+
+    var carrello = CaricaCarrello(userId);
+    if (carrello == null || carrello.Carrello == null || !carrello.Carrello.Any())
+    {
+        _logger.LogWarning("Tentativo di creare un ordine con un carrello vuoto.");
+        return BadRequest("Il carrello è vuoto.");
+    }
+
+    try
+    {
+        var cliente = _context.Clienti.FirstOrDefault(c => c.Id == userId);
+        if (cliente == null)
+        {
+            _logger.LogWarning("Cliente non trovato per ID: {ClienteId}.", userId);
+            return NotFound("Cliente non trovato.");
+        }
+
+        var nuovoOrdine = new Ordine
+        {
+            ClienteId = userId,
+            Cliente = cliente,
+            DataAcquisto = DateTime.Now,
+            Quantita = carrello.Carrello.Sum(p => p.QuantitaInCarrello),
+            Orologi = carrello.Carrello.Select(ci =>
+            {
+                var prodotto = ci.Orologio;
+
+                if (_context.Orologi.Any(o => o.Id == prodotto.Id))
+                {
+                    _context.Orologi.Attach(prodotto);
+                }
+                else
+                {
+                    prodotto.Id = 0; // Reset ID per i nuovi prodotti
+                }
+
+                return prodotto;
+            }).ToList()
+        };
+
+        // Imposta il valore per la proprietà Nome
+        nuovoOrdine.Nome = $"BRT-{nuovoOrdine.Id}_{nuovoOrdine.ClienteId}";
+
+        _context.Ordini.Add(nuovoOrdine);
+        _context.SaveChanges();
+
+        _logger.LogInformation("Ordine creato con successo, ID: {OrdineId}.", nuovoOrdine.Id);
+
+        SvuotaCarrello(userId);
+
+        return RedirectToAction("Index", "Home");
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError("Errore durante la creazione dell'ordine: {Message}", ex.Message);
+        return StatusCode(500, "Errore interno al server.");
+    }
+}
+
+
+[HttpGet]
+public IActionResult OrdinaPerData()
+{
+    try
+    {
+        // Recupera gli ordini dal database e ordina per DataAcquisto
+        var ordini = _context.Ordini
+            .Include(o => o.Orologi) // Include la lista degli orologi associati all'ordine
+            .Include(o => o.Cliente) // Include il cliente associato all'ordine
+            .OrderBy(o => o.DataAcquisto) // Ordina per DataAcquisto
+            .ToList();
+
+        // Trasforma gli ordini in una lista di view model
+        var viewModel = ordini.Select(ordine => new ListaOrdiniViewModel
+        {
+            Id = ordine.Id,
+            NomeOrdine = ordine.Nome,
+            DataAcquisto = ordine.DataAcquisto,
+            StatoOrdine = ordine.Orologi.Any() ? "Completato" : "In lavorazione", // Stato dinamico basato sulla presenza di prodotti
+            TotaleOrdine = ordine.Orologi.Sum(o => o.Prezzo), // Calcolo del totale
+            UrlImmagineProdotto = ordine.Orologi.FirstOrDefault()?.UrlImmagine ?? "/img/default.png", // Immagine del primo prodotto
+            NomeProdotto = ordine.Orologi.FirstOrDefault()?.Modello ?? "Nessun prodotto",
+            CostoSpedizione = 10.00m // Fisso per ora
+        }).ToList();
+
+        // Passa il modello alla vista
+        return View("Index", viewModel);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError("Errore durante l'ordinamento degli ordini: {Message}", ex.Message);
+        return StatusCode(500, "Errore interno del server.");
+    }
+}
 
 
 
