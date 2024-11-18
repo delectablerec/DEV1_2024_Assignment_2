@@ -216,7 +216,7 @@ public IActionResult EliminaOrdine(int id)
         return StatusCode(500, "Errore interno al server.");
     }
 }
-
+/*metodo funzionante prima di mettere il totale ordine
 [HttpGet]
 public IActionResult DettaglioOrdine(int id)
 {
@@ -257,7 +257,66 @@ public IActionResult DettaglioOrdine(int id)
         _logger.LogError("Errore durante il caricamento del dettaglio ordine: {Message}", ex.Message);
         return StatusCode(500, "Errore interno al server.");
     }
+}*/
+
+
+[HttpGet]
+public IActionResult DettaglioOrdine(int id)
+{
+    try
+    {
+        // Recupera l'ordine dal database includendo i prodotti e il cliente associato
+        var ordine = _context.Ordini
+            .Include(o => o.Orologi) // Include i prodotti associati
+            .Include(o => o.Cliente) // Include il cliente associato
+            .FirstOrDefault(o => o.Id == id);
+
+        if (ordine == null)
+        {
+            _logger.LogWarning("Ordine non trovato con ID: {Id}", id);
+            return NotFound("Ordine non trovato.");
+        }
+
+        // Calcola il subtotale
+        decimal subtotale = ordine.Orologi.Sum(p => p.Prezzo);
+
+        decimal costoSpedizione = 10.00m;
+
+        // Calcola il totale
+        decimal totale = subtotale + costoSpedizione;
+
+        // Calcola il totale dell'ordine
+     //   var totaleOrdine = ordine.Orologi.Sum(p => p.Prezzo * p.Giacenza);
+
+        // Popola il view model con i dettagli dell'ordine
+        var viewModel = new DettaglioOrdineViewModel
+        {
+            OrdineId = ordine.Id,
+            NomeOrdine = ordine.Nome,
+            ClienteNome = ordine.Cliente.Nome,
+        //    ClienteTelefono = ordine.Cliente.PhoneNumber ?? "Non disponibile", // Usa un valore predefinito se null
+           // IndirizzoSpedizione = ordine.Cliente.Indirizzo ?? "Indirizzo non disponibile", // Usa un valore predefinito se null
+            MetodoPagamento = "Carta di credito", // Modifica in base alla tua logica
+            TipoSpedizione = "Standard",         // Modifica in base alla tua logica
+            CostoSpedizione = costoSpedizione,            // Default 
+            StatoOrdine = "Completato",          // Modifica in base allo stato reale
+            DataAcquisto = ordine.DataAcquisto,
+            Prodotti = ordine.Orologi.ToList(),
+            // Totale del carrello (ordine)
+            Subtotale = subtotale,
+            Totale = totale
+        };
+
+        return View("DettaglioOrdini", viewModel);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError("Errore durante il caricamento del dettaglio ordine: {Message}", ex.Message);
+        return StatusCode(500, "Errore interno al server.");
+    }
 }
+
+
 
 
 }

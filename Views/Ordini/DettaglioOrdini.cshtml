@@ -99,12 +99,13 @@
       <p><strong>Ordinato il:</strong> @Model.DataAcquisto.ToString("dd/MM/yyyy")</p>
       <p><strong>Nome cliente:</strong> @Model.ClienteNome</p>
       <p><strong>Indirizzo:</strong> @Model.IndirizzoSpedizione</p>
-      <p><strong>Telefono:</strong> @Model.ClienteTelefono</p>
+    @*  <p><strong>Telefono:</strong> @Model.ClienteTelefono</p> *@
       <p><strong>Spedizione:</strong> @Model.TipoSpedizione</p>
       <p><strong>Metodo pagamento:</strong> @Model.MetodoPagamento</p>
     </div>
-  @* 
+   
      <!-- Recap ordine -->
+  
     <div class="summary-box">
       <div class="d-flex justify-content-between">
         <p>Subtotale:</p>
@@ -117,9 +118,9 @@
       <hr>
       <div class="d-flex justify-content-between total-box">
         <p>Totale:</p>
-       <p>€@Model.Ordini.Orol.Totale + @Model.CostoSpedizione</p>
+       <p>€@(Model.Totale + Model.CostoSpedizione)</p>
       </div>
-    </div>   *@ 
+    </div>   
     
     <!-- Bottone per tornare alla sezione precedente -->
     <div class="return-button">
@@ -128,7 +129,7 @@
      
   </div>
 </div>
-
+}
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
