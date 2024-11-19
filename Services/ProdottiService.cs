@@ -13,12 +13,12 @@ public class ProdottiService
     {
         try
         {
-            return _context.Orologi.ToList();  // Return all products as a List
+            return _context.Orologi.ToList();  // Ritorna tutti i prodotti come lista
         }
         catch (Exception ex)
         {
             _logger.LogError("Errore nella lettura : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
-            return new List<Orologio>();
+            return new List<Orologio>();    // Ritorna una lista vuota se c'è un errore
         }
     }
 
@@ -36,7 +36,7 @@ public class ProdottiService
         catch (Exception ex)
         {
             _logger.LogError("Errore nella lettura : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message , ex.GetType().Name , ex.StackTrace);
-            return new List<Categoria>(); // Ritorna una lista vuota se c'è un errore
+            return new List<Categoria>(); 
         }
     } 
 
@@ -116,21 +116,21 @@ public class ProdottiService
         List<Orologio> prodottiTotali, int? minPrezzo, int? maxPrezzo, int? categoriaId, int? marcaId,
         int? materialeId, int? tipologiaId)
     {
-        List<Orologio> prodottiFiltrati = new List<Orologio>(); 
+        List<Orologio> prodottiFiltrati = new List<Orologio>(); // Lista di prodotti filtrati
         bool scartato;
 
         foreach (var prodotto in prodottiTotali)
         {
             scartato = false;
-            if(minPrezzo.HasValue && prodotto.Prezzo < minPrezzo.Value)
+            if(minPrezzo.HasValue && prodotto.Prezzo < minPrezzo.Value) // Se prezzo minore del prezzo minimo
             {
                 scartato = true;
             }
-            if(maxPrezzo.HasValue && prodotto.Prezzo > maxPrezzo.Value)
+            if(maxPrezzo.HasValue && prodotto.Prezzo > maxPrezzo.Value) // Se prezzo maggiore di prezzo massimo
             {
                 scartato = true;
             }
-            if(categoriaId.HasValue && prodotto.CategoriaId != categoriaId)
+            if(categoriaId.HasValue && prodotto.CategoriaId != categoriaId) // Se la categoria non corrisponde a quella selezionata
             {
                 scartato = true;
             }
@@ -144,42 +144,63 @@ public class ProdottiService
             }
             if(tipologiaId.HasValue && prodotto.TipologiaId != tipologiaId)
             {
-                scartato = true;
+                scartato = true;    // Scarta il prodotto
             }
-            if(scartato == false)
+            if(scartato == false)   // Se prodotto non scartato
             {
-                prodottiFiltrati.Add(prodotto);
+                prodottiFiltrati.Add(prodotto); // Lo aggiunge alla lista
             }
         }
         return prodottiFiltrati;
+    }
+
+    public List<Orologio> OrdinaPerPrezzo(List<Orologio> prodotti)
+    {
+        // Bubble Sort per ordinare i prodotti per prezzo
+        for (int i = 0; i < prodotti.Count - 1; i++)
+        {
+            for (int j = 0; j < prodotti.Count - 1 - i; j++)
+            {
+                if (prodotti[j].Prezzo > prodotti[j + 1].Prezzo)
+                {
+                    // Inverte gli elementi se sono nell'ordine sbagliato
+                    var temp = prodotti[j];
+                    prodotti[j] = prodotti[j + 1];
+                    prodotti[j + 1] = temp;
+                }
+            }
+        }
+
+        return prodotti;
     }
 
     public ProdottiViewModel PreparaProdottiViewModel(
         int? minPrezzo, int? maxPrezzo, int? categoriaId, int? marcaId, int? materialeId, int? tipologiaId, 
         int paginaCorrente, int prodottiPerPagina)
     {
-        var categorie = _context.Categorie.ToList();
-        var marche = _context.Marche.ToList();
-        var materiali = _context.Materiali.ToList();
-        var tipologie = _context.Tipologie.ToList();
+        var categorie = CaricaCategorie();
+        var marche = CaricaMarche();
+        var materiali = CaricaMateriali();
+        var tipologie = CaricaTipologie();
 
         var prodottiTotali = CaricaProdotti();
         var prodottiFiltrati = FiltraProdotti(prodottiTotali, minPrezzo, maxPrezzo, categoriaId, marcaId, materialeId, tipologiaId);
 
-        int quantitaProdotti = prodottiFiltrati.Count;
-        int numeroPagine = (int)Math.Ceiling((double)quantitaProdotti / prodottiPerPagina);
+        int quantitaProdotti = prodottiFiltrati.Count;  // Conteggio dei prodotti filtrati
+        int numeroPagine = (int)Math.Ceiling((double)quantitaProdotti / prodottiPerPagina); // Numero pagine in base a quantità prodotti
 
-        var prodottiPaginati = prodottiFiltrati
+        var prodottiOrdinati = OrdinaPerPrezzo(prodottiFiltrati);   // Per non usare .OrderBy(p => p.Prezzo)
+
+        var prodottiPaginati = prodottiOrdinati // Inpaginazione dei prodotti
             .Skip((paginaCorrente - 1) * prodottiPerPagina)
             .Take(prodottiPerPagina)
-            .OrderBy(p => p.Prezzo)
             .ToList();
 
         return new ProdottiViewModel
         {
             Orologi = prodottiPaginati,
             MinPrezzo = minPrezzo ?? 0,
-            MaxPrezzo = maxPrezzo ?? (prodottiFiltrati.Any() ? prodottiFiltrati.Max(p => p.Prezzo) : 0),
+            MaxPrezzo = maxPrezzo ?? (prodottiFiltrati.Any() ? prodottiFiltrati.Max(p => p.Prezzo) : 0),    // Per problema pagina vuota per nessuna corrispondenza filtro
             NumeroPagine = numeroPagine,
             PaginaCorrente = paginaCorrente,
             Categorie = categorie,
@@ -210,7 +231,7 @@ public class ProdottiService
     {
         try
         {
-            _context.Orologi.Add(orologio);
+            _context.Orologi.Add(orologio); // Aggiunge prodotto al database
             _context.SaveChanges();
             _logger.LogInformation("Product successfully saved.");
             return true;
@@ -285,15 +306,14 @@ public class ProdottiService
     {
         try
         {
-            // Retrieve the product from the database
+            // Trova il prodotto nel database
             var prodotto = CercaProdottoPerId(_context.Orologi.ToList(), id);
 
             if (prodotto == null)
             {
-                return null; // Return null if the product was not found
+                return null; // Return null se prodotto non trovato
             }
 
-            // Prepare the ViewModel with the product to delete
             var viewModel = new EliminaProdottoViewModel
             {
                 Orologio = prodotto
@@ -303,8 +323,8 @@ public class ProdottiService
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error preparing ViewModel for product deletion: {ex.Message}");
-            return null; // Return null in case of an error
+            _logger.LogError($"Errore nella preparazione del view model: {ex.Message}");
+            return null; 
         }
     }
 
@@ -312,23 +332,22 @@ public class ProdottiService
     {
         try
         {
-            // Find the product to delete
             Orologio prodotto = CercaProdottoPerId(_context.Orologi.ToList(), id);
             if (prodotto == null)
             {
-                return false; // Product not found
+                return false; 
             }
 
-            // Remove the product from the DbContext
+            // Rimuove il prodotto dal database
             _context.Orologi.Remove(prodotto);
             
-            // Save changes in the database
+            // Salva le modifiche
             _context.SaveChanges();
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error deleting product: {ex.Message}");
+            _logger.LogError($"Errore nella cancellazione del prodotto: {ex.Message}");
             return false;
         }
     }
@@ -339,13 +358,13 @@ public class ProdottiService
         {
             Orologio orologio = null;
     
-            // Loop through the Orologi collection to find the product
+            // Loop nella collezione per trovare il prodotto
             foreach (var item in orologi)
             {
                 if (item.Id == id)
                 {
                     orologio = item;
-                    break; // Exit the loop once the product is found
+                    break; // Esce dal loop una volta trovato
                 }
             }
             return orologio;

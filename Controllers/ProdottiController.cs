@@ -18,6 +18,7 @@ public class ProdottiController : Controller
     {
         const int prodottiPerPagina = 6;
 
+        // Per assegnare le variabili passate al viewmodel
         var viewModel = _prodottiService.PreparaProdottiViewModel(
             minPrezzo, maxPrezzo, categoriaSelezionata, marcaSelezionata, materialeSelezionato, tipologiaSelezionata,
             paginaCorrente, prodottiPerPagina);
@@ -41,15 +42,16 @@ public class ProdottiController : Controller
             return View(viewModel);
         }*/
 
-        _logger.LogInformation("Attempting to save product.");
-        var isSaved = _prodottiService.SalvaProdotto(viewModel.Orologio);
+        _logger.LogInformation("Tentativo di salvare il prodotto.");
+        // Bool per prodotto salvato o meno
+        var salvato = _prodottiService.SalvaProdotto(viewModel.Orologio);
 
-        if (!isSaved)
+        if (!salvato)
         {
-            return View("Error"); // Optionally show an error view
+            return View("Error");
         }
 
-        _logger.LogInformation("Product saved. Redirecting to Index.");
+        _logger.LogInformation("Prodotto salvato. Redirecting a Index.");
         return RedirectToAction("Index", "Home");
     }
 
@@ -81,62 +83,14 @@ public class ProdottiController : Controller
         return RedirectToAction("Index");
     }
     
-/*
-    public IActionResult EliminaProdotto(int id)
-    {
-        var prodotti = CaricaProdotti();
-        var prodotto = CercaProdottoPerId(prodotti, id);
-        if (prodotto == null)
-        {
-            // Se il prodotto non viene trovato
-            return NotFound();
-        }
-
-        // Prepara il viewnodel con il prodotto da cancellare
-        var viewModel = new EliminaProdottoViewModel
-        {
-            Orologio = prodotto
-        };
-        return View(viewModel);
-    }
-
-    [HttpPost, ActionName("EliminaProdotto")]
-    public IActionResult EliminaProdottoEseguito(int id)
-    {
-        try
-        {
-            var prodotti = CaricaProdotti();
-            var prodotto = CercaProdottoPerId(prodotti, id);
-            if (prodotto == null)
-            {
-                return NotFound();
-            }
-
-            // Rimuove il prodotto da DbContext
-            _context.Orologi.Remove(prodotto);
-            
-            // Salva le modifiche nel database
-            _context.SaveChanges();
-            _logger.LogInformation("Prodotto con ID: {Id} eliminato con successo.", id);
-            return RedirectToAction("Index");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Errore nel salvataggio: {Message} \n Exception Type: {ExceptionType} \n Stack Trace: {StackTrace}", ex.Message, ex.GetType().Name, ex.StackTrace);
-            return StatusCode(500, "Errore durante l'eliminazione del prodotto.");
-        }
-    }
-*/
     public IActionResult EliminaProdotto(int id)
     {
         try
         {
-            // Call the service to get the ViewModel for the product to delete
             var viewModel = _prodottiService.PreparaEliminaProdottoViewModel(id);
             
             if (viewModel == null)
             {
-                // If the product is not found, return NotFound
                 return NotFound();
             }
             
@@ -144,8 +98,8 @@ public class ProdottiController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error retrieving product: {ex.Message}");
-            return StatusCode(500, "An error occurred while retrieving the product.");
+            _logger.LogError($"Errore nella ricerca del prodotto: {ex.Message}");
+            return StatusCode(500, "Qualcosa è andato storto duranrte la ricerca del prodotto.");
         }
     }
 
@@ -154,12 +108,11 @@ public class ProdottiController : Controller
     {
         try
         {
-            // Call the service to delete the product
             bool success = _prodottiService.EliminaProdotto(id);
 
             if (success)
             {
-                _logger.LogInformation("Product with ID {Id} successfully deleted.", id);
+                _logger.LogInformation("Prodotto con ID {Id} cancellato con successo.", id);
                 return RedirectToAction("Index");
             }
             else
@@ -169,8 +122,8 @@ public class ProdottiController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error deleting product: {ex.Message}");
-            return StatusCode(500, "An error occurred while deleting the product.");
+            _logger.LogError($"Errore nella cancellazione del prodotto: {ex.Message}");
+            return StatusCode(500, "Qualcosa è andato storto durante la cancellazione del prodotto.");
         }
     }
 }
