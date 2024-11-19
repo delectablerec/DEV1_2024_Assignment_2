@@ -20,5 +20,6 @@ public class ListaOrdiniViewModel
     public string? UrlImmagineProdotto { get; set; }
     public string NomeProdotto { get; set; } = "Nessun prodotto";
     public decimal CostoSpedizione { get; set; } = 10.00m; // Default
+    public List<Orologio> Orologi { get; set; }
 }
 
