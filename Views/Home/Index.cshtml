@@ -1,100 +1,293 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+  ViewData["Title"] = "Home Page";
 }
 
-<!-- Ultimi Arrivi -->
-<div class="container-lg py-5">
-  <h2 class="text-center mb-4">Ultimi Arrivi</h2>  
-  <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
-    <!-- Indicators -->
-    <ol class="carousel-indicators">
-      <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"></li>
-      <li data-bs-target="#myCarousel" data-bs-slide-to="1"></li>
-      <li data-bs-target="#myCarousel" data-bs-slide-to="2"></li>
-    </ol>
-
-    <!-- Wrapper for slides -->
-    <div class="carousel-inner">
-      <div class="carousel-item active text-center">
-        <img src="./images/1.jpg" alt="1.jpg" class="d-block mx-auto carousel-image" style="max-width: 100%; height: 400px; object-fit: cover;">
-      </div>
-
-      <div class="carousel-item text-center">
-        <img src="./images/2.jpg" alt="2.jpg" class="d-block mx-auto carousel-image" style="max-width: 100%; height: 400px; object-fit: cover;">
-      </div>
-    
-      <div class="carousel-item text-center">
-        <img src="./images/3.jpg" alt="3.jpg" class="d-block mx-auto carousel-image" style="max-width: 100%; height: 400px; object-fit: cover;">
+<!-- Main Carousel -->
+<div id="mainCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active" aria-current="true"
+      aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img class="d-block w-100 main-carousel-image" src="./immaginiProdotti/Omega2.jpg" alt="First slide">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Collezione di Lusso</h5>
+        <p>Scopri l'eleganza dei nostri orologi esclusivi</p>
       </div>
     </div>
-
-    <!-- Left and right controls -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+    <div class="carousel-item">
+      <img class="d-block w-100 main-carousel-image" src="./immaginiProdotti/Rolex5.jpg" alt="Second slide">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Edizioni Limitate</h5>
+        <p>Pezzi unici che raccontano storie di eccellenza</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100 main-carousel-image" src="./immaginiProdotti/patekPhilippe2.jpg" alt="Third slide">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Precisione e Design</h5>
+        <p>L'arte dell'orologeria al massimo livello</p>
+      </div>
+    </div>
   </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
 </div>
 
-<!-- Sezioni più visitate -->
-<div class="container-lg py-5">
-  <h2 class="text-center mb-4">Sezioni Più Visitate</h2> 
-  <div class="row text-center">
+<!-- Sezioni Visitate -->
+<div class="container-fluid py-5">
+  <h2 class="text-center mb-4">Categorie</h2>
+  <div class="row text-center px-3">
     <div class="col-6 col-md-2 mb-4">
       <a href="#" class="text-decoration-none">
-        <img src="./images/1.jpg" class="img-fluid mb-2" alt="New In" style="width:100%;">
+        <img src="https://via.placeholder.com/300" class="img-fluid mb-2 rounded" alt="New In">
         <h6 class="text-dark">NEW IN</h6>
       </a>
     </div>
     <div class="col-6 col-md-2 mb-4">
       <a href="#" class="text-decoration-none">
-        <img src="./images/2.jpg" class="img-fluid mb-2" alt="Charms" style="width:100%;">
+        <img src="https://via.placeholder.com/300" class="img-fluid mb-2 rounded" alt="Charms">
         <h6 class="text-dark">CHARMS</h6>
       </a>
     </div>
     <div class="col-6 col-md-2 mb-4">
       <a href="#" class="text-decoration-none">
-        <img src="./images/3.jpg" class="img-fluid mb-2" alt="Bracelets" style="width:100%;">
+        <img src="https://via.placeholder.com/300" class="img-fluid mb-2 rounded" alt="Bracelets">
         <h6 class="text-dark">BRACELETS</h6>
       </a>
     </div>
     <div class="col-6 col-md-2 mb-4">
       <a href="#" class="text-decoration-none">
-        <img src="./images/1.jpg" class="img-fluid mb-2" alt="Rings" style="width:100%;">
+        <img src="https://via.placeholder.com/300" class="img-fluid mb-2 rounded" alt="Rings">
         <h6 class="text-dark">RINGS</h6>
       </a>
     </div>
     <div class="col-6 col-md-2 mb-4">
       <a href="#" class="text-decoration-none">
-        <img src="./images/2.jpg" class="img-fluid mb-2" alt="Earrings" style="width:100%;">
+        <img src="https://via.placeholder.com/300" class="img-fluid mb-2 rounded" alt="Earrings">
         <h6 class="text-dark">EARRINGS</h6>
       </a>
     </div>
     <div class="col-6 col-md-2 mb-4">
       <a href="#" class="text-decoration-none">
-        <img src="./images/3.jpg" class="img-fluid mb-2" alt="Necklaces" style="width:100%;">
+        <img src="https://via.placeholder.com/300" class="img-fluid mb-2 rounded" alt="Necklaces">
         <h6 class="text-dark">NECKLACES</h6>
       </a>
     </div>
   </div>
 </div>
 
-<!-- Aggiungi questo stile CSS per personalizzare le frecce -->
+<!-- Prodotti Carousel -->
+<div class="container-fluid py-5">
+  <h2 class="text-center mb-4">Ultimi Arrivi</h2>
+  <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="row justify-content-center px-3">
+          <div class="col-12 col-md-4 mb-3">
+            <div class="card">
+              <div class="position-relative">
+                <span class="badge bg-dark position-absolute top-0 start-0 m-2">Novità</span>
+                <div class="product-card-image-container">
+                  <img
+                    src="https://images.watchfinder.co.uk/imgv3/stock/293939/Rolex-Submariner-16610-293939-240606-103111.jpg;h=850"
+                    class="product-card-image" alt="Rolex Submariner">
+                </div>
+              </div>
+              <div class="card-body text-center">
+                <h5 class="card-title">Rolex Submariner</h5>
+                <p class="card-text text-muted">Acciaio</p>
+                <p class="fw-bold">€ 12.000</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 mb-3">
+            <div class="card">
+              <div class="position-relative">
+                <span class="badge bg-dark position-absolute top-0 start-0 m-2">Novità</span>
+                <div class="product-card-image-container">
+                  <img src="https://image.svizzerireplica.it/par522bcucp.jpg" class="product-card-image"
+                    alt="Vacheron Constantin">
+                </div>
+              </div>
+              <div class="card-body text-center">
+                <h5 class="card-title">Vacheron Constantin</h5>
+                <p class="card-text text-muted">Platino</p>
+                <p class="fw-bold">€ 28.700</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 mb-3">
+            <div class="card">
+              <div class="position-relative">
+                <span class="badge bg-dark position-absolute top-0 start-0 m-2">Novità</span>
+                <div class="product-card-image-container">
+                  <img
+                    src="https://www.palazzolowatches.com/cdn/shop/files/AP-Royal-Oak-Blue-Dial-41mm-Product.png?v=1717158575"
+                    class="product-card-image" alt="Audemars Piguet">
+                </div>
+              </div>
+              <div class="card-body text-center">
+                <h5 class="card-title">Audemars Piguet</h5>
+                <p class="card-text text-muted">Acciaio</p>
+                <p class="fw-bold">€ 20.000</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="row justify-content-center px-3">
+          <div class="col-12 col-md-4 mb-3">
+            <div class="card">
+              <div class="position-relative">
+                <span class="badge bg-dark position-absolute top-0 start-0 m-2">Esclusivo</span>
+                <div class="product-card-image-container">
+                  <img src="https://www.rocca1794.com/media/catalog/product/p/a/patek_philippe_5270j_001_1.png"
+                    class="product-card-image" alt="Patek Philippe">
+                </div>
+              </div>
+              <div class="card-body text-center">
+                <h5 class="card-title">Patek Philippe</h5>
+                <p class="card-text text-muted">Modello speciale</p>
+                <p class="fw-bold">€ 200.000</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 mb-3">
+            <div class="card">
+              <div class="position-relative">
+                <span class="badge bg-dark position-absolute top-0 start-0 m-2">Esclusivo</span>
+                <div class="product-card-image-container">
+                  <img
+                    src="https://media.rolex.com/image/upload/q_auto:eco/f_auto/t_v7-majesty/c_limit,w_2440/v1/catalogue/2024/upright-c/m126515ln-0006"
+                    class="product-card-image" alt="Rolex Daytona">
+                </div>
+              </div>
+              <div class="card-body text-center">
+                <h5 class="card-title">Rolex Daytona</h5>
+                <p class="card-text text-muted">Modello speciale</p>
+                <p class="fw-bold">€ 50.000</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+
+
 <style>
-  .carousel-control-prev-icon,
-  .carousel-control-next-icon {
-    background-color: black; /* Cambia il colore delle frecce a nero */
-    border-radius: 50%; /* Aggiunge un bordo arrotondato alle frecce */
+  /* Stile immagini carousel principale */
+  .main-carousel-image {
+    max-height: 70vh;
+    object-fit: cover;
+    filter: brightness(0.8);
   }
 
-  /* Aggiungi una larghezza e altezza fisse per le immagini del carosello */
-  .carousel-image {
-    max-width: 100%;
-    height: 400px; /* Imposta una altezza fissa per evitare spostamenti */
-    object-fit: cover; /* Garantisce che l'immagine si adatti senza deformarsi */
+  /* Stile caption */
+  .carousel-caption {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 15px;
   }
+
+  /* Stile frecce carousel semplificato */
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 40px;
+    opacity: 0.7;
+  }
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-image: none;
+    width: 30px;
+    height: 30px;
+    position: relative;
+  }
+
+  .carousel-control-prev-icon::before,
+  .carousel-control-next-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 15px;
+    height: 15px;
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .carousel-control-prev-icon::before {
+    transform: translate(-50%, -50%) rotate(-135deg);
+  }
+
+  /* Stile card prodotti */
+  .product-card-image-container {
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .product-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* Responsive */
+  @@media
+  (max-width: 768px) {
+    .main-carousel-image {
+      max-height: 50vh;
+    }
+
+    .product-card-image-container {
+      height: 200px;
+    }
+
+    .carousel-caption {
+      padding: 10px;
+      font-size: 0.9rem;
+    }
+  }
+
+  @@media
+  (max-width: 576px) {
+    .main-carousel-image {
+      max-height: 40vh;
+    }
+
+    .product-card-image-container {
+      height: 150px;
+    }
+
+    .carousel-caption {
+      padding: 5px;
+      font-size: 0.8rem;
+    }
+  }
+  
 </style>
