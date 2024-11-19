@@ -22,28 +22,29 @@ public class OrdiniService
     {
         try
         {
-            var ordini = _context.Ordini        // Recupera gli ordini dal database
-                .Include("OrdineDettagli.Orologio")
-                .Include("Cliente")
+            var ordini = _context.Ordini        // Recupera gli ordini dal database includendo i dettagli dell'ordine prodotti e le informazioni sul cliente
+                .Include("OrdineDettagli.Orologio") // Include i dettagli dell'ordine e i relativi prodotti (orologi)
+                .Include("Cliente")  // Include le informazioni del cliente associato a ogni ordine
                 .ToList();
-            // Converte ogni ordine in un ViewModel
+            // Converte ogni ordine in oggetto ListaOrdiniViewModel
             return ordini.Select(ordine =>
             {
+                
                 var totaleOrdine = ordine.OrdineDettagli.Sum(d => d.PrezzoUnitario * d.Quantita); // Calcola il totale dell'ordine
                 var statoOrdine = ordine.OrdineDettagli.Count > 0 ? "Completato" : "In lavorazione";  // Determina lo stato dell'ordine
-
+                // Recupera l'URL dell'immagine del primo prodotto associato all'ordine se disponibile altrimenti usa un'immagine predefinita
                 var urlImmagineProdotto = ordine.OrdineDettagli.Count > 0 && ordine.OrdineDettagli[0].Orologio != null
                     ? ordine.OrdineDettagli[0].Orologio.UrlImmagine
                     : "/img/default.png";
-
+                 // Recupera il nome del modello del primo prodotto associato all'ordine se disponibile altrimenti usa "Nessun prodotto"
                 var nomeProdotto = ordine.OrdineDettagli.Count > 0 && ordine.OrdineDettagli[0].Orologio != null
                     ? ordine.OrdineDettagli[0].Orologio.Modello
                     : "Nessun prodotto";
-
+            // Crea e restituisce un nuovo oggetto ListaOrdiniViewModel con i dati calcolati e recuperati
                 return new ListaOrdiniViewModel
                 {
-                    Id = ordine.Id,
-                    NomeOrdine = ordine.Nome,
+                    Id = ordine.Id,  // ID dell'ordine
+                    NomeOrdine = ordine.Nome,  //nome ordine
                     DataAcquisto = ordine.DataAcquisto,
                     StatoOrdine = statoOrdine,
                     TotaleOrdine = totaleOrdine,
@@ -68,17 +69,18 @@ public class OrdiniService
         if (System.IO.File.Exists(filePath)) // Controlla se il file esiste nel path specificato
         {
             var json = System.IO.File.ReadAllText(filePath); // Legge il contenuto del file json
-            // Deserializza i carrelli degli utenti
+            // Deserializza il contenuto JSON in un dizionario di carrelli utenti
+            // La chiave è l'ID dell'utente(string), il valore è il carrello dell'utente.
             var carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) ??
                                  new Dictionary<string, CarrelloViewModel>();
 
-            if (carrelliUtenti.ContainsKey(userId)) // Controlla se esiste un carrello per l'utente
+            if (carrelliUtenti.ContainsKey(userId)) // Controlla se esiste un carrello associato all'ID utente(che è chiave del dizionario)
             {
                 // Reimposta il carrello dell'utente a svuotandolo
                 carrelliUtenti[userId] = new CarrelloViewModel
                 {
                     Carrello = new List<OrologioInCarrello>(), // Lista vuota di orologi
-                    Totale = 0,
+                    Totale = 0,  //azzeramento
                     Quantita = 0
                 };
 
@@ -95,7 +97,7 @@ public class OrdiniService
     }
 }
 
-
+//Metodo per caricare il carrello di un utente specifico dal file JSON
     public CarrelloViewModel CaricaCarrello(string userId, string filePath)
     {
         try
@@ -103,10 +105,12 @@ public class OrdiniService
             if (System.IO.File.Exists(filePath))
             {
                 var json = System.IO.File.ReadAllText(filePath);
-            // Deserializza il file JSON in un dizionario di carrelli
+            // Deserializza il contenuto JSON in un dizionario
+            // La chiave rappresenta l'ID dell'utente e il valore è il relativo carrello
                 var carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) ??
-                                     new Dictionary<string, CarrelloViewModel>();
+                                     new Dictionary<string, CarrelloViewModel>(); //altrimenti  Usa un dizionario vuoto 
                 // Controlla se esiste un carrello per l'utente specifico
+                //TryGetValue verifica se un elemento esiste in un dizionario se esiste ottiene il valore associato alla chiave specificata (userId)
                 if (carrelliUtenti.TryGetValue(userId, out var carrello))
                 {
                     return carrello; //restituisce il carrello associato all'utente
@@ -175,6 +179,7 @@ public class OrdiniService
     {
         try
         {
+            // Variabile per conservare l'ordine da eliminare
             Ordine ordineDaEliminare = null;
 
             // Itera sugli ordini per trovare l'ordine con l'ID specificato
@@ -197,12 +202,12 @@ public class OrdiniService
             // Aggiorna la giacenza e rimuove i dettagli
             foreach (var dettaglio in ordineDaEliminare.OrdineDettagli)
             {
-                if (dettaglio.Orologio != null)
+                if (dettaglio.Orologio != null) // Verifica che l'orologio associato non sia null
                 {
-                    dettaglio.Orologio.Giacenza += dettaglio.Quantita;
-                    _context.Entry(dettaglio.Orologio).State = EntityState.Modified;
+                    dettaglio.Orologio.Giacenza += dettaglio.Quantita; // Aggiunge la quantità del prodotto alla giacenza
+                    _context.Entry(dettaglio.Orologio).State = EntityState.Modified; // Segnala a Entity Framework che l'orologio è stato modificato
                 }
-                _context.Entry(dettaglio).State = EntityState.Deleted;
+                _context.Entry(dettaglio).State = EntityState.Deleted; // Segnala che il dettaglio dell'ordine deve essere eliminato.
             }
 
             // Rimuove l'ordine
