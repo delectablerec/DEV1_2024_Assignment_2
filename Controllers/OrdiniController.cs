@@ -19,51 +19,70 @@ public class OrdiniController : Controller
 
     // Metodo per visualizzare tutti gli ordini
     public IActionResult Index()
+{
+    try
     {
-        try
+        // Recupera tutti gli ordini con i dettagli e i clienti
+        List<Ordine> ordini = _context.Ordini
+            .Include("OrdineDettagli.Orologio")
+            .Include("Cliente")
+            .ToList();
+
+        // Inizializza il ViewModel
+        List<ListaOrdiniViewModel> viewModel = new List<ListaOrdiniViewModel>();
+
+        foreach (Ordine ordine in ordini)
         {
-            var ordini = _context.Ordini
-                .Include(o => o.OrdineDettagli)
-                    .ThenInclude(od => od.Orologio)
-                .Include(o => o.Cliente)
-                .ToList();
-
-            var viewModel = new List<ListaOrdiniViewModel>();
-            foreach (var ordine in ordini)
+            // Calcola il totale dell'ordine
+            decimal totaleOrdine = 0m;
+            foreach (OrdineDettaglio dettaglio in ordine.OrdineDettagli)
             {
-                var totaleOrdine = 0m;
-                foreach (var dettaglio in ordine.OrdineDettagli)
-                {
-                    totaleOrdine += dettaglio.PrezzoUnitario * dettaglio.Quantita;
-                }
-
-                viewModel.Add(new ListaOrdiniViewModel
-                {
-                    Id = ordine.Id,
-                    NomeOrdine = ordine.Nome,
-                    DataAcquisto = ordine.DataAcquisto,
-                    StatoOrdine = ordine.OrdineDettagli.Count > 0 ? "Completato" : "In lavorazione",
-                    TotaleOrdine = totaleOrdine,
-                    UrlImmagineProdotto = ordine.OrdineDettagli.Count > 0
-                        ? ordine.OrdineDettagli[0].Orologio.UrlImmagine
-                        : "/img/default.png",
-                    NomeProdotto = ordine.OrdineDettagli.Count > 0
-                        ? ordine.OrdineDettagli[0].Orologio.Modello
-                        : "Nessun prodotto",
-                    CostoSpedizione = 10.00m
-                });
+                totaleOrdine += dettaglio.PrezzoUnitario * dettaglio.Quantita;
             }
 
-            return View(viewModel);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Errore durante il caricamento degli ordini: {Message}", ex.Message);
-            return StatusCode(500, "Errore interno del server.");
-        }
-    }
+            // Determina lo stato dell'ordine
+            string statoOrdine = "In lavorazione";
+            if (ordine.OrdineDettagli.Count > 0)
+            {
+                statoOrdine = "Completato";
+            }
 
- 
+            // Determina i dettagli del primo prodotto
+            string urlImmagineProdotto = "/img/default.png";
+            string nomeProdotto = "Nessun prodotto";
+            if (ordine.OrdineDettagli.Count > 0 && ordine.OrdineDettagli[0].Orologio != null)
+            {
+                urlImmagineProdotto = ordine.OrdineDettagli[0].Orologio.UrlImmagine;
+                nomeProdotto = ordine.OrdineDettagli[0].Orologio.Modello;
+            }
+
+            // Aggiungi un nuovo elemento al ViewModel
+            ListaOrdiniViewModel ordineViewModel = new ListaOrdiniViewModel
+            {
+                Id = ordine.Id,
+                NomeOrdine = ordine.Nome,
+                DataAcquisto = ordine.DataAcquisto,
+                StatoOrdine = statoOrdine,
+                TotaleOrdine = totaleOrdine,
+                UrlImmagineProdotto = urlImmagineProdotto,
+                NomeProdotto = nomeProdotto,
+                CostoSpedizione = 10.00m // Valore fisso
+            };
+
+            viewModel.Add(ordineViewModel);
+        }
+
+        // Restituisci la vista con il ViewModel
+        return View(viewModel);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError("Errore durante il caricamento degli ordini: {Message}", ex.Message);
+        return StatusCode(500, "Errore interno del server.");
+    }
+}
+
+
 
     // Metodo per caricare il carrello dal file JSON
     private CarrelloViewModel CaricaCarrello(string userId)
@@ -112,6 +131,7 @@ public class OrdiniController : Controller
         }
     }
 
+   
     // Metodo per svuotare il carrello
     private void SvuotaCarrello(string userId)
     {
@@ -144,88 +164,7 @@ public class OrdiniController : Controller
             _logger.LogError("Errore durante lo svuotamento del carrello per UserId: {UserId}. Exception: {Message}", userId, ex.Message);
         }
     }
-/*
-    // Metodo per creare un ordine a partire dal carrello
-    [HttpPost]
-    public IActionResult CreaOrdineDaCarrello()
-    {
-        try
-        {
-            var userId = _userManager.GetUserId(User);
-            if (string.IsNullOrEmpty(userId))
-            {
-                _logger.LogWarning("Utente non autenticato. Impossibile creare un ordine.");
-                return Unauthorized("Devi essere autenticato per effettuare un ordine.");
-            }
 
-            var carrello = CaricaCarrello(userId);
-            if (carrello == null || carrello.Carrello.Count == 0)
-            {
-                _logger.LogWarning("Tentativo di creare un ordine con un carrello vuoto. UserId: {UserId}", userId);
-                return BadRequest("Il carrello è vuoto.");
-            }
-
-            var cliente = _context.Clienti.FirstOrDefault(c => c.Id == userId);
-            if (cliente == null)
-            {
-                _logger.LogWarning("Cliente non trovato. UserId: {UserId}", userId);
-                return BadRequest("Cliente non trovato.");
-            }
-
-            var nuovoOrdine = new Ordine
-            {
-                ClienteId = userId,
-                Cliente = cliente,
-                DataAcquisto = DateTime.Now,
-                Nome = $"Ordine-{DateTime.Now.Ticks}_{userId}"
-            };
-
-            foreach (var item in carrello.Carrello)
-            {
-                var prodotto = _context.Orologi.FirstOrDefault(p => p.Id == item.Orologio.Id);
-                if (prodotto == null)
-                {
-                    _logger.LogWarning("Prodotto con ID {IdProdotto} non trovato.", item.Orologio.Id);
-                    continue;
-                }
-
-                if (prodotto.Giacenza < item.QuantitaInCarrello)
-                {
-                    throw new Exception($"Giacenza insufficiente per il prodotto {prodotto.Modello}.");
-                }
-
-                prodotto.Giacenza -= item.QuantitaInCarrello;
-
-                var dettaglio = new OrdineDettaglio
-                {
-                    Ordine = nuovoOrdine,
-                    Orologio = prodotto,
-                    Quantita = item.QuantitaInCarrello,
-                    PrezzoUnitario = prodotto.Prezzo
-                };
-
-                nuovoOrdine.OrdineDettagli.Add(dettaglio);
-            }
-
-            _context.Ordini.Add(nuovoOrdine);
-            _context.SaveChanges();
-
-            nuovoOrdine.Nome = $"BRT-{nuovoOrdine.Id}_{userId}";
-            _context.SaveChanges();
-
-            _logger.LogInformation("Ordine creato con successo, ID: {OrdineId}.", nuovoOrdine.Id);
-
-            SvuotaCarrello(userId);
-
-            return RedirectToAction("Index", "Ordini");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Errore durante la creazione dell'ordine: {Message}", ex.Message);
-            return StatusCode(500, "Errore interno del server.");
-        }
-    }
-*/
 
 [HttpPost]
 public IActionResult CreaOrdineDaCarrello()
