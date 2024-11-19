@@ -1,33 +1,7 @@
 {
-  "28b18064-78ab-466e-a733-8487450ddd2a": {
-    "Carrello": [
-      {
-        "OrologioId": 5,
-        "Orologio": {
-          "Modello": "fantasy65",
-          "Referenza": "edrfg456",
-          "MaterialeId": 1,
-          "Materiale": null,
-          "TipologiaId": 1,
-          "Tipologia": null,
-          "Diametro": 0,
-          "GenereId": 2,
-          "Genere": null,
-          "Prezzo": 345.45,
-          "Giacenza": 24,
-          "Colore": "grigio",
-          "UrlImmagine": "/immaginiProdotti/PatekPhilippe2.jpg",
-          "CategoriaId": 2,
-          "Categoria": null,
-          "MarcaId": 1,
-          "Marca": null,
-          "Id": 5,
-          "Nome": "orologio"
-        },
-        "QuantitaInCarrello": 5
-      }
-    ],
-    "Totale": 1727.25,
-    "Quantita": 5
+  "29fb7d2a-eac2-4647-b19f-e9c7d45b225a": {
+    "Carrello": [],
+    "Totale": 0.0,
+    "Quantita": 0
   }
 }
