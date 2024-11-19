@@ -16,3 +16,4 @@ migrations
 *.db-wal
 .dockerignore
 Dockerfile
+carrelli.json
