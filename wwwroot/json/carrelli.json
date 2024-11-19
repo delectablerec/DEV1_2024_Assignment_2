@@ -1,33 +1,7 @@
 {
   "128a9578-9ca4-450c-9108-41c7d05d99d3": {
-    "Carrello": [
-      {
-        "OrologioId": 1,
-        "Orologio": {
-          "Modello": "model2",
-          "Referenza": "1325",
-          "MaterialeId": 1,
-          "Materiale": null,
-          "TipologiaId": 1,
-          "Tipologia": null,
-          "Diametro": 0,
-          "GenereId": 1,
-          "Genere": null,
-          "Prezzo": 15.0,
-          "Giacenza": 147,
-          "Colore": "nero",
-          "UrlImmagine": "/immaginiProdotti/Rolex1.jpg",
-          "CategoriaId": 1,
-          "Categoria": null,
-          "MarcaId": 1,
-          "Marca": null,
-          "Id": 1,
-          "Nome": "orologio1"
-        },
-        "QuantitaInCarrello": 1
-      }
-    ],
-    "Totale": 15.0,
-    "Quantita": 1
+    "Carrello": [],
+    "Totale": 0.0,
+    "Quantita": 0
   }
 }

@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 public class ProdottiController : Controller
 {
     private ProdottiService _prodottiService;
     private readonly ILogger<ProdottiController> _logger;
     private readonly ApplicationDbContext _context;
-
 
     public ProdottiController(ApplicationDbContext context, ILogger<ProdottiController> logger, ProdottiService prodottiService)
     {
@@ -33,17 +34,33 @@ public class ProdottiController : Controller
     }
 
     [HttpPost]
-    public IActionResult AggiungiProdotto(AggiungiProdottoViewModel viewModel)
+    public IActionResult AggiungiProdotto(AggiungiProdottoViewModel viewModel, IFormFile ImageFile)
     {
-        /*if (!ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             _logger.LogWarning("Validation failed for the product.");
             viewModel = _prodottiService.PreparaAggiungiProdottoViewModel();
             return View(viewModel);
-        }*/
+        }
 
         _logger.LogInformation("Tentativo di salvare il prodotto.");
-        // Bool per prodotto salvato o meno
+
+        // Gestisci l'upload del file
+        if (ImageFile != null && ImageFile.Length > 0)
+        {
+            var fileName = Path.GetFileName(ImageFile.FileName);
+            var filePath = Path.Combine("wwwroot", "uploads", fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                ImageFile.CopyTo(stream);
+            }
+
+            // Aggiorna il modello con il nome del file
+            viewModel.Orologio.UrlImmagine = fileName;
+        }
+
+        // Salva il prodotto nel database
         var salvato = _prodottiService.SalvaProdotto(viewModel.Orologio);
 
         if (!salvato)
@@ -82,18 +99,18 @@ public class ProdottiController : Controller
         _logger.LogInformation("Prodotto con ID: {Id} modificato. Redirecting to Index.", viewModel.Orologio.Id);
         return RedirectToAction("Index");
     }
-    
+
     public IActionResult EliminaProdotto(int id)
     {
         try
         {
             var viewModel = _prodottiService.PreparaEliminaProdottoViewModel(id);
-            
+
             if (viewModel == null)
             {
                 return NotFound();
             }
-            
+
             return View(viewModel);
         }
         catch (Exception ex)
