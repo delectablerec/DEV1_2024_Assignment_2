@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 public class CarrelloController : Controller
 {
-    private CarrelloService _carrelloService;
     private readonly ILogger<ProdottiController> _logger;   // Logger per identificare problemi o informazioni
     private readonly UserManager<Cliente> _userManager; // Cliente eredita da IdentityUser
+    private CarrelloService _carrelloService;
     private readonly ApplicationDbContext _context; // Collegamento al database
     public CarrelloController(ApplicationDbContext context, ILogger<ProdottiController> logger, UserManager<Cliente> userManager, CarrelloService carrelloService)
     {
@@ -50,7 +50,8 @@ public class CarrelloController : Controller
         {
             _logger.LogInformation("Carrello caricato per UserId: {UserId}. Prodotti nel carrello: {Count}", userId, carrello.Carrello.Count);
         }
-
+        
+        ViewData["CartItemCount"] = ItemsInCart();
         return View(carrello);
     }
 
@@ -132,6 +133,25 @@ public class CarrelloController : Controller
 
         return RedirectToAction("Index"); // Redirect al carrello dopo la rimozione
     }
+        public int ItemsInCart()
+    {
+        var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrEmpty(userId))
+        {
+            _logger.LogError("User ID is null or empty.");
+            return 0;
+        }
 
+        var carrello = _carrelloService.CaricaCarrello(userId);
 
+        if (carrello == null || carrello.Carrello.Count == 0)
+        {
+            _logger.LogWarning("Carrello vuoto per UserId: {UserId}", userId);
+            return 0;
+        }
+        else
+        {
+            return carrello.Carrello.Count;
+        }
+    }
 }
