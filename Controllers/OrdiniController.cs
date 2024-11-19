@@ -63,6 +63,8 @@ public class OrdiniController : Controller
         }
     }
 
+ 
+
     // Metodo per caricare il carrello dal file JSON
     private CarrelloViewModel CaricaCarrello(string userId)
     {
@@ -224,7 +226,7 @@ public class OrdiniController : Controller
         }
     }
 
-    // Metodo per visualizzare il dettaglio di un ordine
+ /*   // Metodo per visualizzare il dettaglio di un ordine
     [HttpGet]
     public IActionResult DettaglioOrdine(int id)
     {
@@ -283,7 +285,86 @@ public class OrdiniController : Controller
             _logger.LogError("Errore durante il caricamento del dettaglio ordine: {Message}", ex.Message);
             return StatusCode(500, "Errore interno del server.");
         }
+    }*/
+
+    public IActionResult DettaglioOrdine(int id)
+{
+    try
+    {
+        // Recupera tutti gli ordini dal contesto, includendo i dettagli e i clienti
+        List<Ordine> ordini = _context.Ordini
+            .Include("OrdineDettagli.Orologio")
+            .Include("Cliente")
+            .ToList();
+
+        // Trova l'ordine con l'ID specificato
+        Ordine ordine = null;
+        foreach (var o in ordini)
+        {
+            if (o.Id == id)
+            {
+                ordine = o;
+                break;
+            }
+        }
+
+        // Controlla se l'ordine esiste
+        if (ordine == null)
+        {
+            _logger.LogWarning("Ordine non trovato con ID: {Id}", id);
+            return NotFound("Ordine non trovato.");
+        }
+
+        // Crea il ViewModel per il dettaglio ordine
+        DettaglioOrdineViewModel viewModel = new DettaglioOrdineViewModel
+        {
+            OrdineId = ordine.Id,
+            NomeOrdine = ordine.Nome,
+            ClienteNome = ordine.Cliente != null ? ordine.Cliente.Nome : "Cliente sconosciuto",
+            IndirizzoSpedizione = "Via Esempio, 123", // Valore statico
+            MetodoPagamento = "Carta di credito",     // Valore statico
+            TipoSpedizione = "Standard",             // Valore statico
+            StatoOrdine = ordine.OrdineDettagli.Count > 0 ? "Completato" : "In lavorazione",
+            DataAcquisto = ordine.DataAcquisto,
+            Subtotale = 0m,
+            CostoSpedizione = 10.00m, // Valore fisso
+            Totale = 0m,
+            Prodotti = new List<DettaglioOrdineProdottoViewModel>()
+        };
+
+        // Calcola il totale e aggiungi i dettagli del prodotto al ViewModel
+        foreach (var dettaglio in ordine.OrdineDettagli)
+        {
+            var prezzoTotaleDettaglio = dettaglio.PrezzoUnitario * dettaglio.Quantita;
+            viewModel.Subtotale += prezzoTotaleDettaglio;
+
+            // Aggiungi il prodotto al ViewModel
+            DettaglioOrdineProdottoViewModel prodottoViewModel = new DettaglioOrdineProdottoViewModel
+            {
+                UrlImmagine = dettaglio.Orologio != null ? dettaglio.Orologio.UrlImmagine : "/img/default.png",
+                Modello = dettaglio.Orologio != null ? dettaglio.Orologio.Modello : "Modello sconosciuto",
+                Quantita = dettaglio.Quantita,
+                PrezzoUnitario = dettaglio.PrezzoUnitario,
+                Descrizione = $"Quantità: {dettaglio.Quantita} - Prezzo unitario: €{dettaglio.PrezzoUnitario}",
+                Giacenza = dettaglio.Orologio != null ? dettaglio.Orologio.Giacenza : 0
+            };
+
+            viewModel.Prodotti.Add(prodottoViewModel);
+        }
+
+        // Calcola il totale dell'ordine
+        viewModel.Totale = viewModel.Subtotale + viewModel.CostoSpedizione;
+
+        // Restituisce la vista con il ViewModel
+        return View("DettaglioOrdini", viewModel);
     }
+    catch (Exception ex)
+    {
+        _logger.LogError("Errore durante il caricamento del dettaglio ordine: {Message}", ex.Message);
+        return StatusCode(500, "Errore interno del server.");
+    }
+}
+
 
 [HttpPost]
 public IActionResult EliminaOrdine(int id)
