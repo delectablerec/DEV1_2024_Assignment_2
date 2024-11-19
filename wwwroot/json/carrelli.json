@@ -1,33 +1,33 @@
 {
-  "7e03b07e-05f1-4955-867e-a38ee4bec4e7": {
+  "28b18064-78ab-466e-a733-8487450ddd2a": {
     "Carrello": [
       {
-        "OrologioId": 1,
+        "OrologioId": 5,
         "Orologio": {
-          "Modello": "virtual",
-          "Referenza": "yu56Df3",
-          "MaterialeId": 4,
+          "Modello": "fantasy65",
+          "Referenza": "edrfg456",
+          "MaterialeId": 1,
           "Materiale": null,
           "TipologiaId": 1,
           "Tipologia": null,
           "Diametro": 0,
-          "GenereId": 1,
+          "GenereId": 2,
           "Genere": null,
-          "Prezzo": 456.23,
-          "Giacenza": 32,
-          "Colore": "blu",
-          "UrlImmagine": "/immaginiProdotti/Omega1.jpg",
-          "CategoriaId": 3,
+          "Prezzo": 345.45,
+          "Giacenza": 24,
+          "Colore": "grigio",
+          "UrlImmagine": "/immaginiProdotti/PatekPhilippe2.jpg",
+          "CategoriaId": 2,
           "Categoria": null,
-          "MarcaId": 4,
+          "MarcaId": 1,
           "Marca": null,
-          "Id": 1,
+          "Id": 5,
           "Nome": "orologio"
         },
-        "QuantitaInCarrello": 2
+        "QuantitaInCarrello": 5
       }
     ],
-    "Totale": 912.46,
-    "Quantita": 2
+    "Totale": 1727.25,
+    "Quantita": 5
   }
 }
