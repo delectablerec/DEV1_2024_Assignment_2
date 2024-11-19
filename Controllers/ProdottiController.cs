@@ -11,7 +11,7 @@ public class ProdottiController : Controller
         _logger = logger;
     }
 
-    public IActionResult Index(int? minPrezzo, int? maxPrezzo, int? categoriaId, int? marcaId, int? materialeId, int? tipologiaId, int paginaCorrente = 1)
+    public IActionResult Index(int? minPrezzo, int? maxPrezzo, int? categoriaSelezionata, int? marcaSelezionata, int? materialeSelezionato, int? tipologiaSelezionata, int paginaCorrente = 1)
     {
         // Numero di default dei prodotti per pagina
         int prodottiPerPagina = 6;
@@ -24,7 +24,7 @@ public class ProdottiController : Controller
 
         var prodottiTotali = CaricaProdotti();
 
-        var prodottiFiltrati = FiltraProdotti(prodottiTotali.ToList(), minPrezzo, maxPrezzo, categoriaId, marcaId, materialeId, tipologiaId);
+        var prodottiFiltrati = FiltraProdotti(prodottiTotali.ToList(), minPrezzo, maxPrezzo, categoriaSelezionata, marcaSelezionata, materialeSelezionato, tipologiaSelezionata);
 
         if (!prodottiTotali.Any())
         {
@@ -62,13 +62,17 @@ public class ProdottiController : Controller
         {
             Orologi = prodottiPaginati,
             MinPrezzo = minPrezzo ?? 0,
-            MaxPrezzo = maxPrezzo ?? prodottiPaginati.Max(p => p.Prezzo),
+            MaxPrezzo = maxPrezzo ?? (prodottiPaginati.Any() ? prodottiPaginati.Max(p => p.Prezzo) : 0),
             NumeroPagine = numeroPagine,
             PaginaCorrente = paginaCorrente,
             Categorie = categorie, 
             Marche = marche,  
             Materiali = materiali,
             Tipologie = tipologie,
+            CategoriaSelezionata = categoriaSelezionata,
+            MarcaSelezionata = marcaSelezionata,
+            MaterialeSelezionato = materialeSelezionato,
+            TipologiaSelezionata = tipologiaSelezionata,
             ConteggioProdotti = quantitaProdotti
         };
         return View(viewModel);
@@ -144,11 +148,10 @@ public class ProdottiController : Controller
             // Log validation errors for debugging purposes
             foreach (var modelState in ModelState.Values)
             {
-                foreach (var error in modelState.Errors)
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
                     _logger.LogError(error.ErrorMessage);  // Log each error
                 }
-
                 // Return the view with validation errors
                 viewModel.Categorie = CaricaCategorie();
                 viewModel.Marche = CaricaMarche();
@@ -158,10 +161,10 @@ public class ProdottiController : Controller
                 return View(viewModel);
             }
         }
-
+*/
         // Log information about the current product
         _logger.LogInformation("Product is valid, saving to database");
-*/
+
         try
         {
             _context.Orologi.Add(viewModel.Orologio);  // Entity Framework will handle the ID assignment

@@ -14,6 +14,7 @@
                     <label asp-for="Orologio.Nome" class="col-sm-4 control-label">Nome</label>
                     <div class="col-sm-8">
                         <input class="form-control bg-dark text-light border-secondary" asp-for="Orologio.Nome" placeholder="nome">
+                        <!--<span asp-validation-for="Orologio.Nome" class="text-danger"></span>-->
                     </div>
                 </div>
 
@@ -21,6 +22,7 @@
                     <label class="col-sm-4 control-label">Prezzo</label>
                     <div class="col-sm-8">
                         <input class="form-control bg-dark text-light border-secondary" asp-for="Orologio.Prezzo" placeholder="prezzo">
+                        <!--<span asp-validation-for="Orologio.Prezzo" class="text-danger"></span>-->
                     </div>
                 </div>
 
@@ -28,6 +30,7 @@
                     <label class="col-sm-4 control-label">Giacenza</label>
                     <div class="col-sm-8">
                         <input class="form-control bg-dark text-light border-secondary" asp-for="Orologio.Giacenza" placeholder="giacenza">
+                        <!--<span asp-validation-for="Orologio.Giacenza" class="text-danger"></span>-->
                     </div>
                 </div>
 
@@ -35,6 +38,7 @@
                     <label class="col-sm-4 control-label">Colore</label>
                     <div class="col-sm-8">
                         <input class="form-control bg-dark text-light border-secondary" asp-for="Orologio.Colore" placeholder="colore">
+                        <!--<span asp-validation-for="Orologio.Colore" class="text-danger"></span>-->
                     </div>
                 </div>
 
@@ -42,6 +46,7 @@
                     <label class="col-sm-4 control-label">Immagine</label>
                     <div class="col-sm-8">
                         <input class="form-control bg-dark text-light border-secondary" asp-for="Orologio.UrlImmagine" placeholder="immagine">
+                        <!--<span asp-validation-for="Orologio.UrlImmagine" class="text-danger"></span>-->
                     </div>
                 </div>
 
@@ -55,6 +60,7 @@
                                 <option value="@categoria.Id">@categoria.Nome</option>
                             }
                         </select>
+                        <!--<span asp-validation-for="Orologio.CategoriaId" class="text-danger"></span>-->
                     </div>
                 </div>
 
@@ -68,6 +74,7 @@
                                 <option value="@marca.Id">@marca.Nome</option>
                             }
                         </select>
+                        <!--<span asp-validation-for="Orologio.MarcaId" class="text-danger"></span>-->
                     </div>
                 </div>
 
@@ -75,6 +82,7 @@
                     <label class="col-sm-4 control-label">Modello</label>
                     <div class="col-sm-8">
                         <input class="form-control bg-dark text-light border-secondary" asp-for="Orologio.Modello" placeholder="modello">
+                        <!--<span asp-validation-for="Orologio.Modello" class="text-danger"></span>-->
                     </div>
                 </div>
 
@@ -82,6 +90,7 @@
                     <label class="col-sm-4 control-label">Referenza</label>
                     <div class="col-sm-8">
                         <input class="form-control bg-dark text-light border-secondary" asp-for="Orologio.Referenza" placeholder="referenza">
+                        <!--<span asp-validation-for="Orologio.Referenza" class="text-danger"></span>-->
                     </div>
                 </div>
 
@@ -95,6 +104,7 @@
                                 <option value="@materiale.Id">@materiale.Nome</option>
                             }
                         </select>
+                        <!--<span asp-validation-for="Orologio.MaterialeId" class="text-danger"></span>-->
                     </div>
                 </div>
 
@@ -108,6 +118,7 @@
                                 <option value="@tipologia.Id">@tipologia.Nome</option>
                             }
                         </select>
+                        <!--<span asp-validation-for="Orologio.TipologiaId" class="text-danger"></span>-->
                     </div>
                 </div>
 
@@ -115,6 +126,7 @@
                     <label class="col-sm-4 control-label">Diametro</label>
                     <div class="col-sm-8">
                         <input class="form-control bg-dark text-light border-secondary" asp-for="Orologio.Diametro" placeholder="diametro">
+                        <!--<span asp-validation-for="Orologio.Diametro" class="text-danger"></span>-->
                     </div>
                 </div>
 
@@ -128,11 +140,13 @@
                                 <option value="@genere.Id">@genere.Nome</option>
                             }
                         </select>
+                        <!--<span asp-validation-for="Orologio.GenereId" class="text-danger"></span>-->
                     </div>
                 </div>
 
                 <div class="row mt-4">
                     <div class="offset-sm-4 col-sm-8">
+                        
                         <button type="submit" class="btn btn-custom w-100 rounded-pill">Submit</button>
                     </div>
                 </div>
