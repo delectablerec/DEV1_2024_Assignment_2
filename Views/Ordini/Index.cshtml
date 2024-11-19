@@ -45,7 +45,27 @@
         margin: 5px 10px;
       }
     }
- 
+  /* Stile per schermi medi (576px a 1180px) */
+    @@media screen and (max-width: 1180px) and (min-width: 576px) {
+        .order-card {
+            text-align: center; 
+            display: block; /* Forza layout verticale */
+        }
+
+        .order-photo {
+            margin: 0 auto 15px; 
+        }
+
+        .col-12.col-sm-8 {
+            text-align: center; 
+        }
+
+        .btn-detail, .btn-delete {
+            display: block; /* Disposizione verticale dei bottoni */
+            
+            margin: 5px auto; /* Centra i bottoni */
+        }
+    }
   </style>
    
 
