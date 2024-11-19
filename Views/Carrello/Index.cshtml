@@ -77,11 +77,11 @@
                         Continua a Comprare
                     </button>
                 </form>
-                <form method="post" asp-controller="Ordini" asp-action="CreaOrdineDaCarrello">
-                    <button type="submit" class="btn btn-dark">
+               <!-- <form method="post" asp-controller="Ordini" asp-action="CreaOrdineDaCarrello"> -->
+                    <button type="submit" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#orderConfirmationModal">
                         Vai alla Cassa
                     </button>
-                </form>
+             <!--   </form> -->
             </div>
         </div>
     }
@@ -95,4 +95,25 @@
             </a>
         </div>
     }
+</div>
+
+<!-- Modal for Order Confirmation -->
+<div class="modal fade" id="orderConfirmationModal" tabindex="-1" aria-labelledby="orderConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderConfirmationModalLabel">Conferma Ordine</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Sei sicuro di voler confermare il tuo ordine? Una volta confermato, l'ordine verrà creato.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                <form method="post" asp-controller="Ordini" asp-action="CreaOrdineDaCarrello">
+                    <button type="submit" class="btn btn-dark">Conferma Ordine</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

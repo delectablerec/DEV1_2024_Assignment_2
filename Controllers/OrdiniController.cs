@@ -2,26 +2,32 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+
+// Controller per gestire le operazioni sugli ordini
 public class OrdiniController : Controller
 {
     private readonly ApplicationDbContext _context;
-    private readonly OrdiniService _ordiniService;
-    private readonly ILogger<OrdiniController> _logger;
-    private readonly UserManager<Cliente> _userManager;
+    private readonly OrdiniService _ordiniService;  // Servizio per la logica di gestione degli ordini
+    private readonly ILogger<OrdiniController> _logger; // Logger per tracciare errori e informazioni
+    private readonly UserManager<Cliente> _userManager; // Gestore per l'identità degli utenti
 
+
+
+// Costruttore del controller
     public OrdiniController(OrdiniService ordiniService, ILogger<OrdiniController> logger, UserManager<Cliente> userManager)
     {
-        ApplicationDbContext context;
-        _ordiniService = ordiniService;
-        _logger = logger;
-        _userManager = userManager;
+       // ApplicationDbContext context; // Contesto per l'accesso al database
+        _ordiniService = ordiniService; // Assegna il servizio degli ordini
+        _logger = logger; // Assegna il logger
+        _userManager = userManager;  // Assegna il gestore utenti
     }
 
+// Azione per visualizzare la lista degli ordini
     public IActionResult Index()
     {
         try
         {
-            var ordini = _ordiniService.GetOrdini();
+            var ordini = _ordiniService.GetOrdini(); // Recupera la lista degli ordini tramite il servizio
             return View(ordini);
         }
         catch
@@ -30,18 +36,19 @@ public class OrdiniController : Controller
         }
     }
 
+// Azione per creare un ordine dal carrello
     [HttpPost]
 public IActionResult CreaOrdineDaCarrello()
 {
     try
     {
-        var userId = _userManager.GetUserId(User);
-        if (string.IsNullOrEmpty(userId))
+        var userId = _userManager.GetUserId(User); // Recupera l'ID dell'utente autenticato
+        if (string.IsNullOrEmpty(userId)) //se non è autenticato
         {
             _logger.LogWarning("Utente non autenticato. Impossibile creare un ordine.");
             return Unauthorized("Devi essere autenticato per effettuare un ordine.");
         }
-
+    // Carica il carrello dal file JSON
         var carrello = _ordiniService.CaricaCarrello(userId, "wwwroot/json/carrelli.json");
         if (carrello == null || carrello.Carrello.Count == 0)
         {
@@ -49,13 +56,13 @@ public IActionResult CreaOrdineDaCarrello()
             return BadRequest("Il carrello è vuoto.");
         }
 
-        var success = _ordiniService.CreaOrdineDaCarrello(userId, carrello);
-        if (!success)
+        var success = _ordiniService.CreaOrdineDaCarrello(userId, carrello); // Crea l'ordine utilizzando il servizio
+        if (!success) //se l'ordine non è stato creato
         {
             return BadRequest("Errore nella creazione dell'ordine.");
         }
 
-        _ordiniService.SvuotaCarrello(userId, "wwwroot/json/carrelli.json");
+        _ordiniService.SvuotaCarrello(userId, "wwwroot/json/carrelli.json"); // Svuota il carrello una volta creato l'ordine
 
         return RedirectToAction("Index");
     }
@@ -66,15 +73,16 @@ public IActionResult CreaOrdineDaCarrello()
     }
 }
 
+// Azione per eliminare un ordine
 [HttpPost]
 public IActionResult EliminaOrdine(int id)
 {
     try
     {
-        // Usa il servizio per eliminare l'ordine
+        // richiama il servizio per eliminare l'ordine
         bool successo = _ordiniService.EliminaOrdine(id);
 
-        if (!successo)
+        if (!successo) // Controlla se l'ordine non è stato trovato
         {
             return NotFound("Ordine non trovato.");
         }
@@ -88,6 +96,7 @@ public IActionResult EliminaOrdine(int id)
     }
 }
 
+// Azione per visualizzare il dettaglio di un ordine
 public IActionResult DettaglioOrdine(int id)
 {
     try
