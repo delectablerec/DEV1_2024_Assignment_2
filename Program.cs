@@ -16,7 +16,8 @@ builder.Services.AddDefaultIdentity<Cliente>(options => options.SignIn.RequireCo
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Register your CartService here
-builder.Services.AddScoped<CarrelloService>();  // Adding CartService as Scoped service
+builder.Services.AddScoped<CarrelloService>()  // Adding CartService as Scoped service
+                .AddScoped<ProdottiService>();
 
 builder.Services.AddControllersWithViews();
 
