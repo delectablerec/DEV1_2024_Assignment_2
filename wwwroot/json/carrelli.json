@@ -1,33 +1,33 @@
 {
-  "128a9578-9ca4-450c-9108-41c7d05d99d3": {
+  "ec9e59e9-816c-40a3-9ceb-7a909c8a9984": {
     "Carrello": [
       {
         "OrologioId": 1,
         "Orologio": {
-          "Modello": "model2",
-          "Referenza": "1325",
-          "MaterialeId": 1,
+          "Modello": "Moon53",
+          "Referenza": "43hdsk8",
+          "MaterialeId": 2,
           "Materiale": null,
           "TipologiaId": 1,
           "Tipologia": null,
-          "Diametro": 0,
+          "Diametro": 6,
           "GenereId": 1,
           "Genere": null,
-          "Prezzo": 15.0,
-          "Giacenza": 147,
-          "Colore": "nero",
-          "UrlImmagine": "/immaginiProdotti/Rolex1.jpg",
-          "CategoriaId": 1,
+          "Prezzo": 3478.0,
+          "Giacenza": 5,
+          "Colore": "blu",
+          "UrlImmagine": "/immaginiProdotti/Seiko1.jpg",
+          "CategoriaId": 2,
           "Categoria": null,
-          "MarcaId": 1,
+          "MarcaId": 3,
           "Marca": null,
           "Id": 1,
-          "Nome": "orologio1"
+          "Nome": "orologio"
         },
         "QuantitaInCarrello": 1
       }
     ],
-    "Totale": 15.0,
+    "Totale": 3478.0,
     "Quantita": 1
   }
 }

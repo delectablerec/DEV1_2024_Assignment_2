@@ -26,6 +26,18 @@ public class ProdottiController : Controller
         return View(viewModel);
     }
 
+    public IActionResult DettaglioProdotto(int id)
+    {
+        var viewModel = _prodottiService.PreparaDettaglioProdottoViewModel(id);
+
+        if (viewModel == null)
+        {
+            return NotFound();
+        }
+
+        return View(viewModel);
+    }
+
     public IActionResult AggiungiProdotto()
     {
         var viewModel = _prodottiService.PreparaAggiungiProdottoViewModel();

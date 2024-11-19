@@ -3,42 +3,33 @@
     ViewData["Title"] = "Dettaglio Prodotto";
 }
 
-
 <div class="container my-5">
     <div class="row">
         <!-- Colonna immagine principale e galleria -->
         <div class="col-lg-5 d-flex flex-column align-items-center">
             <!-- Immagine principale del prodotto -->
-            <img src="@Model.Orologio.UrlImmagine" alt="@Model.Orologio.Nome @Model.Orologio.Marca" class="img-fluid rounded mb-3" style="max-width: 100%; height: auto;">
-            
-            <!-- Immagini aggiuntive una sotto l’altra -->
-            <div class="w-100 d-flex flex-column align-items-center">
-                <img src="./img/rolex_back.jpg" alt="Orologio retro" class="img-fluid" style="max-width: 80%; height: auto;">
-            </div>
-
-            <!-- Immagine aggiuntiva posizionata sotto le altre immagini in modalità responsive -->
-            <div class="img-box w-100 d-flex justify-content-center mt-3 d-lg-none">
-                <img src="./img/rolexbox.jpg" alt="Vista laterale Rolex" class="img-fluid rounded" style="max-width: 80%; height: auto;">
-            </div>
+            <img src="@Model.Orologio.UrlImmagine" alt="@Model.Orologio.Modello @Model.Orologio.Marca" class="img-fluid rounded mb-3" style="max-width: 100%; height: auto;">
         </div>
 
         <!-- Colonna dettagli del prodotto "appiccicosa" -->
         <div class="col-lg-5 sticky-column d-flex flex-column align-items-start">
-            <h1 class="fw-bold">Rolex Submariner</h1>
-            <p>Il Rolex Submariner è un'icona dell'orologeria, famoso per il suo design elegante e la sua robustezza subacquea.</p>
+            <h1 class="fw-bold">@Model.Orologio.Modello</h1>
+            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</p>
         <!--     <a class="text-decoration-underline" style="color: #333;" data-bs-toggle="collapse" href="#moreText" role="button" aria-expanded="false" aria-controls="moreText">Leggi di più</a>-->
 
             <span id="moreText" style="display: none;">
-                Il Rolex Submariner è stato originariamente progettato per essere l’orologio da sub per eccellenza, 
-                con una cassa robusta, una ghiera rotante unidirezionale e un movimento di precisione. 
-                Questo modello rappresenta una fusione perfetta tra funzionalità e bellezza, mantenendo un 
-                fascino che lo rende una scelta popolare tra collezionisti e appassionati.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Temporibus fuga deleniti voluptatem maiores necessitatibus autem corrupti,
+                dolore iure. Nulla libero iure eaque, doloribus animi labore velit. Aliquam magni sed nihil.
             </span>
             <a href="javascript:void(0)" onclick="toggleText()" id="readMoreLink" style="color: #333;" class="text-decoration-underline">Leggi di più</a>
+            
+            <p class="fs-4 mt-3"><strong>@Model.Orologio.Prezzo</strong> <small class="text-muted">IVA incl.</small></p>
 
-
-            <p class="fs-4 mt-3"><strong>€ 12.500</strong> <small class="text-muted">IVA incl.</small></p>
-            <button class="btn btn-dark btn-lg w-100 mb-3">AGGIUNGI AL CARRELLO</button>
+            @if(Model.Orologio.Giacenza >0)
+            {
+                <a asp-controller="Carrello" asp-action="AggiungiACarrello" asp-route-id="@Model.Orologio.Id" class="btn btn-dark btn-lg w-100 mb-3"> AGGIUNGI AL CARRELLO </a>
+            }
 
             <!-- Opzioni aggiuntive -->
             <div class="mb-3">
@@ -50,95 +41,74 @@
                 <a href="#" class="text-decoration-none"style="color: #333;"><i class="bi bi-share"></i> SHARE</a>
                 <span class="text-muted">Ref. RGX10000</span>
             </div>
-
-            <!-- Immagine aggiuntiva posizionata sotto "Share" e "Ref" solo su schermi grandi -->
-            <div class="img-box w-100 d-flex justify-content-center mt-3 d-none d-lg-flex">
-                <img src="./img/rolexbox.jpg" alt="Vista laterale Rolex" class="img-fluid rounded" style="max-width: 80%; height: auto;">
-            </div>
         </div>
     </div>
 
     <!-- Specifiche tecniche e nav tabs -->
     <div class="specifiche-tecniche">
-        <h4>Specifiche tecniche</h4>
+        <h4>Specifiche</h4>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="cassa-tab" data-bs-toggle="tab" data-bs-target="#cassa" type="button" role="tab" aria-controls="cassa" aria-selected="true">Cassa</button>
+                <button class="nav-link active" id="generiche-tab" data-bs-toggle="tab" data-bs-target="#generiche" type="button" role="tab" aria-controls="generiche" aria-selected="true">Generiche</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="movimento-tab" data-bs-toggle="tab" data-bs-target="#movimento" type="button" role="tab" aria-controls="movimento" aria-selected="false">Movimento</button>
+                <button class="nav-link" id="tecniche-tab" data-bs-toggle="tab" data-bs-target="#tecniche" type="button" role="tab" aria-controls="tecniche" aria-selected="false">Tecniche</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="lancette-tab" data-bs-toggle="tab" data-bs-target="#lancette" type="button" role="tab" aria-controls="lancette" aria-selected="false">Lancette</button>
+                <button class="nav-link" id="estetiche-tab" data-bs-toggle="tab" data-bs-target="#estetiche" type="button" role="tab" aria-controls="estetiche" aria-selected="false">Estetiche</button>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-            <!-- Sezione Cassa -->
-            <div class="tab-pane fade show active p-3" id="cassa" role="tabpanel" aria-labelledby="cassa-tab">
+            <!-- Sezione Generica -->
+            <div class="tab-pane fade show active p-3" id="generiche" role="tabpanel" aria-labelledby="generiche-tab">
                 <div class="tech-info">
                     <div>
-                        <h5>Dimensioni Cassa</h5>
-                        <p>38 mm x 27.5 mm</p>
+                        <h5>Categoria</h5>
+                        <p>@Model.Orologio.Categoria.Nome</p>
                     </div>
                     <div>
-                        <h5>Materiale Cassa</h5>
-                        <p>Acciaio</p>
+                        <h5>Genere</h5>
+                        <p>@Model.Orologio.Genere.Nome</p>
                     </div>
                     <div>
-                        <h5>Corona</h5>
-                        <p>Acciaio, Spinello</p>
+                        <h5>Marca</h5>
+                        <p>@Model.Orologio.Marca.Nome</p>
                     </div>
                     <div>
-                        <h5>Impermeabilità</h5>
-                        <p>30 metri</p>
-                    </div>
-                    <div>
-                        <h5>Vetro</h5>
-                        <p>Zaffiro sintetico</p>
-                    </div>
-                    <div>
-                        <h5>Spessore Cassa</h5>
-                        <p>7.3 mm</p>
-                    </div>
-                    <div>
-                        <h5>Materiale del Fondello</h5>
-                        <p>Acciaio</p>
+                        <h5>Modello</h5>
+                        <p>@Model.Orologio.Modello</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Sezione Movimento -->
-            <div class="tab-pane fade p-3" id="movimento" role="tabpanel" aria-labelledby="movimento-tab">
+            <!-- Sezione Tecnica -->
+            <div class="tab-pane fade p-3" id="tecniche" role="tabpanel" aria-labelledby="tecniche-tab">
                 <div class="tech-info">
                     <div>
-                        <h5>Tipo di Movimento</h5>
-                        <p>Automatico</p>
+                        <h5>Referenza</h5>
+                        <p>@Model.Orologio.Referenza</p>
                     </div>
                     <div>
-                        <h5>Calibro</h5>
-                        <p>3235</p>
+                        <h5>Diametro</h5>
+                        <p>@Model.Orologio.Diametro</p>
                     </div>
                     <div>
-                        <h5>Riserva di carica</h5>
-                        <p>70 ore</p>
-                    </div>
-                    <div>
-                        <h5>Certificazione</h5>
-                        <p>COSC</p>
+                        <h5>Tipologia</h5>
+                        <p>@Model.Orologio.Tipologia.Nome</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Sezione Lancette -->
-            <div class="tab-pane fade p-3" id="lancette" role="tabpanel" aria-labelledby="lancette-tab">
+            <!-- Sezione Estetica -->
+            <div class="tab-pane fade p-3" id="estetiche" role="tabpanel" aria-labelledby="estetiche-tab">
                 <div class="tech-info">
-                    <div>
-                        <h5>Stile</h5>
-                        <p>Classiche, luminescenti</p>
-                    </div>
                     <div>
                         <h5>Materiale</h5>
-                        <p>Acciaio, rivestimento in Super-LumiNova</p>
+                        <p>@Model.Orologio.Materiale.Nome</p>
+                    </div>
+                    <div>
+                        <h5>Colore</h5>
+                        <p>@Model.Orologio.Colore</p>
                     </div>
                 </div>
             </div>
@@ -159,12 +129,6 @@
         </form>
     </div>
 </div>
-
-<footer class="border-top footer text-muted">
-    <div class="container">
-        <p>2024 - All rights reserved - <a href="#" style="color: #333;">Privacy</a></p>
-    </div>
-</footer>
 
 <style>
     /* Stile generale per la colonna "sticky" */
