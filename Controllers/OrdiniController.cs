@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 // Controller per gestire le operazioni sugli ordini
 public class OrdiniController : Controller
 {
-    private readonly ApplicationDbContext _context;
+  
     private readonly OrdiniService _ordiniService;  // Servizio per la logica di gestione degli ordini
     private readonly ILogger<OrdiniController> _logger; // Logger per tracciare errori e informazioni
     private readonly UserManager<Cliente> _userManager; // Gestore per l'identità degli utenti
@@ -16,7 +16,7 @@ public class OrdiniController : Controller
 // Costruttore del controller
     public OrdiniController(OrdiniService ordiniService, ILogger<OrdiniController> logger, UserManager<Cliente> userManager)
     {
-       // ApplicationDbContext context; // Contesto per l'accesso al database
+       
         _ordiniService = ordiniService; // Assegna il servizio degli ordini
         _logger = logger; // Assegna il logger
         _userManager = userManager;  // Assegna il gestore utenti
@@ -36,7 +36,7 @@ public class OrdiniController : Controller
         }
     }
 
-// Azione per creare un ordine dal carrello
+// Azione per creare un ordine dal carrello di un utente autenticato
     [HttpPost]
 public IActionResult CreaOrdineDaCarrello()
 {
@@ -49,14 +49,15 @@ public IActionResult CreaOrdineDaCarrello()
             return Unauthorized("Devi essere autenticato per effettuare un ordine.");
         }
     // Carica il carrello dal file JSON
+    //Il metodo CaricaCarrello utilizza l'userId per cercare nel file JSON il carrello associato a quell'utente
         var carrello = _ordiniService.CaricaCarrello(userId, "wwwroot/json/carrelli.json");
         if (carrello == null || carrello.Carrello.Count == 0)
         {
             _logger.LogWarning("Tentativo di creare un ordine con un carrello vuoto. UserId: {UserId}", userId);
             return BadRequest("Il carrello è vuoto.");
         }
-
-        var success = _ordiniService.CreaOrdineDaCarrello(userId, carrello); // Crea l'ordine utilizzando il servizio
+    //  creare un nuovo ordine basato sui dati presenti nel carrello dell'utente specifico
+        var success = _ordiniService.CreaOrdineDaCarrello(userId, carrello); 
         if (!success) //se l'ordine non è stato creato
         {
             return BadRequest("Errore nella creazione dell'ordine.");
@@ -79,7 +80,8 @@ public IActionResult EliminaOrdine(int id)
 {
     try
     {
-        // richiama il servizio per eliminare l'ordine
+        //Chiama il metodo EliminaOrdine del servizio OrdiniService passando l'ID dell'ordine da eliminare.
+        //Il metodo EliminaOrdine restituisce un valore booleano true se è andata a buon fine
         bool successo = _ordiniService.EliminaOrdine(id);
 
         if (!successo) // Controlla se l'ordine non è stato trovato
@@ -101,7 +103,7 @@ public IActionResult DettaglioOrdine(int id)
 {
     try
     {
-        // Usa il servizio per ottenere il dettaglio dell'ordine
+       // richiama il metodo che cerca l'ordine con l'ID specificato nel db includendo i dettagli dell'ordine e i dati del cliente
         var viewModel = _ordiniService.GetDettaglioOrdine(id);
 
         // Controlla se l'ordine non esiste
@@ -110,7 +112,7 @@ public IActionResult DettaglioOrdine(int id)
             return NotFound("Ordine non trovato.");
         }
 
-        // Restituisce la vista con il ViewModel
+        // Restituisce la vista con il ViewModel aggiornato
         return View("DettaglioOrdini", viewModel);
     }
     catch (Exception ex)
