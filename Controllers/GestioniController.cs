@@ -33,7 +33,7 @@ public class GestioniController : Controller
             };
 
             _context.Categorie.Add(categoria);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             
             return RedirectToAction("Index");
         }
@@ -58,7 +58,7 @@ public class GestioniController : Controller
             };
 
             _context.Marche.Add(marca);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             
             return RedirectToAction("Index");
         }
@@ -83,7 +83,7 @@ public class GestioniController : Controller
             };
 
             _context.Materiali.Add(materiale);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             
             return RedirectToAction("Index"); 
         }
@@ -108,7 +108,7 @@ public class GestioniController : Controller
             };
 
             _context.Tipologie.Add(tipologia);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             
             return RedirectToAction("Index"); 
         }
@@ -133,7 +133,7 @@ public class GestioniController : Controller
             };
 
             _context.Generi.Add(genere);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             
             return RedirectToAction("Index"); 
         }

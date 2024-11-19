@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 public class ProdottiService
 {
     private readonly ApplicationDbContext _context;
@@ -213,6 +214,38 @@ public class ProdottiService
             TipologiaSelezionata = tipologiaId,
             ConteggioProdotti = quantitaProdotti
         };
+    }
+
+    public DettaglioProdottoViewModel PreparaDettaglioProdottoViewModel(int id)
+    {
+        try
+        {
+            // Trova il prodotto nel database includendo gli oggetti che ha come proprietà
+            var prodotto = _context.Orologi   
+                    .Include(o => o.Categoria)
+                    .Include(o => o.Marca)
+                    .Include(o => o.Materiale)
+                    .Include(o => o.Tipologia)
+                    .Include(o => o.Genere)
+                    .FirstOrDefault(o => o.Id == id);
+
+            if (prodotto == null)
+            {
+                return null; // Return null se prodotto non trovato
+            }
+
+            var viewModel = new DettaglioProdottoViewModel
+            {
+                Orologio = prodotto
+            };
+
+            return viewModel;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Errore nella preparazione del view model: {ex.Message}");
+            return null; 
+        }
     }
     public AggiungiProdottoViewModel PreparaAggiungiProdottoViewModel()
     {
