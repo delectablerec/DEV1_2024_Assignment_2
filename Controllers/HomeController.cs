@@ -3,15 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 
 public class HomeController : Controller
 {
+    private CarrelloService _carrelloService;
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, CarrelloService carrelloService)
     {
         _logger = logger;
+        _carrelloService = carrelloService;
     }
 
     public IActionResult Index()
     {
+        ViewData["CartItemCount"] = _carrelloService.ItemsInCart(User);
         return View();
     }
 
@@ -26,3 +29,4 @@ public class HomeController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
+

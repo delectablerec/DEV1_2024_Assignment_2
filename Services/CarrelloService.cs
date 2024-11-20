@@ -1,3 +1,6 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 public class CarrelloService
@@ -6,11 +9,13 @@ public class CarrelloService
     private readonly ApplicationDbContext _context;
     private const string CartFilePath = "wwwroot/json/carrelli.json";
     private readonly ILogger<CarrelloService> _logger;
+    private readonly UserManager<Cliente> _userManager;
 
-    public CarrelloService(ApplicationDbContext context, ILogger<CarrelloService> logger)
+    public CarrelloService(ApplicationDbContext context, ILogger<CarrelloService> logger, UserManager<Cliente> userManager)
     {
         _context = context;
         _logger = logger;
+        _userManager = userManager;
     }
     public CarrelloViewModel CaricaCarrello(string userId)
     {
@@ -19,9 +24,9 @@ public class CarrelloService
             Dictionary<string, CarrelloViewModel> carrelliUtenti = new();
 
             // Controlla se il file json esiste e lo popola
-            if (File.Exists(CartFilePath))
+            if (System.IO.File.Exists(CartFilePath))
             {
-                var json = File.ReadAllText(CartFilePath);
+                var json = System.IO.File.ReadAllText(CartFilePath);
                 carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json)
                         ?? new Dictionary<string, CarrelloViewModel>();
             }
@@ -263,7 +268,7 @@ public class CarrelloService
         try
         {
             var json = JsonConvert.SerializeObject(carrelliUtenti, Formatting.Indented);
-            File.WriteAllText(CartFilePath, json); // Save the updated carts to the JSON file
+            System.IO.File.WriteAllText(CartFilePath, json); // Save the updated carts to the JSON file
             _logger.LogInformation("Carrello salvato su {FilePath}", CartFilePath);
         }
         catch (Exception ex)
@@ -291,6 +296,31 @@ public class CarrelloService
         {
             _logger.LogError("Errore nella ricerca : {Message} \n Exception Type : {ExceptionType} \n Stack Trace : {StackTrace}", ex.Message, ex.GetType().Name, ex.StackTrace);
             return null;
+        }
+    }
+
+    public int ItemsInCart(ClaimsPrincipal user)
+    {
+        var userId = _userManager.GetUserId(user);
+        if (string.IsNullOrEmpty(userId))
+        {
+            _logger.LogError("User ID is null or empty.");
+            return 0;
+        }
+
+        var carrello = CaricaCarrello(userId);
+
+        if (carrello == null || carrello.Carrello.Count == 0)
+        {
+            _logger.LogWarning("Carrello vuoto per UserId: {UserId}", userId);
+            return 0;
+        }
+        else
+        {
+            int count = 0;
+            foreach (OrologioInCarrello orologio in carrello.Carrello)
+                count += orologio.QuantitaInCarrello;
+            return count;
         }
     }
 }
