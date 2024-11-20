@@ -9,6 +9,7 @@ public class ApplicationDbContext : IdentityDbContext<Cliente>
         : base(options)
     {
     }
+    public DbSet<CarouselImage> CarouselImages { get; set; }
     public DbSet<Prodotto> Prodotti { get; set; }
     public DbSet<Orologio> Orologi { get; set; }
     public DbSet<Categoria> Categorie { get; set; }
@@ -20,6 +21,7 @@ public class ApplicationDbContext : IdentityDbContext<Cliente>
     public DbSet<Ordine> Ordini { get; set; }
 
     public DbSet<Cliente> Clienti { get; set; }
+
 
 /*  !!! PER CREARE PRODOTTI E OROLOGI SEPARATI
     protected override void OnModelCreating(ModelBuilder modelBuilder)
