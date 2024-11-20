@@ -8,7 +8,8 @@ public class Prodotto : General
     //[Required(ErrorMessage = "Il campo Colore è obbligatorio.")]
     public string Colore { get; set; }
     //[Required(ErrorMessage = "Il campo UrlImmagine è obbligatorio.")]
-    public string UrlImmagine { get; set; }
+    public string UrlImmagine { get; set; } // Percorso dell'immagine
+    
     //[Required(ErrorMessage = "Il campo Categoria è obbligatorio.")]
     public int CategoriaId { get; set; } 
     public Categoria Categoria { get; set; }  // Relazione con la categoria

@@ -6,4 +6,6 @@ public class AggiungiProdottoViewModel
     public List<Materiale> Materiali { get; set; }
     public List<Tipologia> Tipologie { get; set; }
     public List<Genere> Generi { get; set; }
+
+    public IFormFile ImmagineCaricata { get; set; }
 }

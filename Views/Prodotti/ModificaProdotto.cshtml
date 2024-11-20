@@ -8,40 +8,53 @@
         <div class="col-lg-9 mx-auto rounded border p-4">
             <h1 class="text-center mb-5">@ViewData["Title"]</h1>
 
-            <form asp-action="ModificaProdotto" method="post" class="g-3">
+            <form asp-action="ModificaProdotto" method="post" enctype="multipart/form-data" class="g-3">
 
                 <div class="form-group row mb-3">
                     <label asp-for="Orologio.Nome" class="col-sm-4 control-label">Nome</label>
                     <div class="col-sm-8">
-                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Nome" value="@Model.Orologio.Nome" asp-for="Orologio.Nome">
+                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Nome"
+                            value="@Model.Orologio.Nome" asp-for="Orologio.Nome">
                     </div>
                 </div>
 
                 <div class="form-group row mb-3">
                     <label asp-for="Orologio.Prezzo" class="col-sm-4 control-label">Prezzo</label>
                     <div class="col-sm-8">
-                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Prezzo" value="@Model.Orologio.Prezzo" asp-for="Orologio.Prezzo">
+                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Prezzo"
+                            value="@Model.Orologio.Prezzo" asp-for="Orologio.Prezzo">
                     </div>
                 </div>
 
                 <div class="form-group row mb-3">
                     <label asp-for="Orologio.Giacenza" class="col-sm-4 control-label">Giacenza</label>
                     <div class="col-sm-8">
-                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Giacenza" value="@Model.Orologio.Giacenza" asp-for="Orologio.Giacenza">
+                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Giacenza"
+                            value="@Model.Orologio.Giacenza" asp-for="Orologio.Giacenza">
                     </div>
                 </div>
 
                 <div class="form-group row mb-3">
                     <label asp-for="Orologio.Colore" class="col-sm-4 control-label">Colore</label>
                     <div class="col-sm-8">
-                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Colore" value="@Model.Orologio.Colore" asp-for="Orologio.Colore">
+                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Colore"
+                            value="@Model.Orologio.Colore" asp-for="Orologio.Colore">
                     </div>
                 </div>
 
                 <div class="form-group row mb-3">
                     <label asp-for="Orologio.UrlImmagine" class="col-sm-4 control-label">Immagine</label>
                     <div class="col-sm-8">
-                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.UrlImmagine" value="@Model.Orologio.UrlImmagine" asp-for="Orologio.UrlImmagine">
+                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.UrlImmagine"
+                            value="@Model.Orologio.UrlImmagine" asp-for="Orologio.UrlImmagine">
+                    </div>
+                </div>
+
+                <div class="form-group row mb-3">
+                    <label class="col-sm-4 control-label">Carica nuova immagine</label>
+                    <div class="col-sm-8">
+                        <input type="file" class="form-control bg-dark text-light border-secondary"
+                            asp-for="ImmagineCaricata" accept="image/*">
                     </div>
                 </div>
 
@@ -61,7 +74,8 @@
                 <div class="form-group row mb-3 center">
                     <label class="col-sm-4 control-label">Marca</label>
                     <div class="col-sm-8">
-                        <select asp-for="Orologio.MarcaId" class="form-select bg-dark text-light border-secondary" asp-for="Orologio.MarcaId">
+                        <select asp-for="Orologio.MarcaId" class="form-select bg-dark text-light border-secondary"
+                            asp-for="Orologio.MarcaId">
                             <option value="">Seleziona marca</option>
                             @foreach (var marca in Model.Marche)
                             {
@@ -74,14 +88,16 @@
                 <div class="form-group row mb-3">
                     <label asp-for="Orologio.Modello" class="col-sm-4 control-label">Modello</label>
                     <div class="col-sm-8">
-                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Modello" value="@Model.Orologio.Modello" asp-for="Orologio.Modello">
+                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Modello"
+                            value="@Model.Orologio.Modello" asp-for="Orologio.Modello">
                     </div>
                 </div>
 
                 <div class="form-group row mb-3">
                     <label asp-for="Orologio.Referenza" class="col-sm-4 control-label">Referenza</label>
                     <div class="col-sm-8">
-                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Referenza" value="@Model.Orologio.Referenza" asp-for="Orologio.Referenza">
+                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Referenza"
+                            value="@Model.Orologio.Referenza" asp-for="Orologio.Referenza">
                     </div>
                 </div>
 
@@ -114,7 +130,8 @@
                 <div class="form-group row mb-3">
                     <label asp-for="Orologio.Diametro" class="col-sm-4 control-label">Diametro</label>
                     <div class="col-sm-8">
-                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Colore"value="@Model.Orologio.Diametro" asp-for="Orologio.Diametro" >
+                        <input class="form-control bg-dark text-light border-secondary" name="Orologio.Colore"
+                            value="@Model.Orologio.Diametro" asp-for="Orologio.Diametro">
                     </div>
                 </div>
 
@@ -140,7 +157,8 @@
             </form>
         </div>
     </div>
-    <a class="link-body-emphasis link-underline-opacity-10 btn btn-custom w-100 rounded-pill" asp-controller="Prodotti" asp-action="Index">Torna a Prodotti</a>
+    <a class="link-body-emphasis link-underline-opacity-10 btn btn-custom w-100 rounded-pill" asp-controller="Prodotti"
+        asp-action="Index">Torna a Prodotti</a>
 </div>
 
 <!-- Custom CSS -->
@@ -150,9 +168,11 @@
         background-color: #121212;
         color: #e0e0e0;
     }
+
     .container.bg-dark {
         background-color: #1e1e1e;
     }
+
     /* Input Field Styles */
     .form-control,
     .form-select {
@@ -160,12 +180,14 @@
         color: #f5f5dc;
         border: 1px solid #555;
     }
+
     .form-control:focus,
     .form-select:focus {
         background-color: #444;
         color: #f5f5dc;
         border-color: #888;
     }
+
     /* Custom Button Style with Pale Cream Color */
     .btn-custom {
         background-color: #f5f5dc;
@@ -173,6 +195,7 @@
         border: none;
         transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
     }
+
     /* Hover Effect */
     .btn-custom:hover {
         background-color: transparent;

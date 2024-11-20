@@ -31,15 +31,15 @@ public class OrdiniService
             var carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) ??
                                  new Dictionary<string, CarrelloViewModel>();
 
-            if (carrelliUtenti.ContainsKey(userId)) // Controlla se esiste un carrello associato all'ID utente(che è chiave del dizionario)
-            {
-                // Reimposta il carrello dell'utente a svuotandolo
-                carrelliUtenti[userId] = new CarrelloViewModel
+                if (carrelliUtenti.ContainsKey(userId)) // Controlla se esiste un carrello associato all'ID utente(che è chiave del dizionario)
                 {
-                    Carrello = new List<OrologioInCarrello>(), // Lista vuota di orologi
-                    Totale = 0,  //azzeramento
-                    Quantita = 0
-                };
+                    // Reimposta il carrello dell'utente a svuotandolo
+                    carrelliUtenti[userId] = new CarrelloViewModel
+                    {
+                        Carrello = new List<OrologioInCarrello>(), // Lista vuota di orologi
+                        Totale = 0,  //azzeramento
+                        Quantita = 0
+                    };
 
                 var updatedJson = JsonConvert.SerializeObject(carrelliUtenti, Formatting.Indented); // Serializza il carrello aggiornato
                 File.WriteAllText(filePath, updatedJson); // Scrive il file aggiornato
@@ -124,7 +124,7 @@ public List<ListaOrdiniViewModel> GetOrdini()
 }
 
 
-//Metodo per caricare il carrello di un utente specifico dal file JSON
+    //Metodo per caricare il carrello di un utente specifico dal file JSON
     public CarrelloViewModel CaricaCarrello(string userId, string filePath)
     {
         try
@@ -143,7 +143,7 @@ public List<ListaOrdiniViewModel> GetOrdini()
                     return carrello; //restituisce il carrello associato all'utente
                 }
             }
-// Restituisce un carrello vuoto se il file non esiste o il carrello non è trovato
+            // Restituisce un carrello vuoto se il file non esiste o il carrello non è trovato
             return new CarrelloViewModel
             {
                 Carrello = new List<OrologioInCarrello>(),
@@ -280,7 +280,7 @@ public List<ListaOrdiniViewModel> GetOrdini()
         }
     }
 
-//Metodo per ottenere i dettagli di un ordine specifico
+    //Metodo per ottenere i dettagli di un ordine specifico
     public DettaglioOrdineViewModel GetDettaglioOrdine(int id)
     {
         try
