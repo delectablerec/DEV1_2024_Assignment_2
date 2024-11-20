@@ -204,10 +204,10 @@ public class OrdiniService
             {
                 if (dettaglio.Orologio != null) // Verifica che l'orologio associato non sia null
                 {
-                    dettaglio.Orologio.Giacenza += dettaglio.Quantita; // Aggiunge la quantità del prodotto alla giacenza
-                    _context.Entry(dettaglio.Orologio).State = EntityState.Modified; // Segnala a Entity Framework che l'orologio è stato modificato
+                   dettaglio.Orologio.Giacenza += dettaglio.Quantita; // Aggiunge la quantità del prodotto alla giacenza
+              
                 }
-                _context.Entry(dettaglio).State = EntityState.Deleted; // Segnala che il dettaglio dell'ordine deve essere eliminato.
+              
             }
 
             // Rimuove l'ordine
