@@ -1,36 +1,5 @@
 {
-  "128a9578-9ca4-450c-9108-41c7d05d99d3": {
-    "Carrello": [
-      {
-        "OrologioId": 1,
-        "Orologio": {
-          "Modello": "Moon53",
-          "Referenza": "43hdsk8",
-          "MaterialeId": 2,
-          "Materiale": null,
-          "TipologiaId": 1,
-          "Tipologia": null,
-          "Diametro": 6,
-          "GenereId": 1,
-          "Genere": null,
-          "Prezzo": 3478.0,
-          "Giacenza": 5,
-          "Colore": "blu",
-          "UrlImmagine": "/immaginiProdotti/Seiko1.jpg",
-          "CategoriaId": 2,
-          "Categoria": null,
-          "MarcaId": 3,
-          "Marca": null,
-          "Id": 1,
-          "Nome": "orologio"
-        },
-        "QuantitaInCarrello": 1
-      }
-    ],
-    "Totale": 3478.0,
-    "Quantita": 1
-  },
-  "528d13d0-78f0-4938-ae38-5cd2715f7e67": {
+  "3359705f-1a1a-4541-b59c-038f1995306c": {
     "Carrello": [],
     "Totale": 0.0,
     "Quantita": 0

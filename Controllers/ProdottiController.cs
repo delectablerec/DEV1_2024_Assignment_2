@@ -1,17 +1,21 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+
 
 public class ProdottiController : Controller
 {
     private ProdottiService _prodottiService;
     private readonly ILogger<ProdottiController> _logger;
     private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _hostingEnvironment;
 
 
-    public ProdottiController(ApplicationDbContext context, ILogger<ProdottiController> logger, ProdottiService prodottiService)
+    public ProdottiController(ApplicationDbContext context, ILogger<ProdottiController> logger, ProdottiService prodottiService, IWebHostEnvironment hostingEnvironment)
     {
         _context = context;
         _logger = logger;
         _prodottiService = prodottiService;
+        _hostingEnvironment = hostingEnvironment;
     }
 
     public IActionResult Index(int? minPrezzo, int? maxPrezzo, int? categoriaSelezionata, int? marcaSelezionata, int? materialeSelezionato, int? tipologiaSelezionata, int paginaCorrente = 1)
@@ -45,17 +49,24 @@ public class ProdottiController : Controller
     }
 
     [HttpPost]
-    public IActionResult AggiungiProdotto(AggiungiProdottoViewModel viewModel)
+    public async Task<IActionResult> AggiungiProdotto(AggiungiProdottoViewModel viewModel)
     {
-        /*if (!ModelState.IsValid)
+        if (viewModel.ImmagineCaricata != null && viewModel.ImmagineCaricata.Length > 0)
         {
-            _logger.LogWarning("Validation failed for the product.");
-            viewModel = _prodottiService.PreparaAggiungiProdottoViewModel();
-            return View(viewModel);
-        }*/
+            // Salva l'immagine e ottieni l'URL
+            var fileName = Path.GetFileName(viewModel.ImmagineCaricata.FileName);
+            var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "images", fileName);
 
-        _logger.LogInformation("Tentativo di salvare il prodotto.");
-        // Bool per prodotto salvato o meno
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await viewModel.ImmagineCaricata.CopyToAsync(stream);
+            }
+
+            // Assegna l'URL dell'immagine al prodotto
+            viewModel.Orologio.UrlImmagine = $"/images/{fileName}";
+        }
+
+        // Salva il prodotto nel database
         var salvato = _prodottiService.SalvaProdotto(viewModel.Orologio);
 
         if (!salvato)
@@ -66,6 +77,8 @@ public class ProdottiController : Controller
         _logger.LogInformation("Prodotto salvato. Redirecting a Index.");
         return RedirectToAction("Index", "Home");
     }
+
+
 
     public IActionResult ModificaProdotto(int id)
     {
@@ -80,10 +93,24 @@ public class ProdottiController : Controller
     }
 
     [HttpPost]
-    public IActionResult ModificaProdotto(ModificaProdottoViewModel viewModel)
+    public async Task<IActionResult> ModificaProdotto(ModificaProdottoViewModel viewModel)
     {
-        _logger.LogInformation("Categoria selezionata: " + viewModel.Orologio.Categoria);
+        if (viewModel.ImmagineCaricata != null && viewModel.ImmagineCaricata.Length > 0)
+        {
+            // Salva l'immagine e ottieni l'URL
+            var fileName = Path.GetFileName(viewModel.ImmagineCaricata.FileName);
+            var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "images", fileName);
 
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await viewModel.ImmagineCaricata.CopyToAsync(stream);
+            }
+
+            // Assegna l'URL dell'immagine al prodotto
+            viewModel.Orologio.UrlImmagine = $"/images/{fileName}";
+        }
+
+        // Modifica il prodotto nel database
         var modificato = _prodottiService.ModificaProdotto(viewModel.Orologio);
 
         if (!modificato)
@@ -94,18 +121,17 @@ public class ProdottiController : Controller
         _logger.LogInformation("Prodotto con ID: {Id} modificato. Redirecting to Index.", viewModel.Orologio.Id);
         return RedirectToAction("Index");
     }
-    
     public IActionResult EliminaProdotto(int id)
     {
         try
         {
             var viewModel = _prodottiService.PreparaEliminaProdottoViewModel(id);
-            
+
             if (viewModel == null)
             {
                 return NotFound();
             }
-            
+
             return View(viewModel);
         }
         catch (Exception ex)
