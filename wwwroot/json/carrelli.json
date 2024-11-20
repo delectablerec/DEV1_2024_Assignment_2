@@ -1,0 +1,33 @@
+{
+  "c47a0ad5-6625-446a-9d51-7a6e73177a0a": {
+    "Carrello": [
+      {
+        "OrologioId": 1,
+        "Orologio": {
+          "Modello": "54twjkdb2i",
+          "Referenza": "qwdwfdw",
+          "MaterialeId": 1,
+          "Materiale": null,
+          "TipologiaId": 1,
+          "Tipologia": null,
+          "Diametro": 5,
+          "GenereId": 1,
+          "Genere": null,
+          "Prezzo": 2389.0,
+          "Giacenza": 16,
+          "Colore": "blu",
+          "UrlImmagine": "/images/Rolex3.jpg",
+          "CategoriaId": 1,
+          "Categoria": null,
+          "MarcaId": 1,
+          "Marca": null,
+          "Id": 1,
+          "Nome": "orologio"
+        },
+        "QuantitaInCarrello": 17
+      }
+    ],
+    "Totale": 40613.0,
+    "Quantita": 17
+  }
+}

@@ -7,26 +7,17 @@ public class ProdottiController : Controller
     private ProdottiService _prodottiService;
     private readonly ILogger<ProdottiController> _logger;
     private readonly ApplicationDbContext _context;
-<<<<<<< HEAD
     private readonly IWebHostEnvironment _hostingEnvironment;
-
-
-    public ProdottiController(ApplicationDbContext context, ILogger<ProdottiController> logger, ProdottiService prodottiService, IWebHostEnvironment hostingEnvironment)
-=======
     private CarrelloService _carrelloService;
 
 
-    public ProdottiController(ApplicationDbContext context, ILogger<ProdottiController> logger, ProdottiService prodottiService, CarrelloService carrelloService)
->>>>>>> origin/itemsInChart
+    public ProdottiController(ApplicationDbContext context, ILogger<ProdottiController> logger, ProdottiService prodottiService, CarrelloService carrelloService, IWebHostEnvironment hostingEnvironment)
     {
         _context = context;
         _logger = logger;
         _prodottiService = prodottiService;
-<<<<<<< HEAD
         _hostingEnvironment = hostingEnvironment;
-=======
         _carrelloService = carrelloService;
->>>>>>> origin/itemsInChart
     }
 
     public IActionResult Index(int? minPrezzo, int? maxPrezzo, int? categoriaSelezionata, int? marcaSelezionata, int? materialeSelezionato, int? tipologiaSelezionata, int paginaCorrente = 1)
