@@ -131,49 +131,76 @@ public class OrdiniService
         }
     }
 
+
+
 // Azione per creare un ordine dal carrello
     public bool CreaOrdineDaCarrello(string userId, CarrelloViewModel carrello)
+{
+    try
     {
-        try
-        {
-            // Recupera il cliente dal database usando l'ID utente
-            var cliente = _context.Clienti.FirstOrDefault(c => c.Id == userId);
-            if (cliente == null) return false;
-            // Crea un nuovo oggetto Ordine
-            var nuovoOrdine = new Ordine
-            {
-                ClienteId = userId, // Assegna l'ID del cliente
-                Cliente = cliente,
-                DataAcquisto = DateTime.Now,
-                Nome = $"Ordine-{DateTime.Now.Ticks}_{userId}" //crea un nome univoco per l'ordine
-            };
-        // Itera su tutti gli elementi del carrello
-            foreach (var item in carrello.Carrello)
-            {
-                // Recupera il prodotto dal database usando l'ID del prodotto
-                var prodotto = _context.Orologi.FirstOrDefault(p => p.Id == item.Orologio.Id);
-                if (prodotto == null) continue; // Salta anche se se il prodotto non è stato trovato
-                // Aggiunge un nuovo dettaglio ordine al nuovo ordine
-                nuovoOrdine.OrdineDettagli.Add(new OrdineDettaglio
-                {
-                    Ordine = nuovoOrdine, // Associa il dettaglio all'ordine
-                    Orologio = prodotto,
-                    Quantita = item.QuantitaInCarrello,  // Imposta la quantità
-                    PrezzoUnitario = prodotto.Prezzo        //imposta il prezzo unitario
-                });
-            }
-            // Aggiunge il nuovo ordine al  database
-            _context.Ordini.Add(nuovoOrdine);
-            _context.SaveChanges();
+        // Recupera il cliente dal database usando l'ID utente
+        Cliente cliente = null; // Inizializza una variabile per memorizzare il cliente trovato
 
-            return true; // Restituisce true se l'ordine è stato creato con successo
-        }
-        catch (Exception ex)
+        foreach (var c in _context.Clienti) // Itera su tutti i clienti nel database
         {
-            _logger.LogError($"Errore durante la creazione dell'ordine: {ex.Message}");
-            return false;
+            if (c.Id == userId)  // Confronta l'ID di ciascun cliente con l'ID dell'utente specificato
+            {
+                cliente = c; // Se c'è una corrispondenza, assegna il cliente alla variabile
+                break; // Termina il ciclo una volta trovato il cliente
+            }
         }
+
+        if (cliente == null) return false; // Restituisce false se il cliente non è trovato quindi l'ordine non verrà creato
+
+        // Crea un nuovo oggetto Ordine  per memorizzare i dettagli dell'ordine
+        var nuovoOrdine = new Ordine
+        {
+            ClienteId = userId, // Assegna l'ID del cliente
+            Cliente = cliente, // Associa l'oggetto cliente recuperato
+            DataAcquisto = DateTime.Now,
+            Nome = $"Ordine-{DateTime.Now.Ticks}_{userId}" // Crea un nome univoco per l'ordine  usando un timestamp e l'ID utente
+        };
+
+        // Itera su tutti gli elementi del carrello
+        foreach (var item in carrello.Carrello)
+        {
+            // Recupera il prodotto dal database usando l'ID del prodotto
+            Orologio prodotto = null; // Inizializza una variabile per memorizzare il prodotto trovato
+
+            foreach (var p in _context.Orologi) // Itera su tutti gli orologi nel database
+            {
+                if (p.Id == item.Orologio.Id) //  Confronta l'ID dell'orologio con quello del prodotto nel carrello
+                {
+                    prodotto = p; // Se c'è una corrispondenza, assegna il prodotto alla variabile
+                    break; // Termina il ciclo una volta trovato il prodotto
+                }
+            }
+
+            if (prodotto == null) continue; // Salta l'elemento corrente del carrello se il prodotto non è stato trovato
+
+             // Crea un nuovo dettaglio dell'ordine per memorizzare i dettagli del prodotto
+            nuovoOrdine.OrdineDettagli.Add(new OrdineDettaglio
+            {
+                Ordine = nuovoOrdine, // Associa il dettaglio all'ordine
+                Orologio = prodotto, // Associa il prodotto trovato
+                Quantita = item.QuantitaInCarrello, // Imposta la quantità
+                PrezzoUnitario = prodotto.Prezzo   // Imposta il prezzo unitario
+            });
+        }
+
+        // Aggiunge il nuovo ordine al database
+        _context.Ordini.Add(nuovoOrdine);
+        _context.SaveChanges(); // Salva le modifiche nel database
+
+        return true; // Restituisce true se l'ordine è stato creato con successo
     }
+    catch (Exception ex)
+    {
+        _logger.LogError($"Errore durante la creazione dell'ordine: {ex.Message}");
+        return false; // Restituisce false in caso di errore
+    }
+}
+
 
      public bool EliminaOrdine(int id)
     {
