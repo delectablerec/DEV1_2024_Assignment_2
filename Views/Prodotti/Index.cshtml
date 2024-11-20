@@ -110,8 +110,8 @@
     <!-- Form filtro (Sidebar su schermo grande) -->
     <div class="row">
         <!-- Filtro sidebar -->
-        <div class="col-lg-3 d-none d-lg-block">
-            <form method="get">
+        <div class="col-lg-3 d-none d-lg-block ">
+            <form method="get" >
                 <!-- Filtro prezzo -->
                 <div class="form-group m-1">
                     <label for="minPrezzo">
@@ -196,20 +196,20 @@
                     @foreach (var orologio in Model.Orologi)
                     {
                         <div class="col-md-6 col-lg-4 d-flex justify-content-center">
-                            <div class="card mb-3 mb-md-4 mb-lg-5" style="width: 18rem;">
+                            <div class="card mb-3 mb-md-4 mb-lg-5" style="width: 18rem; border: 2px solid #333; border-radius: 10px; transition: all 0.3s ease-in-out; background-color: rgb(235, 240, 245);">
                                 <img src="@orologio.UrlImmagine" class="card-img-top" alt="@orologio.Marca.Nome @orologio.Modello">
-                                <div class="card-body">
-                                    <h5 class="card-title">@orologio.Modello</h5>
-                                    <p class="card-text text-dark">@orologio.Marca.Nome</p>
-                                    <p class="card-text text-dark">@orologio.Categoria.Nome</p>
-                                    <p class="card-text">@orologio.Prezzo</p>
-                                    <p class="card-text">@orologio.Giacenza</p>
-                                    <p class="card-text">@orologio.Tipologia.Nome</p>
-                                    <p class="card-text">@orologio.Materiale.Nome</p>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Modello: <strong>@orologio.Modello</strong></h5>
+                                    <p class="card-text text-dark">Marca: @orologio.Marca.Nome</p>
+                                    <p class="card-text text-dark">Categoria: @orologio.Categoria.Nome</p>
+                                    <p class="card-text">Prezzo: <strong>@orologio.Prezzo</strong></p>
+                                    <p class="card-text">Giacenza: <strong>@orologio.Giacenza</strong></p>
+                                    <p class="card-text">Tipologia: @orologio.Tipologia.Nome</p>
+                                    <p class="card-text">Materiale: @orologio.Materiale.Nome</p>
 
                                     <div class="d-flex justify-content-between align-items-center">
                                         <!-- Bottone dettagli -->
-                                        <a asp-controller="Prodotti" asp-action="DettaglioProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm flex-grow-1">Dettagli</a>
+                                        <a asp-controller="Prodotti" asp-action="DettaglioProdotto" asp-route-id="@orologio.Id" class="btn btn-secondary btn-sm flex-grow-1">Dettagli</a>
 
                                         <!-- Bottone icona carrello -->
                                         @if (orologio.Giacenza > 0)

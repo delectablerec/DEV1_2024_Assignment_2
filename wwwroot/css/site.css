@@ -8,9 +8,9 @@
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+/* .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
+} */
 
 html {
   position: relative;
@@ -29,6 +29,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: rgb(241, 244, 247);
 }
 
 main {
@@ -38,6 +39,7 @@ main {
 footer {
   margin-top: auto;
 }
+
 
 .custom-navbar {
   background-color: #212529; 
@@ -49,4 +51,10 @@ footer {
 .custom-navbar .navbar-brand, 
 .custom-navbar .btn-cart .bi {
     color: white !important; /* Forza il colore bianco per link e brand */
+}
+
+.btn-1{
+  border-radius : 50%;
+  background-color: rgb(233, 236, 240);
+  color: black;
 }
