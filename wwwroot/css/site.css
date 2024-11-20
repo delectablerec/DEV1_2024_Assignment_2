@@ -1,6 +1,6 @@
-html {
+/*html {
   font-size: 14px;
-}
+}*/
 
 @media (min-width: 768px) {
   html {
@@ -15,8 +15,38 @@ html {
 html {
   position: relative;
   min-height: 100%;
+  font-size: 16px;
 }
-
+/*
 body {
   margin-bottom: 60px;
+}*/
+
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+  margin-top: auto;
+}
+
+.custom-navbar {
+  background-color: #212529; 
+  color: white; 
+}
+
+
+.custom-navbar .nav-link, 
+.custom-navbar .navbar-brand, 
+.custom-navbar .btn-cart .bi {
+    color: white !important; /* Forza il colore bianco per link e brand */
 }
