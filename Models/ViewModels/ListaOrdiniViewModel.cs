@@ -6,7 +6,8 @@ public class ListaOrdiniViewModel
     public DateTime DataAcquisto { get; set; }
     public string StatoOrdine { get; set; } = "In lavorazione";
     public decimal TotaleOrdine { get; set; }
-    public string? UrlImmagineProdotto { get; set; }
+    // public string? UrlImmagineProdotto { get; set; }
+    public List<Orologio> Orologi { get; set; }
     public string NomeProdotto { get; set; } = "Nessun prodotto";
     public decimal CostoSpedizione { get; set; } = 10.00m; // Default
 }

@@ -95,6 +95,11 @@ public List<ListaOrdiniViewModel> GetOrdini()
                 nomeProdotto = ordine.OrdineDettagli[0].Orologio.Modello;
             }
 
+            List<Orologio> orologi = new List<Orologio>();
+            foreach (OrdineDettaglio ordineDettaglio in ordine.OrdineDettagli)
+            {
+                orologi.Add(ordineDettaglio.Orologio);
+            }
             // Crea un oggetto ListaOrdiniViewModel per l'ordine corrente
             var viewModel = new ListaOrdiniViewModel
             {
@@ -103,7 +108,7 @@ public List<ListaOrdiniViewModel> GetOrdini()
                 DataAcquisto = ordine.DataAcquisto, // Data dell'acquisto
                 StatoOrdine = statoOrdine, // Stato calcolato
                 TotaleOrdine = totaleOrdine, // Totale calcolato
-                UrlImmagineProdotto = urlImmagineProdotto, // URL immagine prodotto
+                Orologi = orologi, // URL immagine prodotto
                 NomeProdotto = nomeProdotto, // Nome del prodotto
                 CostoSpedizione = 10.00m // Costo spedizione fisso
             };
