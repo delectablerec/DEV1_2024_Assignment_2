@@ -1,8 +1,9 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-public class CarrelloService : Controller
+public class CarrelloService
 {
     //private Dictionary<string, CarrelloViewModel> _userCart = new();     // Carrello collegato al cliente
     private readonly ApplicationDbContext _context;
@@ -298,9 +299,9 @@ public class CarrelloService : Controller
         }
     }
 
-    public int ItemsInCart()
+    public int ItemsInCart(ClaimsPrincipal user)
     {
-        var userId = _userManager.GetUserId(User);
+        var userId = _userManager.GetUserId(user);
         if (string.IsNullOrEmpty(userId))
         {
             _logger.LogError("User ID is null or empty.");
@@ -316,7 +317,10 @@ public class CarrelloService : Controller
         }
         else
         {
-            return carrello.Carrello.Count;
+            int count = 0;
+            foreach (OrologioInCarrello orologio in carrello.Carrello)
+                count += orologio.QuantitaInCarrello;
+            return count;
         }
     }
 }

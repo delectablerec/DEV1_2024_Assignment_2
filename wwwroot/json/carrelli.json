@@ -24,7 +24,7 @@
           "Id": 2,
           "Nome": "Ciro"
         },
-        "QuantitaInCarrello": 1
+        "QuantitaInCarrello": 2
       },
       {
         "OrologioId": 1,
@@ -52,7 +52,7 @@
         "QuantitaInCarrello": 3
       }
     ],
-    "Totale": 45678.0,
-    "Quantita": 4
+    "Totale": 45690.0,
+    "Quantita": 5
   }
 }

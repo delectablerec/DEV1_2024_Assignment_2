@@ -74,7 +74,7 @@ public class OrdiniController : Controller
             }
 
             // Restituisci la vista con il ViewModel
-            ViewData["CartItemCount"] = _carrelloService.ItemsInCart();
+            ViewData["CartItemCount"] = _carrelloService.ItemsInCart(User);
             return View(viewModel);
         }
         catch (Exception ex)

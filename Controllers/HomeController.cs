@@ -14,7 +14,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        ViewData["CartItemCount"] = _carrelloService.ItemsInCart();
+        ViewData["CartItemCount"] = _carrelloService.ItemsInCart(User);
         return View();
     }
 

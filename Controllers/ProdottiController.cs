@@ -25,7 +25,7 @@ public class ProdottiController : Controller
             minPrezzo, maxPrezzo, categoriaSelezionata, marcaSelezionata, materialeSelezionato, tipologiaSelezionata,
             paginaCorrente, prodottiPerPagina);
 
-        ViewData["CartItemCount"] = _carrelloService.ItemsInCart();
+        ViewData["CartItemCount"] = _carrelloService.ItemsInCart(User);
         return View(viewModel);
     }
 

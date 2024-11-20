@@ -51,7 +51,7 @@ public class CarrelloController : Controller
             _logger.LogInformation("Carrello caricato per UserId: {UserId}. Prodotti nel carrello: {Count}", userId, carrello.Carrello.Count);
         }
         
-        ViewData["CartItemCount"] = _carrelloService.ItemsInCart();
+        ViewData["CartItemCount"] = _carrelloService.ItemsInCart(User);
         return View(carrello);
     }
 
