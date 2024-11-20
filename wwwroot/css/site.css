@@ -58,3 +58,33 @@ footer {
   background-color: rgb(233, 236, 240);
   color: black;
 }
+
+/* Custom CSS gestionale*/
+
+.container.bg-dark {
+    background-color: #1e1e1e;
+}
+
+.btn-custom {
+    background-color: #909499;
+    color: #ffffff;
+    border: none;
+    transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.btn-custom:hover {
+  background-color: transparent;
+  color: #ffffff;
+  border: 2px solid #b0b0b0; /* Grey border */
+}
+
+.form-control {
+  background-color: #333;
+  color: #f5f5dc;
+  border: 1px solid #555;
+}
+.form-control:focus {
+  background-color: #444;
+  color: #f5f5dc;
+  border-color: #888;
+}
