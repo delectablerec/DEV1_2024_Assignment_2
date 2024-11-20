@@ -17,58 +17,15 @@ public class OrdiniService
         _logger = logger;
     }
 
-// Metodo per ottenere la lista degli ordini
-    public List<ListaOrdiniViewModel> GetOrdini()
-    {
-        try
-        {
-            var ordini = _context.Ordini        // Recupera gli ordini dal database includendo i dettagli dell'ordine prodotti e le informazioni sul cliente
-                .Include("OrdineDettagli.Orologio") // Include i dettagli dell'ordine e i relativi prodotti (orologi)
-                .Include("Cliente")  // Include le informazioni del cliente associato a ogni ordine
-                .ToList();
-            // Converte ogni ordine in oggetto ListaOrdiniViewModel
-            return ordini.Select(ordine =>
-            {
-                
-                var totaleOrdine = ordine.OrdineDettagli.Sum(d => d.PrezzoUnitario * d.Quantita); // Calcola il totale dell'ordine
-                var statoOrdine = ordine.OrdineDettagli.Count > 0 ? "Completato" : "In lavorazione";  // Determina lo stato dell'ordine
-                // Recupera l'URL dell'immagine del primo prodotto associato all'ordine se disponibile altrimenti usa un'immagine predefinita
-                var urlImmagineProdotto = ordine.OrdineDettagli.Count > 0 && ordine.OrdineDettagli[0].Orologio != null
-                    ? ordine.OrdineDettagli[0].Orologio.UrlImmagine
-                    : "/img/default.png";
-                 // Recupera il nome del modello del primo prodotto associato all'ordine se disponibile altrimenti usa "Nessun prodotto"
-                var nomeProdotto = ordine.OrdineDettagli.Count > 0 && ordine.OrdineDettagli[0].Orologio != null
-                    ? ordine.OrdineDettagli[0].Orologio.Modello
-                    : "Nessun prodotto";
-            // Crea e restituisce un nuovo oggetto ListaOrdiniViewModel con i dati calcolati e recuperati
-                return new ListaOrdiniViewModel
-                {
-                    Id = ordine.Id,  // ID dell'ordine
-                    NomeOrdine = ordine.Nome,  //nome ordine
-                    DataAcquisto = ordine.DataAcquisto,
-                    StatoOrdine = statoOrdine,
-                    TotaleOrdine = totaleOrdine,
-                    UrlImmagineProdotto = urlImmagineProdotto,
-                    NomeProdotto = nomeProdotto,
-                    CostoSpedizione = 10.00m
-                };
-            }).ToList();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Errore durante il recupero degli ordini: {ex.Message}");
-            throw;
-        }
-    }
 
 // Metodo per svuotare il carrello
   public void SvuotaCarrello(string userId, string filePath)
 {
     try
     {
-        if (System.IO.File.Exists(filePath)) // Controlla se il file esiste nel path specificato
+        if (File.Exists(filePath)) // Controlla se il file esiste nel path specificato
         {
-            var json = System.IO.File.ReadAllText(filePath); // Legge il contenuto del file json
+            var json = File.ReadAllText(filePath); // Legge il contenuto del file json
             // Deserializza il contenuto JSON in un dizionario di carrelli utenti
             // La chiave è l'ID dell'utente(string), il valore è il carrello dell'utente.
             var carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) ??
@@ -85,7 +42,7 @@ public class OrdiniService
                 };
 
                 var updatedJson = JsonConvert.SerializeObject(carrelliUtenti, Formatting.Indented); // Serializza il carrello aggiornato
-                System.IO.File.WriteAllText(filePath, updatedJson); // Scrive il file aggiornato
+                File.WriteAllText(filePath, updatedJson); // Scrive il file aggiornato
                 _logger.LogInformation("Carrello svuotato per UserId: {UserId}", userId);
             }
         }
@@ -97,14 +54,84 @@ public class OrdiniService
     }
 }
 
+
+public List<ListaOrdiniViewModel> GetOrdini()
+{
+    try
+    {
+        // Recupera gli ordini dal database includendo i dettagli dell'ordine e il cliente
+        var ordini = _context.Ordini
+            .Include("OrdineDettagli.Orologio")
+            .Include("Cliente")
+            .ToList();
+
+        // Crea una lista per memorizzare i risultati
+        var listaOrdiniViewModel = new List<ListaOrdiniViewModel>();
+
+        // Itera su ciascun ordine
+        foreach (var ordine in ordini)
+        {
+            // Calcola il totale dell'ordine
+            decimal totaleOrdine = 0;
+            foreach (var dettaglio in ordine.OrdineDettagli)
+            {
+                totaleOrdine += dettaglio.PrezzoUnitario * dettaglio.Quantita;
+            }
+
+            // Determina lo stato dell'ordine
+            string statoOrdine = ordine.OrdineDettagli.Count > 0 ? "Completato" : "In lavorazione";
+
+            // Recupera l'URL dell'immagine del primo prodotto se disponibile, altrimenti usa un'immagine predefinita
+            string urlImmagineProdotto = "/img/default.png";
+            if (ordine.OrdineDettagli.Count > 0 && ordine.OrdineDettagli[0].Orologio != null)
+            {
+                urlImmagineProdotto = ordine.OrdineDettagli[0].Orologio.UrlImmagine;
+            }
+
+            // Recupera il nome del modello del primo prodotto se disponibile, altrimenti usa "Nessun prodotto"
+            string nomeProdotto = "Nessun prodotto";
+            if (ordine.OrdineDettagli.Count > 0 && ordine.OrdineDettagli[0].Orologio != null)
+            {
+                nomeProdotto = ordine.OrdineDettagli[0].Orologio.Modello;
+            }
+
+            // Crea un oggetto ListaOrdiniViewModel per l'ordine corrente
+            var viewModel = new ListaOrdiniViewModel
+            {
+                Id = ordine.Id, // ID dell'ordine
+                NomeOrdine = ordine.Nome, // Nome dell'ordine
+                DataAcquisto = ordine.DataAcquisto, // Data dell'acquisto
+                StatoOrdine = statoOrdine, // Stato calcolato
+                TotaleOrdine = totaleOrdine, // Totale calcolato
+                UrlImmagineProdotto = urlImmagineProdotto, // URL immagine prodotto
+                NomeProdotto = nomeProdotto, // Nome del prodotto
+                CostoSpedizione = 10.00m // Costo spedizione fisso
+            };
+
+            // Aggiungi il ViewModel alla lista
+            listaOrdiniViewModel.Add(viewModel);
+        }
+
+        // Restituisce la lista degli ordini
+        return listaOrdiniViewModel;
+    }
+    catch (Exception ex)
+    {
+        // Logga l'errore e rilancia l'eccezione
+        _logger.LogError($"Errore durante il recupero degli ordini: {ex.Message}");
+        throw;
+    }
+}
+
+
 //Metodo per caricare il carrello di un utente specifico dal file JSON
     public CarrelloViewModel CaricaCarrello(string userId, string filePath)
     {
         try
         {
-            if (System.IO.File.Exists(filePath))
+            if (File.Exists(filePath))
             {
-                var json = System.IO.File.ReadAllText(filePath);
+                var json = File.ReadAllText(filePath);
             // Deserializza il contenuto JSON in un dizionario
             // La chiave rappresenta l'ID dell'utente e il valore è il relativo carrello
                 var carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) ??
@@ -133,7 +160,7 @@ public class OrdiniService
 
 
 
-// Azione per creare un ordine dal carrello
+// Metodo per creare un ordine dal carrello
     public bool CreaOrdineDaCarrello(string userId, CarrelloViewModel carrello)
 {
     try
@@ -201,7 +228,7 @@ public class OrdiniService
     }
 }
 
-
+//Metodo per eliminare l'ordine
      public bool EliminaOrdine(int id)
     {
         try
