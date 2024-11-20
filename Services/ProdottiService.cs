@@ -221,13 +221,13 @@ public class ProdottiService
         try
         {
             // Trova il prodotto nel database includendo gli oggetti che ha come proprietà
-            var prodotto = _context.Orologi   
-                    .Include(o => o.Categoria)
-                    .Include(o => o.Marca)
-                    .Include(o => o.Materiale)
-                    .Include(o => o.Tipologia)
-                    .Include(o => o.Genere)
-                    .FirstOrDefault(o => o.Id == id);
+            var prodotto = CercaProdottoPerId(_context.Orologi   
+                                                    .Include(o => o.Categoria)
+                                                    .Include(o => o.Marca)
+                                                    .Include(o => o.Materiale)
+                                                    .Include(o => o.Tipologia)
+                                                    .Include(o => o.Genere)
+                                                    .ToList(),id);
 
             if (prodotto == null)
             {
@@ -339,8 +339,9 @@ public class ProdottiService
     {
         try
         {
-            // Trova il prodotto nel database
-            var prodotto = CercaProdottoPerId(_context.Orologi.ToList(), id);
+            var prodotto = CercaProdottoPerId(_context.Orologi
+                                                .Include(o => o.Marca) // Eagerly load the Marca property
+                                                .ToList(),id);
 
             if (prodotto == null)
             {
