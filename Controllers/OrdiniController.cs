@@ -6,16 +6,15 @@ using Newtonsoft.Json;
 public class OrdiniController : Controller
 {
     private CarrelloService _carrelloService;
+    private readonly UserManager<Cliente> _userManager;
     private readonly ApplicationDbContext _context;
     private readonly ILogger<OrdiniController> _logger;
     private const string FilePath = "wwwroot/json/carrelli.json";
-    private readonly UserManager<Cliente> _userManager;
 
-    public OrdiniController(ApplicationDbContext context, ILogger<OrdiniController> logger, UserManager<Cliente> userManager, CarrelloService carrelloService)
+    public OrdiniController(ApplicationDbContext context, ILogger<OrdiniController> logger, CarrelloService carrelloService)
     {
         _context = context;
         _logger = logger;
-        _userManager = userManager;
         _carrelloService = carrelloService;
     }
 
@@ -75,7 +74,7 @@ public class OrdiniController : Controller
             }
 
             // Restituisci la vista con il ViewModel
-            ViewData["CartItemCount"] = ItemsInCart();
+            ViewData["CartItemCount"] = _carrelloService.ItemsInCart();
             return View(viewModel);
         }
         catch (Exception ex)
@@ -376,27 +375,4 @@ public class OrdiniController : Controller
             return StatusCode(500, "Errore interno del server.");
         }
     }
-    public int ItemsInCart()
-    {
-        var userId = _userManager.GetUserId(User);
-        if (string.IsNullOrEmpty(userId))
-        {
-            _logger.LogError("User ID is null or empty.");
-            return 0;
-        }
-
-        var carrello = _carrelloService.CaricaCarrello(userId);
-
-        if (carrello == null || carrello.Carrello.Count == 0)
-        {
-            _logger.LogWarning("Carrello vuoto per UserId: {UserId}", userId);
-            return 0;
-        }
-        else
-        {
-            return carrello.Carrello.Count;
-        }
-    }
-
-
 }

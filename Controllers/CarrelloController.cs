@@ -51,7 +51,7 @@ public class CarrelloController : Controller
             _logger.LogInformation("Carrello caricato per UserId: {UserId}. Prodotti nel carrello: {Count}", userId, carrello.Carrello.Count);
         }
         
-        ViewData["CartItemCount"] = ItemsInCart();
+        ViewData["CartItemCount"] = _carrelloService.ItemsInCart();
         return View(carrello);
     }
 
@@ -132,26 +132,5 @@ public class CarrelloController : Controller
         }
 
         return RedirectToAction("Index"); // Redirect al carrello dopo la rimozione
-    }
-        public int ItemsInCart()
-    {
-        var userId = _userManager.GetUserId(User);
-        if (string.IsNullOrEmpty(userId))
-        {
-            _logger.LogError("User ID is null or empty.");
-            return 0;
-        }
-
-        var carrello = _carrelloService.CaricaCarrello(userId);
-
-        if (carrello == null || carrello.Carrello.Count == 0)
-        {
-            _logger.LogWarning("Carrello vuoto per UserId: {UserId}", userId);
-            return 0;
-        }
-        else
-        {
-            return carrello.Carrello.Count;
-        }
     }
 }

@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 public class ProdottiController : Controller
@@ -6,16 +5,14 @@ public class ProdottiController : Controller
     private ProdottiService _prodottiService;
     private readonly ILogger<ProdottiController> _logger;
     private readonly ApplicationDbContext _context;
-    private readonly UserManager<Cliente> _userManager; // Cliente eredita da IdentityUser
     private CarrelloService _carrelloService;
 
 
-    public ProdottiController(ApplicationDbContext context, ILogger<ProdottiController> logger, ProdottiService prodottiService, UserManager<Cliente> userManager, CarrelloService carrelloService)
+    public ProdottiController(ApplicationDbContext context, ILogger<ProdottiController> logger, ProdottiService prodottiService, CarrelloService carrelloService)
     {
         _context = context;
         _logger = logger;
         _prodottiService = prodottiService;
-        _userManager = userManager;
         _carrelloService = carrelloService;
     }
 
@@ -28,7 +25,7 @@ public class ProdottiController : Controller
             minPrezzo, maxPrezzo, categoriaSelezionata, marcaSelezionata, materialeSelezionato, tipologiaSelezionata,
             paginaCorrente, prodottiPerPagina);
 
-        ViewData["CartItemCount"] = ItemsInCart();
+        ViewData["CartItemCount"] = _carrelloService.ItemsInCart();
         return View(viewModel);
     }
 
@@ -130,27 +127,6 @@ public class ProdottiController : Controller
         {
             _logger.LogError($"Errore nella cancellazione del prodotto: {ex.Message}");
             return StatusCode(500, "Qualcosa è andato storto durante la cancellazione del prodotto.");
-        }
-    }
-            public int ItemsInCart()
-    {
-        var userId = _userManager.GetUserId(User);
-        if (string.IsNullOrEmpty(userId))
-        {
-            _logger.LogError("User ID is null or empty.");
-            return 0;
-        }
-
-        var carrello = _carrelloService.CaricaCarrello(userId);
-
-        if (carrello == null || carrello.Carrello.Count == 0)
-        {
-            _logger.LogWarning("Carrello vuoto per UserId: {UserId}", userId);
-            return 0;
-        }
-        else
-        {
-            return carrello.Carrello.Count;
         }
     }
 }
