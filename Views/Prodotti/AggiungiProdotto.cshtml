@@ -5,7 +5,7 @@
 
 <div class="container my-4 py-4 bg-dark text-light rounded shadow-sm">
     <div class="row">
-        <div class="col-lg-9 mx-auto rounded border p-4">
+        <div class="col-lg-9 mx-auto p-4">
             <h1 class="text-center mb-5">@ViewData["Title"]</h1>
 
             <form asp-action="AggiungiProdotto" method="post" enctype="multipart/form-data" class="g-3">
@@ -155,53 +155,10 @@
 
                 <div class="row mt-4">
                     <div class="offset-sm-4 col-sm-8">
-                        <button type="submit" class="btn btn-custom w-100 rounded-pill">Submit</button>
+                        <button type="submit" class="btn btn-custom-gestionale w-100 rounded-pill">Submit</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<!-- Custom CSS -->
-<style>
-    /* Dark Theme Background */
-    body {
-        background-color: #121212;
-        color: #e0e0e0;
-    }
-
-    .container.bg-dark {
-        background-color: #1e1e1e;
-    }
-
-    /* Input Field Styles */
-    .form-control,
-    .form-select {
-        background-color: #333;
-        color: #f5f5dc;
-        border: 1px solid #555;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-        background-color: #444;
-        color: #f5f5dc;
-        border-color: #888;
-    }
-
-    /* Custom Button Style with Pale Cream Color */
-    .btn-custom {
-        background-color: #f5f5dc;
-        color: #333;
-        border: none;
-        transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
-    }
-
-    /* Hover Effect */
-    .btn-custom:hover {
-        background-color: transparent;
-        color: #ffffff;
-        border: 2px solid #b0b0b0;
-    }
-</style>

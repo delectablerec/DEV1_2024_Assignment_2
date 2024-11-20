@@ -209,7 +209,7 @@
 
                                     <div class="d-flex justify-content-between align-items-center">
                                         <!-- Bottone dettagli -->
-                                        <a asp-controller="Prodotti" asp-action="DettaglioProdotto" asp-route-id="@orologio.Id" class="btn btn-secondary btn-sm flex-grow-1">Dettagli</a>
+                                        <a asp-controller="Prodotti" asp-action="DettaglioProdotto" asp-route-id="@orologio.Id" class="btn btn-dark btn-sm flex-grow-1">Dettagli</a>
 
                                         <!-- Bottone icona carrello -->
                                         @if (orologio.Giacenza > 0)
@@ -246,11 +246,11 @@
 
                                 @if (User.IsInRole("Admin"))
                                 {
-                                    <a asp-controller="Prodotti" asp-action="ModificaProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm">Modifica</a>
+                                    <a asp-controller="Prodotti" asp-action="ModificaProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-dark btn-sm">Modifica</a>
                                 }
                                 @if (User.IsInRole("Admin"))
                                 {
-                                    <a asp-controller="Prodotti" asp-action="EliminaProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-secondary btn-sm">Elimina</a>
+                                    <a asp-controller="Prodotti" asp-action="EliminaProdotto" asp-route-id="@orologio.Id" class="btn btn-outline-dark btn-sm">Elimina</a>
                                 }
                             </div>
                         </div>
