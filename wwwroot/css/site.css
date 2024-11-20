@@ -50,3 +50,27 @@ footer {
 .custom-navbar .btn-cart .bi {
     color: white !important; /* Forza il colore bianco per link e brand */
 }
+
+/* Custom CSS gestionale*/
+
+.container.bg-dark {
+    background-color: #1e1e1e;
+}
+
+.btn-custom {
+    background-color: #909499;
+    color: #ffffff;
+    border: none;
+    transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.form-control {
+  background-color: #333;
+  color: #f5f5dc;
+  border: 1px solid #555;
+}
+.form-control:focus {
+  background-color: #444;
+  color: #f5f5dc;
+  border-color: #888;
+}
