@@ -11,10 +11,11 @@ public class OrdiniController : Controller
     private readonly ILogger<OrdiniController> _logger;
     private const string FilePath = "wwwroot/json/carrelli.json";
 
-    public OrdiniController(ApplicationDbContext context, ILogger<OrdiniController> logger, CarrelloService carrelloService)
+    public OrdiniController(ApplicationDbContext context, ILogger<OrdiniController> logger, UserManager<Cliente> userManager, CarrelloService carrelloService)
     {
         _context = context;
         _logger = logger;
+        _userManager = userManager;
         _carrelloService = carrelloService;
     }
 

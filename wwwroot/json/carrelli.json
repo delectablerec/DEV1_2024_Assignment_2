@@ -1,58 +1,7 @@
 {
   "18383034-3dc5-45c0-bc4c-bc747970c5b2": {
-    "Carrello": [
-      {
-        "OrologioId": 2,
-        "Orologio": {
-          "Modello": "Ciruzzo",
-          "Referenza": "cidit1234",
-          "MaterialeId": 2,
-          "Materiale": null,
-          "TipologiaId": 1,
-          "Tipologia": null,
-          "Diametro": 125,
-          "GenereId": 1,
-          "Genere": null,
-          "Prezzo": 12.0,
-          "Giacenza": 100,
-          "Colore": "Rosa",
-          "UrlImmagine": "/immaginiProdotti/Rolex2.jpg",
-          "CategoriaId": 2,
-          "Categoria": null,
-          "MarcaId": 1,
-          "Marca": null,
-          "Id": 2,
-          "Nome": "Ciro"
-        },
-        "QuantitaInCarrello": 2
-      },
-      {
-        "OrologioId": 1,
-        "Orologio": {
-          "Modello": "Pinuccio",
-          "Referenza": "cid1234",
-          "MaterialeId": 1,
-          "Materiale": null,
-          "TipologiaId": 1,
-          "Tipologia": null,
-          "Diametro": 20,
-          "GenereId": 1,
-          "Genere": null,
-          "Prezzo": 15222.0,
-          "Giacenza": 14,
-          "Colore": "Blu",
-          "UrlImmagine": "/immaginiProdotti/Rolex1.jpg",
-          "CategoriaId": 1,
-          "Categoria": null,
-          "MarcaId": 1,
-          "Marca": null,
-          "Id": 1,
-          "Nome": "Pino"
-        },
-        "QuantitaInCarrello": 3
-      }
-    ],
-    "Totale": 45690.0,
-    "Quantita": 5
+    "Carrello": [],
+    "Totale": 0.0,
+    "Quantita": 0
   }
 }
