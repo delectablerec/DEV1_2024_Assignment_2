@@ -1,3 +1,4 @@
+//classe rappresenta i dettagli di un ordine specifico cnsente di gestire relazioni uno-a-molti tra ordini e prodotti
 public class OrdineDettaglio
 {
     public int Id { get; set; }
