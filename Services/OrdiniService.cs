@@ -17,7 +17,7 @@ public class OrdiniService
         _logger = logger;
     }
 
-// Metodo per ottenere la lista degli ordini
+    // Metodo per ottenere la lista degli ordini
     public List<ListaOrdiniViewModel> GetOrdini()
     {
         try
@@ -29,18 +29,19 @@ public class OrdiniService
             // Converte ogni ordine in oggetto ListaOrdiniViewModel
             return ordini.Select(ordine =>
             {
-                
+
                 var totaleOrdine = ordine.OrdineDettagli.Sum(d => d.PrezzoUnitario * d.Quantita); // Calcola il totale dell'ordine
                 var statoOrdine = ordine.OrdineDettagli.Count > 0 ? "Completato" : "In lavorazione";  // Determina lo stato dell'ordine
                 // Recupera l'URL dell'immagine del primo prodotto associato all'ordine se disponibile altrimenti usa un'immagine predefinita
                 var urlImmagineProdotto = ordine.OrdineDettagli.Count > 0 && ordine.OrdineDettagli[0].Orologio != null
                     ? ordine.OrdineDettagli[0].Orologio.UrlImmagine
                     : "/img/default.png";
-                 // Recupera il nome del modello del primo prodotto associato all'ordine se disponibile altrimenti usa "Nessun prodotto"
+
+                // Recupera il nome del modello del primo prodotto associato all'ordine se disponibile altrimenti usa "Nessun prodotto"
                 var nomeProdotto = ordine.OrdineDettagli.Count > 0 && ordine.OrdineDettagli[0].Orologio != null
                     ? ordine.OrdineDettagli[0].Orologio.Modello
                     : "Nessun prodotto";
-            // Crea e restituisce un nuovo oggetto ListaOrdiniViewModel con i dati calcolati e recuperati
+                // Crea e restituisce un nuovo oggetto ListaOrdiniViewModel con i dati calcolati e recuperati
                 return new ListaOrdiniViewModel
                 {
                     Id = ordine.Id,  // ID dell'ordine
@@ -61,43 +62,43 @@ public class OrdiniService
         }
     }
 
-// Metodo per svuotare il carrello
-  public void SvuotaCarrello(string userId, string filePath)
-{
-    try
+    // Metodo per svuotare il carrello
+    public void SvuotaCarrello(string userId, string filePath)
     {
-        if (System.IO.File.Exists(filePath)) // Controlla se il file esiste nel path specificato
+        try
         {
-            var json = System.IO.File.ReadAllText(filePath); // Legge il contenuto del file json
-            // Deserializza il contenuto JSON in un dizionario di carrelli utenti
-            // La chiave è l'ID dell'utente(string), il valore è il carrello dell'utente.
-            var carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) ??
-                                 new Dictionary<string, CarrelloViewModel>();
-
-            if (carrelliUtenti.ContainsKey(userId)) // Controlla se esiste un carrello associato all'ID utente(che è chiave del dizionario)
+            if (System.IO.File.Exists(filePath)) // Controlla se il file esiste nel path specificato
             {
-                // Reimposta il carrello dell'utente a svuotandolo
-                carrelliUtenti[userId] = new CarrelloViewModel
-                {
-                    Carrello = new List<OrologioInCarrello>(), // Lista vuota di orologi
-                    Totale = 0,  //azzeramento
-                    Quantita = 0
-                };
+                var json = System.IO.File.ReadAllText(filePath); // Legge il contenuto del file json
+                                                                 // Deserializza il contenuto JSON in un dizionario di carrelli utenti
+                                                                 // La chiave è l'ID dell'utente(string), il valore è il carrello dell'utente.
+                var carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) ??
+                                     new Dictionary<string, CarrelloViewModel>();
 
-                var updatedJson = JsonConvert.SerializeObject(carrelliUtenti, Formatting.Indented); // Serializza il carrello aggiornato
-                System.IO.File.WriteAllText(filePath, updatedJson); // Scrive il file aggiornato
-                _logger.LogInformation("Carrello svuotato per UserId: {UserId}", userId);
+                if (carrelliUtenti.ContainsKey(userId)) // Controlla se esiste un carrello associato all'ID utente(che è chiave del dizionario)
+                {
+                    // Reimposta il carrello dell'utente a svuotandolo
+                    carrelliUtenti[userId] = new CarrelloViewModel
+                    {
+                        Carrello = new List<OrologioInCarrello>(), // Lista vuota di orologi
+                        Totale = 0,  //azzeramento
+                        Quantita = 0
+                    };
+
+                    var updatedJson = JsonConvert.SerializeObject(carrelliUtenti, Formatting.Indented); // Serializza il carrello aggiornato
+                    System.IO.File.WriteAllText(filePath, updatedJson); // Scrive il file aggiornato
+                    _logger.LogInformation("Carrello svuotato per UserId: {UserId}", userId);
+                }
             }
         }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Errore durante lo svuotamento del carrello: {ex.Message}");
+            throw;
+        }
     }
-    catch (Exception ex)
-    {
-        _logger.LogError($"Errore durante lo svuotamento del carrello: {ex.Message}");
-        throw;
-    }
-}
 
-//Metodo per caricare il carrello di un utente specifico dal file JSON
+    //Metodo per caricare il carrello di un utente specifico dal file JSON
     public CarrelloViewModel CaricaCarrello(string userId, string filePath)
     {
         try
@@ -105,8 +106,8 @@ public class OrdiniService
             if (System.IO.File.Exists(filePath))
             {
                 var json = System.IO.File.ReadAllText(filePath);
-            // Deserializza il contenuto JSON in un dizionario
-            // La chiave rappresenta l'ID dell'utente e il valore è il relativo carrello
+                // Deserializza il contenuto JSON in un dizionario
+                // La chiave rappresenta l'ID dell'utente e il valore è il relativo carrello
                 var carrelliUtenti = JsonConvert.DeserializeObject<Dictionary<string, CarrelloViewModel>>(json) ??
                                      new Dictionary<string, CarrelloViewModel>(); //altrimenti  Usa un dizionario vuoto 
                 // Controlla se esiste un carrello per l'utente specifico
@@ -116,7 +117,7 @@ public class OrdiniService
                     return carrello; //restituisce il carrello associato all'utente
                 }
             }
-// Restituisce un carrello vuoto se il file non esiste o il carrello non è trovato
+            // Restituisce un carrello vuoto se il file non esiste o il carrello non è trovato
             return new CarrelloViewModel
             {
                 Carrello = new List<OrologioInCarrello>(),
@@ -131,7 +132,7 @@ public class OrdiniService
         }
     }
 
-// Azione per creare un ordine dal carrello
+    // Azione per creare un ordine dal carrello
     public bool CreaOrdineDaCarrello(string userId, CarrelloViewModel carrello)
     {
         try
@@ -147,7 +148,7 @@ public class OrdiniService
                 DataAcquisto = DateTime.Now,
                 Nome = $"Ordine-{DateTime.Now.Ticks}_{userId}" //crea un nome univoco per l'ordine
             };
-        // Itera su tutti gli elementi del carrello
+            // Itera su tutti gli elementi del carrello
             foreach (var item in carrello.Carrello)
             {
                 // Recupera il prodotto dal database usando l'ID del prodotto
@@ -175,7 +176,7 @@ public class OrdiniService
         }
     }
 
-     public bool EliminaOrdine(int id)
+    public bool EliminaOrdine(int id)
     {
         try
         {
@@ -226,7 +227,7 @@ public class OrdiniService
         }
     }
 
-//Metodo per ottenere i dettagli di un ordine specifico
+    //Metodo per ottenere i dettagli di un ordine specifico
     public DettaglioOrdineViewModel GetDettaglioOrdine(int id)
     {
         try
