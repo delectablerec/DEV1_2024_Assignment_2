@@ -1,33 +1,33 @@
 {
-  "128a9578-9ca4-450c-9108-41c7d05d99d3": {
+  "29fb7d2a-eac2-4647-b19f-e9c7d45b225a": {
     "Carrello": [
       {
-        "OrologioId": 1,
+        "OrologioId": 5,
         "Orologio": {
-          "Modello": "Moon53",
-          "Referenza": "43hdsk8",
+          "Modello": "Daytona",
+          "Referenza": "100100",
           "MaterialeId": 2,
           "Materiale": null,
           "TipologiaId": 1,
           "Tipologia": null,
-          "Diametro": 6,
+          "Diametro": 0,
           "GenereId": 1,
           "Genere": null,
-          "Prezzo": 3478.0,
-          "Giacenza": 5,
-          "Colore": "blu",
-          "UrlImmagine": "/immaginiProdotti/Seiko1.jpg",
-          "CategoriaId": 2,
+          "Prezzo": 25000.0,
+          "Giacenza": 68,
+          "Colore": "acciaio",
+          "UrlImmagine": "https://www.bogliettigioielliere.com/wp-content/uploads/2024/07/m126500ln-0001_drp-upright-bba-with-shadow.png",
+          "CategoriaId": 1,
           "Categoria": null,
-          "MarcaId": 3,
+          "MarcaId": 1,
           "Marca": null,
-          "Id": 1,
-          "Nome": "orologio"
+          "Id": 5,
+          "Nome": "Rolex Daytona"
         },
         "QuantitaInCarrello": 1
       }
     ],
-    "Totale": 3478.0,
+    "Totale": 25000.0,
     "Quantita": 1
   }
 }
